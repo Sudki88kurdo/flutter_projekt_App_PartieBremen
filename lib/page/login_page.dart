@@ -10,6 +10,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   void _login() async {
     setState(() {
       _isLoading = true;
+
     });
 
     bool success = await APIService.loginUser(

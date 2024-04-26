@@ -1,8 +1,9 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_app/HomeScreen.dart';
+import 'package:flutter_app/sharedModuls/HomeScreen.dart';
 import 'appStyle.dart';
-import 'login_page.dart';
-import 'register_page.dart';
+import 'page/login_page.dart';
+import 'page/register_page.dart';
 
 class StartPage extends StatelessWidget {
   @override

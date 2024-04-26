@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'api_service.dart'; // Importiere die API-Verbindung
-import 'HomeScreen.dart';
-import 'appStyle.dart';
+import '../api_service.dart'; // Importiere die API-Verbindung
+import '../sharedModuls/HomeScreen.dart';
+import '../appStyle.dart';
 
 
 class LoginPage extends StatefulWidget {

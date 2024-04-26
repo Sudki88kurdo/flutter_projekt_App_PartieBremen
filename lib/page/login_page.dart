@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   void _login() async {
     setState(() {
       _isLoading = true;
-      print("stany ok");
+
     });
 
     bool success = await APIService.loginUser(

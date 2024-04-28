@@ -1,0 +1,14 @@
+generate enities for freezed on https://app.quicktype.io/?l=dart
+on there only activate:
+    -Null safety
+    -Make all properties optional
+    -Generate class definitions with @freezed compatibility
+    -Detect UUIDs
+    -Detect dates & times
+    -Detect enums
+    -Detect maps
+    -Don't treat $ref as a reference in JSON
+    -Merge similar classes
+
+run:
+flutter pub run build_runner watch --delete-conflicting-outputs

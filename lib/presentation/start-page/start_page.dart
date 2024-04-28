@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'appStyle.dart';
-import 'login_page.dart';
-import 'register_page.dart';
+import 'package:flutter_app/presentation/login-page/login_page_provider.dart';
+import 'package:flutter_app/presentation/start-page/start_page_cubit.dart';
+import 'package:flutter_app/presentation/start-page/start_page_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../appStyle.dart';
+import '../login-page/login_page.dart';
+import '../register_page.dart';
 
 class StartPage extends StatelessWidget {
   @override
@@ -13,7 +18,7 @@ class StartPage extends StatelessWidget {
         backgroundColor: AppStyles.buttonColor,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/hintergrundBremen1.jpg'),
             fit: BoxFit.cover,
@@ -34,30 +39,29 @@ class StartPage extends StatelessWidget {
                   backgroundColor: AppStyles.buttonColor,
                   padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
                 ),
-                child: Text(
+                child: const Text(
                   'Einloggen',
                   style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppStyles.buttonColor,
-                  padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-                ),
-                child: Text(
-                  'Registrieren',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ),
+              const SizedBox(height: 20),
+              BlocBuilder<StartPageCubit, StartPageState>(builder: (context, state){
+                return ElevatedButton(
+                  onPressed: () {
+                    context.pushNamed(LoginPageProvider.routeName);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppStyles.buttonColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 20),
+                  ),
+                  child: const Text(
+                    'Registrieren',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  ),
 
-              ),
-              SizedBox(height: 70),
+                );
+              }),
+              const SizedBox(height: 70),
             ],
           ),
         ),

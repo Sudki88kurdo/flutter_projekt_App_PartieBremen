@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'api_service.dart'; // Importiere die API-Verbindung
-import 'hauptseite.dart';
-import 'appStyle.dart';
+import 'package:flutter_app/api/common/api_result.dart';
+import 'package:flutter_app/presentation/login-page/login_page_cubit.dart';
+import 'package:flutter_app/presentation/login-page/login_page_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../hauptseite.dart';
+import '../../appStyle.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -15,21 +18,21 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _passwordVisible = false;
 
-  void _login() async {
+  void _login(LoginPageCubit loginPageCubit) async {
     setState(() {
       _isLoading = true;
     });
 
-    bool success = await APIService.loginUser(
-      _usernameController.text,
-      _passwordController.text,
-    );
+    ApiResult success = (await loginPageCubit.login(
+      email: _usernameController.text,
+      password: _passwordController.text,
+    ));
 
     setState(() {
       _isLoading = false;
     });
 
-    if (success) {
+    if (success != null) {
       // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
       Navigator.pushReplacement(
         context,
@@ -47,21 +50,21 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Login',
           style: AppStyles.appBarTitleStyle,
         ),
         backgroundColor: AppStyles.buttonColor,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/hintergrundBremen2.jpg'),
             fit: BoxFit.cover,
@@ -79,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                 filled: true,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               controller: _passwordController,
               obscureText: !_passwordVisible,
@@ -100,20 +103,21 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _isLoading
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-              onPressed: _login,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppStyles.buttonColor,
-                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-              ),
-              child: Text(
-                'Einloggen',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
+                ? const CircularProgressIndicator()
+                : BlocBuilder<LoginPageCubit, LoginPageState>(builder: (loginContext, loginState) {
+                  return ElevatedButton(
+            onPressed: () => _login(loginContext.read<LoginPageCubit>()),
+            style: ElevatedButton.styleFrom(
+            backgroundColor: AppStyles.buttonColor,
+            padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
             ),
+            child: const Text(
+            'Einloggen',
+            style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
+            );})
           ],
         ),
       ),

@@ -1,8 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/entities/user.dart';
-import 'api_service.dart';
-import 'login_page.dart';
-import 'appStyle.dart';
+import '../api/clients/user_client.dart';
+import 'login-page/login_page.dart';
+import '../appStyle.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -14,6 +15,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final UserClient _userClient = new UserClient(new Dio());
   DateTime? _selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
@@ -121,14 +124,20 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () async {
                 // Erstelle ein User-Objekt mit den eingegebenen Daten
                 User user = User(
-                  firstName: firstNameController.text,
-                  lastName: lastNameController.text,
+                  name: firstNameController.text,
+                  surname: lastNameController.text,
                   dob: _selectedDate,
                   email: emailController.text,
                   password: passwordController.text,
                   verified: true, // Annahme: Der Benutzer wird als verifiziert markiert
                 );
-                bool success = await APIService.registerUser(user);
+                bool success = (await _userClient.registerUser(
+                  name: firstNameController.text,
+                  surname: lastNameController.text,
+                  dob: _selectedDate,
+                  email: emailController.text,
+                  password: passwordController.text,
+                  verified: true,)) as bool;
                 if (success) {
                   Navigator.pushReplacement(
                     context,

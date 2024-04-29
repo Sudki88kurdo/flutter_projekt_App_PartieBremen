@@ -8,6 +8,6 @@ class StartPageProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StartPage();
+    return const StartPage();
   }
 }

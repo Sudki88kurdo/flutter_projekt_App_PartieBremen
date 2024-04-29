@@ -54,6 +54,7 @@ dependencies:
   flutter_gen_core: ^5.4.0
   bloc_presentation: ^1.0.0
   lottie: ^3.0.0
+  cloud_firestore: ^4.17.2
 
 dev_dependencies:
   flutter_test:

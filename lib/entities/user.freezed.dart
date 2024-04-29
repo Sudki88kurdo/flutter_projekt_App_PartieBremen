@@ -25,10 +25,11 @@ mixin _$User {
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get surname => throw _privateConstructorUsedError;
-  DateTime? get dob => throw _privateConstructorUsedError;
+  DateTime get dob => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
   bool? get verified => throw _privateConstructorUsedError;
+  bool? get active => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,10 +47,11 @@ abstract class $UserCopyWith<$Res> {
       DateTime? updatedAt,
       String? name,
       String? surname,
-      DateTime? dob,
+      DateTime dob,
       String? email,
       String? password,
-      bool? verified});
+      bool? verified,
+      bool? active});
 }
 
 /// @nodoc
@@ -70,10 +72,11 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? updatedAt = freezed,
     Object? name = freezed,
     Object? surname = freezed,
-    Object? dob = freezed,
+    Object? dob = null,
     Object? email = freezed,
     Object? password = freezed,
     Object? verified = freezed,
+    Object? active = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -96,10 +99,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.surname
           : surname // ignore: cast_nullable_to_non_nullable
               as String?,
-      dob: freezed == dob
+      dob: null == dob
           ? _value.dob
           : dob // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -111,6 +114,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
       verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      active: freezed == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
               as bool?,
     ) as $Val);
   }
@@ -129,10 +136,11 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       DateTime? updatedAt,
       String? name,
       String? surname,
-      DateTime? dob,
+      DateTime dob,
       String? email,
       String? password,
-      bool? verified});
+      bool? verified,
+      bool? active});
 }
 
 /// @nodoc
@@ -150,10 +158,11 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? updatedAt = freezed,
     Object? name = freezed,
     Object? surname = freezed,
-    Object? dob = freezed,
+    Object? dob = null,
     Object? email = freezed,
     Object? password = freezed,
     Object? verified = freezed,
+    Object? active = freezed,
   }) {
     return _then(_$UserImpl(
       id: freezed == id
@@ -176,10 +185,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.surname
           : surname // ignore: cast_nullable_to_non_nullable
               as String?,
-      dob: freezed == dob
+      dob: null == dob
           ? _value.dob
           : dob // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -191,6 +200,10 @@ class __$$UserImplCopyWithImpl<$Res>
       verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      active: freezed == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
               as bool?,
     ));
   }
@@ -205,10 +218,11 @@ class _$UserImpl implements _User {
       this.updatedAt,
       this.name,
       this.surname,
-      this.dob,
+      required this.dob,
       this.email,
       this.password,
-      this.verified});
+      this.verified,
+      this.active});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -225,17 +239,19 @@ class _$UserImpl implements _User {
   @override
   final String? surname;
   @override
-  final DateTime? dob;
+  final DateTime dob;
   @override
   final String? email;
   @override
   final String? password;
   @override
   final bool? verified;
+  @override
+  final bool? active;
 
   @override
   String toString() {
-    return 'User(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, surname: $surname, dob: $dob, email: $email, password: $password, verified: $verified)';
+    return 'User(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, surname: $surname, dob: $dob, email: $email, password: $password, verified: $verified, active: $active)';
   }
 
   @override
@@ -255,13 +271,14 @@ class _$UserImpl implements _User {
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.verified, verified) ||
-                other.verified == verified));
+                other.verified == verified) &&
+            (identical(other.active, active) || other.active == active));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt, name,
-      surname, dob, email, password, verified);
+      surname, dob, email, password, verified, active);
 
   @JsonKey(ignore: true)
   @override
@@ -284,10 +301,11 @@ abstract class _User implements User {
       final DateTime? updatedAt,
       final String? name,
       final String? surname,
-      final DateTime? dob,
+      required final DateTime dob,
       final String? email,
       final String? password,
-      final bool? verified}) = _$UserImpl;
+      final bool? verified,
+      final bool? active}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -302,13 +320,15 @@ abstract class _User implements User {
   @override
   String? get surname;
   @override
-  DateTime? get dob;
+  DateTime get dob;
   @override
   String? get email;
   @override
   String? get password;
   @override
   bool? get verified;
+  @override
+  bool? get active;
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>

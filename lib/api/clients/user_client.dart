@@ -11,10 +11,11 @@ abstract class UserClient {
   Future<HttpResponse<User>> registerUser({
        @Field("name") required String name,
        @Field("surname") required String surname,
-       @Field("dob") DateTime? dob,
+       @Field("dob") required DateTime dob,
        @Field("email") required String email,
        @Field("password") required String password,
        @Field("verified") required bool verified,
+       @Field("active") required bool active,
     }
   );
 

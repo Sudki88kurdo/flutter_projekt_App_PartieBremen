@@ -22,14 +22,14 @@ class _UserClient implements UserClient {
   Future<HttpResponse<User>> registerUser({
     required String name,
     required String surname,
-    DateTime? dob,
+    required DateTime dob,
     required String email,
     required String password,
     required bool verified,
+    required bool active,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = {
       'name': name,
@@ -38,8 +38,8 @@ class _UserClient implements UserClient {
       'email': email,
       'password': password,
       'verified': verified,
+      'active': active,
     };
-    _data.removeWhere((k, v) => v == null);
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<HttpResponse<User>>(Options(
       method: 'POST',

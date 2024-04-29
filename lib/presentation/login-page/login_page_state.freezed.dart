@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$LoginPageState {
   ScreenStatus get status => throw _privateConstructorUsedError;
+  bool get passwordVisible => throw _privateConstructorUsedError;
+  User? get user => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LoginPageStateCopyWith<LoginPageState> get copyWith =>
@@ -29,9 +31,10 @@ abstract class $LoginPageStateCopyWith<$Res> {
           LoginPageState value, $Res Function(LoginPageState) then) =
       _$LoginPageStateCopyWithImpl<$Res, LoginPageState>;
   @useResult
-  $Res call({ScreenStatus status});
+  $Res call({ScreenStatus status, bool passwordVisible, User? user});
 
   $ScreenStatusCopyWith<$Res> get status;
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -48,12 +51,22 @@ class _$LoginPageStateCopyWithImpl<$Res, $Val extends LoginPageState>
   @override
   $Res call({
     Object? status = null,
+    Object? passwordVisible = null,
+    Object? user = freezed,
   }) {
     return _then(_value.copyWith(
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
+      passwordVisible: null == passwordVisible
+          ? _value.passwordVisible
+          : passwordVisible // ignore: cast_nullable_to_non_nullable
+              as bool,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
     ) as $Val);
   }
 
@@ -62,6 +75,18 @@ class _$LoginPageStateCopyWithImpl<$Res, $Val extends LoginPageState>
   $ScreenStatusCopyWith<$Res> get status {
     return $ScreenStatusCopyWith<$Res>(_value.status, (value) {
       return _then(_value.copyWith(status: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_value.user!, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
     });
   }
 }
@@ -74,10 +99,12 @@ abstract class _$$LoginPageStateImplCopyWith<$Res>
       __$$LoginPageStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ScreenStatus status});
+  $Res call({ScreenStatus status, bool passwordVisible, User? user});
 
   @override
   $ScreenStatusCopyWith<$Res> get status;
+  @override
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -92,12 +119,22 @@ class __$$LoginPageStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = null,
+    Object? passwordVisible = null,
+    Object? user = freezed,
   }) {
     return _then(_$LoginPageStateImpl(
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
+      passwordVisible: null == passwordVisible
+          ? _value.passwordVisible
+          : passwordVisible // ignore: cast_nullable_to_non_nullable
+              as bool,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
     ));
   }
 }
@@ -105,15 +142,24 @@ class __$$LoginPageStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoginPageStateImpl implements _LoginPageState {
-  const _$LoginPageStateImpl({this.status = const ScreenStatus.pure()});
+  const _$LoginPageStateImpl(
+      {this.status = const ScreenStatus.pure(),
+      this.passwordVisible = false,
+      this.user = null});
 
   @override
   @JsonKey()
   final ScreenStatus status;
+  @override
+  @JsonKey()
+  final bool passwordVisible;
+  @override
+  @JsonKey()
+  final User? user;
 
   @override
   String toString() {
-    return 'LoginPageState(status: $status)';
+    return 'LoginPageState(status: $status, passwordVisible: $passwordVisible, user: $user)';
   }
 
   @override
@@ -121,11 +167,14 @@ class _$LoginPageStateImpl implements _LoginPageState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoginPageStateImpl &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.passwordVisible, passwordVisible) ||
+                other.passwordVisible == passwordVisible) &&
+            (identical(other.user, user) || other.user == user));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, status);
+  int get hashCode => Object.hash(runtimeType, status, passwordVisible, user);
 
   @JsonKey(ignore: true)
   @override
@@ -136,11 +185,17 @@ class _$LoginPageStateImpl implements _LoginPageState {
 }
 
 abstract class _LoginPageState implements LoginPageState {
-  const factory _LoginPageState({final ScreenStatus status}) =
-      _$LoginPageStateImpl;
+  const factory _LoginPageState(
+      {final ScreenStatus status,
+      final bool passwordVisible,
+      final User? user}) = _$LoginPageStateImpl;
 
   @override
   ScreenStatus get status;
+  @override
+  bool get passwordVisible;
+  @override
+  User? get user;
   @override
   @JsonKey(ignore: true)
   _$$LoginPageStateImplCopyWith<_$LoginPageStateImpl> get copyWith =>

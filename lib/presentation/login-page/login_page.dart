@@ -2,125 +2,114 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/api/common/api_result.dart';
 import 'package:flutter_app/presentation/login-page/login_page_cubit.dart';
 import 'package:flutter_app/presentation/login-page/login_page_state.dart';
+import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../common/screen_status.dart';
 import '../hauptseite.dart';
 import '../../appStyle.dart';
 
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
-  bool _passwordVisible = false;
-
-  void _login(LoginPageCubit loginPageCubit) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    ApiResult success = (await loginPageCubit.login(
-      email: _usernameController.text,
-      password: _passwordController.text,
-    ));
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (success != null) {
-      // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } else {
-      // Fehlermeldung anzeigen oder erneut versuchen
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Fehler beim Einloggen')),
-      );
-    }
-  }
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Login',
-          style: AppStyles.appBarTitleStyle,
-        ),
-        backgroundColor: AppStyles.buttonColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/assets/hintergrundBremen2.jpg'),
-            fit: BoxFit.cover,
+    return BlocBuilder<LoginPageCubit, LoginPageState>(builder: (loginPageContext, loginPageState) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Login',
+            style: AppStyles.appBarTitleStyle,
           ),
+          backgroundColor: AppStyles.buttonColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              loginPageContext.pushNamed(StartPageProvider.routeName);
+            },
+          ),
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'Benutzername',
-                fillColor: AppStyles.textFieldFillColor,
-                labelStyle: AppStyles.labelTextStyle(),
-                filled: true,
-              ),
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('lib/assets/hintergrundBremen2.jpg'),
+              fit: BoxFit.cover,
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _passwordController,
-              obscureText: !_passwordVisible,
-              decoration: InputDecoration(
-                labelText: 'Passwort',
-                fillColor: AppStyles.textFieldFillColor,
-                labelStyle: AppStyles.labelTextStyle(),
-                filled: true,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _passwordVisible = !_passwordVisible;
-                    });
-                  },
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Benutzername',
+                  fillColor: AppStyles.textFieldFillColor,
+                  labelStyle: AppStyles.labelTextStyle(),
+                  filled: true,
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : BlocBuilder<LoginPageCubit, LoginPageState>(builder: (loginContext, loginState) {
-                  return ElevatedButton(
-            onPressed: () => _login(loginContext.read<LoginPageCubit>()),
-            style: ElevatedButton.styleFrom(
-            backgroundColor: AppStyles.buttonColor,
-            padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-            ),
-            child: const Text(
-            'Einloggen',
-            style: TextStyle(fontSize: 24, color: Colors.white),
-            ),
-            );})
-          ],
+              const SizedBox(height: 20),
+              BlocBuilder<LoginPageCubit, LoginPageState>(builder: (loginPageContext, loginPageState) {
+                return TextField(
+                  controller: _passwordController,
+                  obscureText: !loginPageState.passwordVisible,
+                  decoration: InputDecoration(
+                      labelText: 'Passwort',
+                      fillColor: AppStyles.textFieldFillColor,
+                      labelStyle: AppStyles.labelTextStyle(),
+                      filled: true,
+                      suffixIcon: BlocBuilder<LoginPageCubit, LoginPageState>(builder: (loginContext, loginState) {
+                        return IconButton(
+                          icon: Icon(
+                            loginPageState.passwordVisible ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            loginPageContext.read<LoginPageCubit>().updatePasswordVisible();
+                          },
+                        );
+                      })
+                  ),
+                );
+              }),
+              const SizedBox(height: 20),
+              BlocBuilder<LoginPageCubit, LoginPageState>(builder: (loginContext, loginState) {
+                return loginState.status != const ScreenStatus.pure()
+                    ?  const CircularProgressIndicator()
+                    :  ElevatedButton(
+                  onPressed: () => _login(loginContext, loginPageState),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppStyles.buttonColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
+                  ),
+                  child: const Text(
+                    'Einloggen',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  ),
+                );})
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
+  }
+  void _login(BuildContext loginContext, LoginPageState loginPageState) async {
+
+    //TODO Implement login
+    await loginContext.read<LoginPageCubit>().login(
+      email: _usernameController.text,
+      password: _passwordController.text,
+    ).then((value) => {
+    // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
+    if(loginPageState.user != null) {
+        loginContext.pushNamed(HomeScreen.routeName)
+    } else {
+      ScaffoldMessenger.of(loginContext).showSnackBar(const SnackBar(
+      content: Text('Fehler bei der Registrierung')))
+    }
+    });
   }
 }

@@ -7,7 +7,7 @@ class AppStyles {
   );
 
   static TextStyle labelTextStyle() {
-    return TextStyle(
+    return const TextStyle(
       fontSize: 20.0,
       fontWeight: FontWeight.bold,
     );

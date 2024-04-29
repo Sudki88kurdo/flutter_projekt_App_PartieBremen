@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/api/repositories/user_repository.dart';
 import 'package:flutter_app/presentation/error/error_page.dart';
+import 'package:flutter_app/presentation/hauptseite.dart';
 import 'package:flutter_app/presentation/login-page/login_page_provider.dart';
+import 'package:flutter_app/presentation/register-page/register_page.dart';
+import 'package:flutter_app/presentation/register-page/register_page_provider.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,5 +29,17 @@ final GoRouter router = GoRouter(
         parentNavigatorKey: _rootNavigationKey,
         builder: (_,__) => const LoginPageProvider()
     ),
+    GoRoute(
+        name: HomeScreen.routeName,
+        path: '/${HomeScreen.routeName}',
+        parentNavigatorKey: _rootNavigationKey,
+        builder: (_,__) => const HomeScreen()
+    ),
+    GoRoute(
+        name: RegisterPageProvider.routeName,
+        path: '/${RegisterPageProvider.routeName}',
+        parentNavigatorKey: _rootNavigationKey,
+        builder: (_,__) => RegisterPage()
+    )
   ],
 );

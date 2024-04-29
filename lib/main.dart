@@ -1,12 +1,30 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'start_page.dart';
+import 'package:flutter_app/presentation/app/app_view_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'api/repositories/user_repository.dart';
+import 'presentation/start-page/start_page.dart';
+import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 
-void main() {
-  print("object");
-  runApp(LoginApp());
+final logger = Logger();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  final dio = Dio(); // Provide a dio instance
+  //dio.options.headers['Demo-Header'] = 'demo header'; // config your dio headers globally
+
+  runApp(EasyLocalization(supportedLocales: const [Locale('en')],
+      fallbackLocale: const Locale('en'), path: 'assets/translations', child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider.value(value: UserRepository('https://api.partibremen.student.28apps-software.de/', dio)),
+        ],
+        child: const AppViewProvider(),)));
 }
 
 class LoginApp extends StatelessWidget {
+  const LoginApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +33,7 @@ class LoginApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: StartPage(),
+      home: const StartPage(),
     );
   }
 

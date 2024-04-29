@@ -78,9 +78,12 @@ class $AssetsImagesGen {
   AssetGenImage get hintergrundBremen2 =>
       const AssetGenImage('assets/images/hintergrundBremen2.jpg');
 
+  /// File path: assets/images/strassen.json
+  String get strassen => 'assets/images/strassen.json';
+
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [hintergrundBremen, hintergrundBremen1, hintergrundBremen2];
+  List<dynamic> get values =>
+      [hintergrundBremen, hintergrundBremen1, hintergrundBremen2, strassen];
 }
 
 class $AssetsTranslationsGen {

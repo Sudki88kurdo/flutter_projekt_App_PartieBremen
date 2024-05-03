@@ -6,7 +6,7 @@ import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../common/screen_status.dart';
-import '../hauptseite.dart';
+import '../viewHome-page/HomeScreen.dart';
 import '../../appStyle.dart';
 
 

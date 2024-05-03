@@ -1,41 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void main() {
-  runApp(HomeScreen());
-}
+import '../../../appStyle.dart';
+import '../../common/rounded_bottomNavigationBar.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  MapScreenState createState() => MapScreenState();
-}
+  static const String routeName = 'home-page';
 
-class MapScreenState extends State<HomeScreen> {
-  // final MapController mapController = MapController();
-  // final List<GeoPoint> geoPoints = [
-  // GeoPoint(latitude: 53.0793, longitude: 8.8017),
-  // ];// Bremen
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getGeoPoints();
-  // }
-
-  // List <GeoPoint> getGeoPoints() {
-  //   return geoPoints;
-  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('PartiBrmen'),
+          title: Text('PartiBrmen Home'),
           centerTitle: true,
           backgroundColor: Colors.green,
           titleTextStyle: const TextStyle(
@@ -60,23 +43,19 @@ class MapScreenState extends State<HomeScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: SearchBar(
-                          shape:
-                              MaterialStatePropertyAll<RoundedRectangleBorder>(
+                          shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadiusDirectional.circular(12),
+                              borderRadius: BorderRadiusDirectional.circular(12),
                             ),
                           ),
-                          backgroundColor:
-                              const MaterialStatePropertyAll<Color>(
-                                  Color.fromRGBO(223, 238, 218, 1.0)),
+                          backgroundColor: const MaterialStatePropertyAll<Color>(
+                              Color.fromRGBO(223, 238, 218, 1.0)),
                           padding: const MaterialStatePropertyAll<EdgeInsets>(
                               EdgeInsets.symmetric(horizontal: 16.0)),
                           hintText: 'Ort suchen',
                           onTap: () {},
                           onChanged: (_) {},
-                          leading:
-                              const Icon(Icons.search, color: Colors.green),
+                          leading: const Icon(Icons.search, color: Colors.green),
                           trailing: const <Widget>[],
                         ),
                       ),
@@ -95,26 +74,24 @@ class MapScreenState extends State<HomeScreen> {
                       initialZoom: 12,
                       interactionOptions: InteractionOptions(
                         flags: InteractiveFlag.drag |
-                            InteractiveFlag.flingAnimation |
-                            InteractiveFlag.pinchMove |
-                            InteractiveFlag.pinchZoom |
-                            InteractiveFlag.doubleTapZoom |
-                            InteractiveFlag.doubleTapDragZoom |
-                            InteractiveFlag.scrollWheelZoom,
+                        InteractiveFlag.flingAnimation |
+                        InteractiveFlag.pinchMove |
+                        InteractiveFlag.pinchZoom |
+                        InteractiveFlag.doubleTapZoom |
+                        InteractiveFlag.doubleTapDragZoom |
+                        InteractiveFlag.scrollWheelZoom,
                       ),
                     ),
                     children: [
                       TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                         userAgentPackageName: 'com.example.app',
                       ),
                       RichAttributionWidget(
                         attributions: [
                           TextSourceAttribution(
                             'OpenStreetMap contributors',
-                            onTap: () => launchUrl(Uri.parse(
-                                'https://openstreetmap.org/copyright')),
+                            onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
                           ),
                         ],
                       ),
@@ -125,7 +102,9 @@ class MapScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+        bottomNavigationBar: BottomNavigationBarWidget(initialIndex: 0),
       ),
     );
   }
 }
+

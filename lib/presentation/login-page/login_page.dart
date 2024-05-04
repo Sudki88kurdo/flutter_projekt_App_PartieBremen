@@ -105,10 +105,11 @@ class LoginPage extends StatelessWidget {
     ).then((value) => {
     // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
     if(loginPageState.user != null) {
+        print(loginPageState.user),
         loginContext.pushNamed(HomeScreen.routeName)
     } else {
       ScaffoldMessenger.of(loginContext).showSnackBar(const SnackBar(
-      content: Text('Fehler bei der Registrierung')))
+      content: Text('Fehler bei der Login')))
     }
     });
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/viewHome-page/HomeScreen.dart';
 
 import '../appStyle.dart';
-import '../presentation/viewHome-page/Profil.dart'; // Stelle sicher, dass der Importpfad korrekt ist
+import '../presentation/viewHome-page/prfiel_page/Profil.dart'; // Stelle sicher, dass der Importpfad korrekt ist
 
 class BottomNavigationBarWidget extends StatefulWidget {
   final int initialIndex;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/error/error_page.dart';
-import 'package:flutter_app/presentation/hauptseite.dart';
+import 'package:flutter_app/presentation/viewHome-page/home_screen.dart';
 import 'package:flutter_app/presentation/login-page/login_page_provider.dart';
 import 'package:flutter_app/presentation/register-page/register_page.dart';
 import 'package:flutter_app/presentation/register-page/register_page_provider.dart';

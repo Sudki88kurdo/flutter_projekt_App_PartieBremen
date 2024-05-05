@@ -1,6 +1,6 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:flutter_app/api/repositories/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../api/repositories/user_repository.dart';
 import 'app_cubit_event.dart';
 import 'app_state.dart';
 

@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../common/screen_status.dart';
-import '../../entities/user.dart';
+import 'package:flutter_app/common/screen_status.dart';
+import 'package:flutter_app/entities/user.dart';
 part 'login_page_state.freezed.dart';
 
 @freezed

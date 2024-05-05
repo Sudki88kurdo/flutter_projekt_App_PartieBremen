@@ -9,7 +9,7 @@ class UserRepository extends BaseRepository<UserClient> {
   /// Constructor
   UserRepository(String baseUrl, Dio dio)
       : super(
-          client: UserClient(dio, baseUrl: 'https://api.partibremen.student.28apps-software.de'),
+          client: UserClient(dio, baseUrl: baseUrl),
           dio: dio,
         );
 
@@ -23,7 +23,14 @@ class UserRepository extends BaseRepository<UserClient> {
     required bool active,
   }) async =>
       execute(
-        () => client.registerUser(email: email, name: name, surname: surname, password: password, verified: verified, dob: dob, active: true),
+        () => client.registerUser(
+            email: email,
+            name: name,
+            surname: surname,
+            password: password,
+            verified: verified,
+            dob: dob,
+            active: true),
       );
 
   Future<ApiResult<User>> loginUser({
@@ -31,6 +38,6 @@ class UserRepository extends BaseRepository<UserClient> {
     required String password,
   }) async =>
       execute(
-            () => client.loginUser(email: email, password: password),
+        () => client.loginUser(email: email, password: password),
       );
 }

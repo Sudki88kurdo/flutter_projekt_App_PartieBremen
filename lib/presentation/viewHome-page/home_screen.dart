@@ -3,6 +3,7 @@ import 'package:flutter_app/presentation/viewHome-page/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/viewHome-page/home_screen_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geocode/geocode.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,6 +34,8 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20.0),
               child: BlocBuilder<HomePageCubit, HomePageState>(
                 builder: (mapcontext, mapstate) {
+                  final MapController _mapController = MapController();
+                  GeoCode geoCode = GeoCode();
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -62,7 +65,17 @@ class HomeScreen extends StatelessWidget {
                                         EdgeInsets.symmetric(horizontal: 16.0)),
                                 hintText: 'Ort suchen',
                                 onTap: () {},
-                                onChanged: (_) {},
+                                onChanged: (search) async {
+                                  Coordinates coordinates =
+                                      await geoCode.forwardGeocoding(
+                                          address: "Bremen, $search");
+                                  if (coordinates.latitude != null) {
+                                    _mapController.move(
+                                        LatLng(coordinates.latitude!,
+                                            coordinates.longitude!),
+                                        12);
+                                  }
+                                },
                                 leading: const Icon(Icons.search,
                                     color: Colors.green),
                                 trailing: const <Widget>[],
@@ -78,6 +91,7 @@ class HomeScreen extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: MediaQuery.of(context).size.height * 0.5,
                         child: FlutterMap(
+                          mapController: _mapController,
                           options: const MapOptions(
                             initialCenter: LatLng(53.0793, 8.8017),
                             initialZoom: 12,
@@ -109,7 +123,6 @@ class HomeScreen extends StatelessWidget {
                                               width: 150.0,
                                               height: 150.0,
                                               child: GestureDetector(
-                                                onTap: () => print("hello"),
                                                 child: const Icon(
                                                   Icons.location_on,
                                                   color: Colors.red,

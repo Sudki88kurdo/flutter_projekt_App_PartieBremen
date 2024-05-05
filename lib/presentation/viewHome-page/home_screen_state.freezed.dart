@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomePageState {
   List<Poi> get pointsOfInterest => throw _privateConstructorUsedError;
+  double get focusPointLat => throw _privateConstructorUsedError;
+  double get focusPointLong => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomePageStateCopyWith<HomePageState> get copyWith =>
@@ -29,7 +31,10 @@ abstract class $HomePageStateCopyWith<$Res> {
           HomePageState value, $Res Function(HomePageState) then) =
       _$HomePageStateCopyWithImpl<$Res, HomePageState>;
   @useResult
-  $Res call({List<Poi> pointsOfInterest});
+  $Res call(
+      {List<Poi> pointsOfInterest,
+      double focusPointLat,
+      double focusPointLong});
 }
 
 /// @nodoc
@@ -46,12 +51,22 @@ class _$HomePageStateCopyWithImpl<$Res, $Val extends HomePageState>
   @override
   $Res call({
     Object? pointsOfInterest = null,
+    Object? focusPointLat = null,
+    Object? focusPointLong = null,
   }) {
     return _then(_value.copyWith(
       pointsOfInterest: null == pointsOfInterest
           ? _value.pointsOfInterest
           : pointsOfInterest // ignore: cast_nullable_to_non_nullable
               as List<Poi>,
+      focusPointLat: null == focusPointLat
+          ? _value.focusPointLat
+          : focusPointLat // ignore: cast_nullable_to_non_nullable
+              as double,
+      focusPointLong: null == focusPointLong
+          ? _value.focusPointLong
+          : focusPointLong // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -64,7 +79,10 @@ abstract class _$$HomePageStateImplCopyWith<$Res>
       __$$HomePageStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Poi> pointsOfInterest});
+  $Res call(
+      {List<Poi> pointsOfInterest,
+      double focusPointLat,
+      double focusPointLong});
 }
 
 /// @nodoc
@@ -79,12 +97,22 @@ class __$$HomePageStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? pointsOfInterest = null,
+    Object? focusPointLat = null,
+    Object? focusPointLong = null,
   }) {
     return _then(_$HomePageStateImpl(
       pointsOfInterest: null == pointsOfInterest
           ? _value._pointsOfInterest
           : pointsOfInterest // ignore: cast_nullable_to_non_nullable
               as List<Poi>,
+      focusPointLat: null == focusPointLat
+          ? _value.focusPointLat
+          : focusPointLat // ignore: cast_nullable_to_non_nullable
+              as double,
+      focusPointLong: null == focusPointLong
+          ? _value.focusPointLong
+          : focusPointLong // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -92,7 +120,10 @@ class __$$HomePageStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$HomePageStateImpl implements _HomePageState {
-  const _$HomePageStateImpl({final List<Poi> pointsOfInterest = const []})
+  const _$HomePageStateImpl(
+      {final List<Poi> pointsOfInterest = const [],
+      this.focusPointLat = 53.0793,
+      this.focusPointLong = 8.8017})
       : _pointsOfInterest = pointsOfInterest;
 
   final List<Poi> _pointsOfInterest;
@@ -106,8 +137,15 @@ class _$HomePageStateImpl implements _HomePageState {
   }
 
   @override
+  @JsonKey()
+  final double focusPointLat;
+  @override
+  @JsonKey()
+  final double focusPointLong;
+
+  @override
   String toString() {
-    return 'HomePageState(pointsOfInterest: $pointsOfInterest)';
+    return 'HomePageState(pointsOfInterest: $pointsOfInterest, focusPointLat: $focusPointLat, focusPointLong: $focusPointLong)';
   }
 
   @override
@@ -116,12 +154,19 @@ class _$HomePageStateImpl implements _HomePageState {
         (other.runtimeType == runtimeType &&
             other is _$HomePageStateImpl &&
             const DeepCollectionEquality()
-                .equals(other._pointsOfInterest, _pointsOfInterest));
+                .equals(other._pointsOfInterest, _pointsOfInterest) &&
+            (identical(other.focusPointLat, focusPointLat) ||
+                other.focusPointLat == focusPointLat) &&
+            (identical(other.focusPointLong, focusPointLong) ||
+                other.focusPointLong == focusPointLong));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_pointsOfInterest));
+      runtimeType,
+      const DeepCollectionEquality().hash(_pointsOfInterest),
+      focusPointLat,
+      focusPointLong);
 
   @JsonKey(ignore: true)
   @override
@@ -131,11 +176,17 @@ class _$HomePageStateImpl implements _HomePageState {
 }
 
 abstract class _HomePageState implements HomePageState {
-  const factory _HomePageState({final List<Poi> pointsOfInterest}) =
-      _$HomePageStateImpl;
+  const factory _HomePageState(
+      {final List<Poi> pointsOfInterest,
+      final double focusPointLat,
+      final double focusPointLong}) = _$HomePageStateImpl;
 
   @override
   List<Poi> get pointsOfInterest;
+  @override
+  double get focusPointLat;
+  @override
+  double get focusPointLong;
   @override
   @JsonKey(ignore: true)
   _$$HomePageStateImplCopyWith<_$HomePageStateImpl> get copyWith =>

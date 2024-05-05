@@ -1,73 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/presentation/viewHome-page/home_screen_cubit.dart';
+import 'package:flutter_app/presentation/viewHome-page/home_screen_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
 import '../appStyle.dart';
 import '../presentation/viewHome-page/home_screen.dart';
-import '../presentation/viewHome-page/profil.dart';
 
-class BottomNavigationBarWidget extends StatefulWidget {
+class BottomNavigationBarWidget extends StatelessWidget {
   final int initialIndex;
 
   BottomNavigationBarWidget({this.initialIndex = 0});
 
   @override
-  _BottomNavigationBarWidgetState createState() => _BottomNavigationBarWidgetState();
-}
-
-class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
-  late int _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialIndex ?? 0;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if (_selectedIndex == 3) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfileWidget()),
-        );
-      }
-      if (_selectedIndex == 0) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-          backgroundColor: AppStyles.buttonColor,
-        ),
-        // BottomNavigationBarItem für Favoriten entfernt
-        BottomNavigationBarItem(
-          icon: Icon(Icons.add),
-          label: 'Add point',
-          backgroundColor: AppStyles.buttonColor,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.notifications),
-          label: 'Benachrichtigungen',
-          backgroundColor: AppStyles.buttonColor,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profil',
-          backgroundColor: AppStyles.buttonColor,
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.black,
-      onTap: _onItemTapped,
+    return BlocBuilder<HomePageCubit, HomePageState>(
+      builder: (context, state) {
+        return BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+              backgroundColor: AppStyles.buttonColor,
+            ),
+            // BottomNavigationBarItem für Favoriten entfernt
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Add point',
+              backgroundColor: AppStyles.buttonColor,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              label: 'Benachrichtigungen',
+              backgroundColor: AppStyles.buttonColor,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profil',
+              backgroundColor: AppStyles.buttonColor,
+            ),
+          ],
+          currentIndex: 0,
+          selectedItemColor: Colors.black,
+          onTap: (index) => _onItemTapped(index, context),
+        );
+      },
     );
+  }
+
+  void _onItemTapped(int index, BuildContext context) {
+    context.read<HomePageCubit>().updateIndex(index);
+    if (index == 3) {
+      //context.pushNamed(
+      //  context,
+      //  MaterialPageRoute(builder: (context) => ProfileWidget()),
+      //);
+    }
+    if (index == 0) {
+      context.pushNamed(
+        HomeScreen.routeName,
+      );
+    }
   }
 }

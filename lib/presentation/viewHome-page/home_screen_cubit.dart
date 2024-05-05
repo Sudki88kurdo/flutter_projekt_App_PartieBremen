@@ -21,4 +21,10 @@ class HomePageCubit extends Cubit<HomePageState> {
       print('Error loading points of interest: $e');
     }
   }
+
+  Future<void> updateIndex(int index) async {
+    emit(state.copyWith(
+      selectedIndex: index,
+    ));
+  }
 }

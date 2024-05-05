@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$HomePageState {
+  int get selectedIndex => throw _privateConstructorUsedError;
   List<Poi> get pointsOfInterest => throw _privateConstructorUsedError;
   double get focusPointLat => throw _privateConstructorUsedError;
   double get focusPointLong => throw _privateConstructorUsedError;
@@ -32,7 +33,8 @@ abstract class $HomePageStateCopyWith<$Res> {
       _$HomePageStateCopyWithImpl<$Res, HomePageState>;
   @useResult
   $Res call(
-      {List<Poi> pointsOfInterest,
+      {int selectedIndex,
+      List<Poi> pointsOfInterest,
       double focusPointLat,
       double focusPointLong});
 }
@@ -50,11 +52,16 @@ class _$HomePageStateCopyWithImpl<$Res, $Val extends HomePageState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? selectedIndex = null,
     Object? pointsOfInterest = null,
     Object? focusPointLat = null,
     Object? focusPointLong = null,
   }) {
     return _then(_value.copyWith(
+      selectedIndex: null == selectedIndex
+          ? _value.selectedIndex
+          : selectedIndex // ignore: cast_nullable_to_non_nullable
+              as int,
       pointsOfInterest: null == pointsOfInterest
           ? _value.pointsOfInterest
           : pointsOfInterest // ignore: cast_nullable_to_non_nullable
@@ -80,7 +87,8 @@ abstract class _$$HomePageStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<Poi> pointsOfInterest,
+      {int selectedIndex,
+      List<Poi> pointsOfInterest,
       double focusPointLat,
       double focusPointLong});
 }
@@ -96,11 +104,16 @@ class __$$HomePageStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? selectedIndex = null,
     Object? pointsOfInterest = null,
     Object? focusPointLat = null,
     Object? focusPointLong = null,
   }) {
     return _then(_$HomePageStateImpl(
+      selectedIndex: null == selectedIndex
+          ? _value.selectedIndex
+          : selectedIndex // ignore: cast_nullable_to_non_nullable
+              as int,
       pointsOfInterest: null == pointsOfInterest
           ? _value._pointsOfInterest
           : pointsOfInterest // ignore: cast_nullable_to_non_nullable
@@ -121,11 +134,15 @@ class __$$HomePageStateImplCopyWithImpl<$Res>
 
 class _$HomePageStateImpl implements _HomePageState {
   const _$HomePageStateImpl(
-      {final List<Poi> pointsOfInterest = const [],
+      {this.selectedIndex = 0,
+      final List<Poi> pointsOfInterest = const [],
       this.focusPointLat = 53.0793,
       this.focusPointLong = 8.8017})
       : _pointsOfInterest = pointsOfInterest;
 
+  @override
+  @JsonKey()
+  final int selectedIndex;
   final List<Poi> _pointsOfInterest;
   @override
   @JsonKey()
@@ -145,7 +162,7 @@ class _$HomePageStateImpl implements _HomePageState {
 
   @override
   String toString() {
-    return 'HomePageState(pointsOfInterest: $pointsOfInterest, focusPointLat: $focusPointLat, focusPointLong: $focusPointLong)';
+    return 'HomePageState(selectedIndex: $selectedIndex, pointsOfInterest: $pointsOfInterest, focusPointLat: $focusPointLat, focusPointLong: $focusPointLong)';
   }
 
   @override
@@ -153,6 +170,8 @@ class _$HomePageStateImpl implements _HomePageState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HomePageStateImpl &&
+            (identical(other.selectedIndex, selectedIndex) ||
+                other.selectedIndex == selectedIndex) &&
             const DeepCollectionEquality()
                 .equals(other._pointsOfInterest, _pointsOfInterest) &&
             (identical(other.focusPointLat, focusPointLat) ||
@@ -164,6 +183,7 @@ class _$HomePageStateImpl implements _HomePageState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      selectedIndex,
       const DeepCollectionEquality().hash(_pointsOfInterest),
       focusPointLat,
       focusPointLong);
@@ -177,10 +197,13 @@ class _$HomePageStateImpl implements _HomePageState {
 
 abstract class _HomePageState implements HomePageState {
   const factory _HomePageState(
-      {final List<Poi> pointsOfInterest,
+      {final int selectedIndex,
+      final List<Poi> pointsOfInterest,
       final double focusPointLat,
       final double focusPointLong}) = _$HomePageStateImpl;
 
+  @override
+  int get selectedIndex;
   @override
   List<Poi> get pointsOfInterest;
   @override

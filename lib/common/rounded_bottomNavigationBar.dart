@@ -50,7 +50,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
     );
   }
 
-  void _onItemTapped(int index, BuildContext context) {
+  Future? _onItemTapped(int index, BuildContext context) {
     context.read<HomePageCubit>().updateIndex(index);
     if (index == 3) {
       //context.pushNamed(
@@ -58,10 +58,22 @@ class BottomNavigationBarWidget extends StatelessWidget {
       //  MaterialPageRoute(builder: (context) => ProfileWidget()),
       //);
     }
+    if (index == 1) {
+      return showModalBottomSheet(
+          enableDrag: true,
+          showDragHandle: true,
+          context: context,
+          builder: (BuildContext bc) {
+            return Container(
+              height: 550,
+            );
+          });
+    }
     if (index == 0) {
       context.pushNamed(
         HomeScreen.routeName,
       );
     }
+    return null;
   }
 }

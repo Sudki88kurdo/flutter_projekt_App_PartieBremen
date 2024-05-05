@@ -21,10 +21,17 @@ Poi _$PoiFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Poi {
   String? get id => throw _privateConstructorUsedError;
-  String? get createdAt => throw _privateConstructorUsedError;
-  String? get updatedAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   bool? get active => throw _privateConstructorUsedError;
+  String? get longitude => throw _privateConstructorUsedError;
+  User? get creator => throw _privateConstructorUsedError;
+  dynamic get reports => throw _privateConstructorUsedError;
+  dynamic get surveys => throw _privateConstructorUsedError;
+  dynamic get votings => throw _privateConstructorUsedError;
+  dynamic get comments => throw _privateConstructorUsedError;
+  String? get latitude => throw _privateConstructorUsedError;
   String? get titel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,11 +46,20 @@ abstract class $PoiCopyWith<$Res> {
   @useResult
   $Res call(
       {String? id,
-      String? createdAt,
-      String? updatedAt,
+      DateTime? createdAt,
+      DateTime? updatedAt,
       String? description,
       bool? active,
+      String? longitude,
+      User? creator,
+      dynamic reports,
+      dynamic surveys,
+      dynamic votings,
+      dynamic comments,
+      String? latitude,
       String? titel});
+
+  $UserCopyWith<$Res>? get creator;
 }
 
 /// @nodoc
@@ -63,6 +79,13 @@ class _$PoiCopyWithImpl<$Res, $Val extends Poi> implements $PoiCopyWith<$Res> {
     Object? updatedAt = freezed,
     Object? description = freezed,
     Object? active = freezed,
+    Object? longitude = freezed,
+    Object? creator = freezed,
+    Object? reports = freezed,
+    Object? surveys = freezed,
+    Object? votings = freezed,
+    Object? comments = freezed,
+    Object? latitude = freezed,
     Object? titel = freezed,
   }) {
     return _then(_value.copyWith(
@@ -73,11 +96,11 @@ class _$PoiCopyWithImpl<$Res, $Val extends Poi> implements $PoiCopyWith<$Res> {
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -86,11 +109,51 @@ class _$PoiCopyWithImpl<$Res, $Val extends Poi> implements $PoiCopyWith<$Res> {
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
               as bool?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as String?,
+      creator: freezed == creator
+          ? _value.creator
+          : creator // ignore: cast_nullable_to_non_nullable
+              as User?,
+      reports: freezed == reports
+          ? _value.reports
+          : reports // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      surveys: freezed == surveys
+          ? _value.surveys
+          : surveys // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      votings: freezed == votings
+          ? _value.votings
+          : votings // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      comments: freezed == comments
+          ? _value.comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as String?,
       titel: freezed == titel
           ? _value.titel
           : titel // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res>? get creator {
+    if (_value.creator == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_value.creator!, (value) {
+      return _then(_value.copyWith(creator: value) as $Val);
+    });
   }
 }
 
@@ -102,11 +165,21 @@ abstract class _$$PoiImplCopyWith<$Res> implements $PoiCopyWith<$Res> {
   @useResult
   $Res call(
       {String? id,
-      String? createdAt,
-      String? updatedAt,
+      DateTime? createdAt,
+      DateTime? updatedAt,
       String? description,
       bool? active,
+      String? longitude,
+      User? creator,
+      dynamic reports,
+      dynamic surveys,
+      dynamic votings,
+      dynamic comments,
+      String? latitude,
       String? titel});
+
+  @override
+  $UserCopyWith<$Res>? get creator;
 }
 
 /// @nodoc
@@ -123,6 +196,13 @@ class __$$PoiImplCopyWithImpl<$Res> extends _$PoiCopyWithImpl<$Res, _$PoiImpl>
     Object? updatedAt = freezed,
     Object? description = freezed,
     Object? active = freezed,
+    Object? longitude = freezed,
+    Object? creator = freezed,
+    Object? reports = freezed,
+    Object? surveys = freezed,
+    Object? votings = freezed,
+    Object? comments = freezed,
+    Object? latitude = freezed,
     Object? titel = freezed,
   }) {
     return _then(_$PoiImpl(
@@ -133,11 +213,11 @@ class __$$PoiImplCopyWithImpl<$Res> extends _$PoiCopyWithImpl<$Res, _$PoiImpl>
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -146,6 +226,34 @@ class __$$PoiImplCopyWithImpl<$Res> extends _$PoiCopyWithImpl<$Res, _$PoiImpl>
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
               as bool?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as String?,
+      creator: freezed == creator
+          ? _value.creator
+          : creator // ignore: cast_nullable_to_non_nullable
+              as User?,
+      reports: freezed == reports
+          ? _value.reports
+          : reports // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      surveys: freezed == surveys
+          ? _value.surveys
+          : surveys // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      votings: freezed == votings
+          ? _value.votings
+          : votings // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      comments: freezed == comments
+          ? _value.comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as String?,
       titel: freezed == titel
           ? _value.titel
           : titel // ignore: cast_nullable_to_non_nullable
@@ -163,6 +271,13 @@ class _$PoiImpl implements _Poi {
       this.updatedAt,
       this.description,
       this.active,
+      this.longitude,
+      this.creator,
+      this.reports,
+      this.surveys,
+      this.votings,
+      this.comments,
+      this.latitude,
       this.titel});
 
   factory _$PoiImpl.fromJson(Map<String, dynamic> json) =>
@@ -171,19 +286,33 @@ class _$PoiImpl implements _Poi {
   @override
   final String? id;
   @override
-  final String? createdAt;
+  final DateTime? createdAt;
   @override
-  final String? updatedAt;
+  final DateTime? updatedAt;
   @override
   final String? description;
   @override
   final bool? active;
   @override
+  final String? longitude;
+  @override
+  final User? creator;
+  @override
+  final dynamic reports;
+  @override
+  final dynamic surveys;
+  @override
+  final dynamic votings;
+  @override
+  final dynamic comments;
+  @override
+  final String? latitude;
+  @override
   final String? titel;
 
   @override
   String toString() {
-    return 'Poi(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, active: $active, titel: $titel)';
+    return 'Poi(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, active: $active, longitude: $longitude, creator: $creator, reports: $reports, surveys: $surveys, votings: $votings, comments: $comments, latitude: $latitude, titel: $titel)';
   }
 
   @override
@@ -199,13 +328,35 @@ class _$PoiImpl implements _Poi {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.active, active) || other.active == active) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.creator, creator) || other.creator == creator) &&
+            const DeepCollectionEquality().equals(other.reports, reports) &&
+            const DeepCollectionEquality().equals(other.surveys, surveys) &&
+            const DeepCollectionEquality().equals(other.votings, votings) &&
+            const DeepCollectionEquality().equals(other.comments, comments) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
             (identical(other.titel, titel) || other.titel == titel));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, createdAt, updatedAt, description, active, titel);
+      runtimeType,
+      id,
+      createdAt,
+      updatedAt,
+      description,
+      active,
+      longitude,
+      creator,
+      const DeepCollectionEquality().hash(reports),
+      const DeepCollectionEquality().hash(surveys),
+      const DeepCollectionEquality().hash(votings),
+      const DeepCollectionEquality().hash(comments),
+      latitude,
+      titel);
 
   @JsonKey(ignore: true)
   @override
@@ -224,10 +375,17 @@ class _$PoiImpl implements _Poi {
 abstract class _Poi implements Poi {
   const factory _Poi(
       {final String? id,
-      final String? createdAt,
-      final String? updatedAt,
+      final DateTime? createdAt,
+      final DateTime? updatedAt,
       final String? description,
       final bool? active,
+      final String? longitude,
+      final User? creator,
+      final dynamic reports,
+      final dynamic surveys,
+      final dynamic votings,
+      final dynamic comments,
+      final String? latitude,
       final String? titel}) = _$PoiImpl;
 
   factory _Poi.fromJson(Map<String, dynamic> json) = _$PoiImpl.fromJson;
@@ -235,13 +393,27 @@ abstract class _Poi implements Poi {
   @override
   String? get id;
   @override
-  String? get createdAt;
+  DateTime? get createdAt;
   @override
-  String? get updatedAt;
+  DateTime? get updatedAt;
   @override
   String? get description;
   @override
   bool? get active;
+  @override
+  String? get longitude;
+  @override
+  User? get creator;
+  @override
+  dynamic get reports;
+  @override
+  dynamic get surveys;
+  @override
+  dynamic get votings;
+  @override
+  dynamic get comments;
+  @override
+  String? get latitude;
   @override
   String? get titel;
   @override

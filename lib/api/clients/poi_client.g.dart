@@ -32,7 +32,7 @@ class _PoiClient implements PoiClient {
     )
             .compose(
               _dio.options,
-              '/poi',
+              '/poi/Only',
               queryParameters: queryParameters,
               data: _data,
             )

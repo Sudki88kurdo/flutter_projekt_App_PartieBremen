@@ -1,18 +1,31 @@
+import 'dart:convert';
+
+import 'package:flutter_app/entities/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'poi.freezed.dart';
 part 'poi.g.dart';
 
-part 'poi.freezed.dart';
+Poi poiFromJson(String str) => Poi.fromJson(json.decode(str));
+
+String poiToJson(Poi data) => json.encode(data.toJson());
 
 @freezed
 class Poi with _$Poi {
   const factory Poi({
     String? id,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? description,
     bool? active,
-    String? titel
+    String? longitude,
+    User? creator,
+    dynamic reports,
+    dynamic surveys,
+    dynamic votings,
+    dynamic comments,
+    String? latitude,
+    String? titel,
   }) = _Poi;
 
   factory Poi.fromJson(Map<String, dynamic> json) => _$PoiFromJson(json);

@@ -108,8 +108,6 @@ class RegisterPage extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: () async {
-                    print(registerPageState.pickedDate.runtimeType);
-                    print("pickedDate");
                      await registerPageContext.read<RegisterPageCubit>().register(
                       name: firstNameController.text,
                       surname: lastNameController.text,
@@ -144,14 +142,15 @@ class RegisterPage extends StatelessWidget {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
+    ).then((value) async {
+      if (value != null)
+        {await context.read<RegisterPageCubit>().updatePickedDate(value);}
+      }
     );
-    if (picked != null) {
-      await context.read<RegisterPageCubit>().updatePickedDate(picked);
-    }
   }
 }

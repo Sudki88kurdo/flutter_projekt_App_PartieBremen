@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/api/common/api_result.dart';
 import 'package:flutter_app/presentation/login-page/login_page_cubit.dart';
 import 'package:flutter_app/presentation/login-page/login_page_state.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
@@ -98,13 +97,12 @@ class LoginPage extends StatelessWidget {
   }
   void _login(BuildContext loginContext, LoginPageState loginPageState) async {
 
-    //TODO Implement login
     await loginContext.read<LoginPageCubit>().login(
       email: _usernameController.text,
       password: _passwordController.text,
     ).then((value) => {
     // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
-    if(loginPageState.user != null) {
+    if(value) {
         loginContext.pushNamed(HomeScreen.routeName)
     } else {
       ScaffoldMessenger.of(loginContext).showSnackBar(const SnackBar(

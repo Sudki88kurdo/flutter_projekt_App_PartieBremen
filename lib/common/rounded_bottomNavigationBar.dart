@@ -19,7 +19,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
     return BlocBuilder<HomePageCubit, HomePageState>(
       buildWhen: (previous, current) =>
           previous.selectedIndex != current.selectedIndex,
-      builder: (context, state) {
+      builder: (homePageContext, state) {
         return BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -46,13 +46,15 @@ class BottomNavigationBarWidget extends StatelessWidget {
           ],
           currentIndex: state.selectedIndex,
           selectedItemColor: Colors.black,
-          onTap: (index) => _onItemTapped(index, context),
+          onTap: (index) async =>
+              await _onItemTapped(index, homePageContext, context),
         );
       },
     );
   }
 
-  Future? _onItemTapped(int index, BuildContext context) {
+  Future? _onItemTapped(
+      int index, BuildContext context, BuildContext buildContext) async {
     context.read<HomePageCubit>().updateIndex(index);
     if (index == 3) {
       //context.pushNamed(
@@ -122,7 +124,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
                                 state.newPoiDescription == null ||
                                 state.newPoiOrt == null ||
                                 state.newPoiStreet == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              ScaffoldMessenger.of(buildContext).showSnackBar(
                                   const SnackBar(
                                       content: Text(
                                           'Fehler beim Erstellen des Interessenpunktes')));
@@ -132,24 +134,29 @@ class BottomNavigationBarWidget extends StatelessWidget {
                                   .forwardGeocoding(
                                       address:
                                           "Bremen, ${state.newPoiOrt}, ${state.newPoiStreet}")
-                                  .then((value) {
+                                  .then((value) async {
                                 if (value.latitude == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                  ScaffoldMessenger.of(buildContext)
+                                      .showSnackBar(const SnackBar(
                                           content: Text(
                                               'Fehler beim Erstellen des Interessenpunktes')));
                                 } else {
-                                  context.read<HomePageCubit>().create(
-                                      title: state.newPoiTitle!,
-                                      description: state.newPoiDescription!,
-                                      active: true,
-                                      creatorId: context
-                                          .read<AppCubit>()
-                                          .state
-                                          .user!
-                                          .id!,
-                                      latitude: value.latitude.toString(),
-                                      longitude: value.longitude.toString());
+                                  await context
+                                      .read<HomePageCubit>()
+                                      .create(
+                                          title: state.newPoiTitle!,
+                                          description: state.newPoiDescription!,
+                                          active: true,
+                                          creatorId: context
+                                              .read<AppCubit>()
+                                              .state
+                                              .user!
+                                              .id!,
+                                          latitude: value.latitude.toString(),
+                                          longitude: value.longitude.toString())
+                                      .then((value) => context
+                                          .read<HomePageCubit>()
+                                          .loadPointsOfInterest());
                                 }
                                 return value;
                               });
@@ -164,9 +171,12 @@ class BottomNavigationBarWidget extends StatelessWidget {
           });
     }
     if (index == 0) {
-      context.pushNamed(
-        HomeScreen.routeName,
-      );
+      await context
+          .read<HomePageCubit>()
+          .loadPointsOfInterest()
+          .then((value) => context.goNamed(
+                HomeScreen.routeName,
+              ));
     }
     return null;
   }

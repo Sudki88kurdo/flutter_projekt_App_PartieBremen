@@ -31,6 +31,8 @@ class HomeScreen extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: BlocBuilder<HomePageCubit, HomePageState>(
+              buildWhen: (prev, next) =>
+                  prev.pointsOfInterest.length != next.pointsOfInterest.length,
               builder: (mapcontext, mapstate) {
                 final MapController _mapController = MapController();
                 GeoCode geoCode = GeoCode();

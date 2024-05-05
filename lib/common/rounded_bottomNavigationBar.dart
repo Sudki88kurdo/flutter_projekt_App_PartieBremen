@@ -62,10 +62,50 @@ class BottomNavigationBarWidget extends StatelessWidget {
       return showModalBottomSheet(
           enableDrag: true,
           showDragHandle: true,
+          isScrollControlled: true,
           context: context,
           builder: (BuildContext bc) {
             return Container(
-              height: 550,
+              height: 500,
+              child: Column(
+                children: [
+                  Text("Neuen Interessenpunkt erstellen"),
+                  Padding(
+                    padding: const EdgeInsets.all(100.0),
+                    child: Flex(
+                      direction: Axis.vertical,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Titel",
+                            filled: false,
+                          ),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Beschreibung",
+                            filled: false,
+                          ),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Ort",
+                            filled: false,
+                          ),
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Strasse",
+                            filled: false,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             );
           });
     }

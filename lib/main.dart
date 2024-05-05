@@ -10,12 +10,27 @@ import 'api/repositories/user_repository.dart';
 import 'presentation/start-page/start_page.dart';
 
 final logger = Logger();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  final dio = Dio(); // Provide a dio instance
-  //dio.options.headers['Demo-Header'] = 'demo header'; // config your dio headers globally
   const baseUrl = 'https://api.partibremen.student.28apps-software.de/';
+  final baseOptions = BaseOptions(
+    baseUrl: baseUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'client-type': 'app',
+    },
+    validateStatus: (status) {
+      return status! < 400;
+    },
+    followRedirects: false,
+    connectTimeout: const Duration(seconds: 30),
+    receiveTimeout: const Duration(seconds: 30),
+  );
+  final dio = Dio(baseOptions); // Provide a dio instance
+  //dio.options.headers['Demo-Header'] = 'demo header'; // config your dio headers globally
 
   runApp(EasyLocalization(supportedLocales: const [Locale('en')],
       fallbackLocale: const Locale('en'), path: 'assets/translations', child: MultiRepositoryProvider(

@@ -29,7 +29,7 @@ class UserRepository extends BaseRepository<UserClient> {
             surname: surname,
             password: password,
             verified: verified,
-            dob: dob,
+            dob: dob.toIso8601String(),
             active: true),
       );
 

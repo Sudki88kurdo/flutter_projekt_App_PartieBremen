@@ -35,7 +35,7 @@ class LoginPage extends StatelessWidget {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('lib/assets/hintergrundBremen2.jpg'),
+              image: AssetImage('assets/images/hintergrundBremen2.jpg'),
               fit: BoxFit.cover,
             ),
           ),

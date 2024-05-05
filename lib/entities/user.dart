@@ -4,7 +4,7 @@ import 'dart:convert';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
-
+enum Role { DEFAULT, USER, CREATOR, MODERATOR, ADMIN, DECIDER }
 @freezed
 class User with _$User {
   const factory User({
@@ -17,6 +17,7 @@ class User with _$User {
     String? email,
     String? password,
     bool? verified,
+    @Default(Role.DEFAULT) Role? role,
     bool? active,
   }) = _User;
 

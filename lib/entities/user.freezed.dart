@@ -29,6 +29,7 @@ mixin _$User {
   String? get email => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
   bool? get verified => throw _privateConstructorUsedError;
+  Role? get role => throw _privateConstructorUsedError;
   bool? get active => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,6 +52,7 @@ abstract class $UserCopyWith<$Res> {
       String? email,
       String? password,
       bool? verified,
+      Role? role,
       bool? active});
 }
 
@@ -76,6 +78,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? email = freezed,
     Object? password = freezed,
     Object? verified = freezed,
+    Object? role = freezed,
     Object? active = freezed,
   }) {
     return _then(_value.copyWith(
@@ -115,6 +118,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
               as bool?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as Role?,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -140,6 +147,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String? email,
       String? password,
       bool? verified,
+      Role? role,
       bool? active});
 }
 
@@ -162,6 +170,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? password = freezed,
     Object? verified = freezed,
+    Object? role = freezed,
     Object? active = freezed,
   }) {
     return _then(_$UserImpl(
@@ -201,6 +210,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
               as bool?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as Role?,
       active: freezed == active
           ? _value.active
           : active // ignore: cast_nullable_to_non_nullable
@@ -222,6 +235,7 @@ class _$UserImpl implements _User {
       this.email,
       this.password,
       this.verified,
+      this.role = Role.DEFAULT,
       this.active});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
@@ -247,11 +261,14 @@ class _$UserImpl implements _User {
   @override
   final bool? verified;
   @override
+  @JsonKey()
+  final Role? role;
+  @override
   final bool? active;
 
   @override
   String toString() {
-    return 'User(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, surname: $surname, dob: $dob, email: $email, password: $password, verified: $verified, active: $active)';
+    return 'User(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, surname: $surname, dob: $dob, email: $email, password: $password, verified: $verified, role: $role, active: $active)';
   }
 
   @override
@@ -272,13 +289,14 @@ class _$UserImpl implements _User {
                 other.password == password) &&
             (identical(other.verified, verified) ||
                 other.verified == verified) &&
+            (identical(other.role, role) || other.role == role) &&
             (identical(other.active, active) || other.active == active));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt, name,
-      surname, dob, email, password, verified, active);
+      surname, dob, email, password, verified, role, active);
 
   @JsonKey(ignore: true)
   @override
@@ -305,6 +323,7 @@ abstract class _User implements User {
       final String? email,
       final String? password,
       final bool? verified,
+      final Role? role,
       final bool? active}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
@@ -327,6 +346,8 @@ abstract class _User implements User {
   String? get password;
   @override
   bool? get verified;
+  @override
+  Role? get role;
   @override
   bool? get active;
   @override

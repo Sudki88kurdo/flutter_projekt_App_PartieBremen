@@ -22,7 +22,7 @@ class StartPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/assets/hintergrundBremen1.jpg'),
+            image: AssetImage('assets/images/hintergrundBremen1.jpg'),
             fit: BoxFit.cover,
           ),
         ),

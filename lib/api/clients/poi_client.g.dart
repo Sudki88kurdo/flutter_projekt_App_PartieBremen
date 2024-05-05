@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_client.dart';
+part of 'poi_client.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'user_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _UserClient implements UserClient {
-  _UserClient(
+class _PoiClient implements PoiClient {
+  _PoiClient(
     this._dio, {
     this.baseUrl,
   });
@@ -19,36 +19,20 @@ class _UserClient implements UserClient {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<User>> registerUser({
-    required String name,
-    required String surname,
-    required String dob,
-    required String email,
-    required String password,
-    required bool verified,
-    required bool active,
-  }) async {
+  Future<HttpResponse<List<Poi>>> getAllPois() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = {
-      'name': name,
-      'surname': surname,
-      'dob': dob,
-      'email': email,
-      'password': password,
-      'verified': verified,
-      'active': active,
-    };
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<HttpResponse<User>>(Options(
-      method: 'POST',
+        .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<Poi>>>(Options(
+      method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/user',
+              '/poi',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -57,41 +41,9 @@ class _UserClient implements UserClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = User.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<User>> loginUser({
-    required String email,
-    required String password,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = {
-      'email': email,
-      'password': password,
-    };
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<HttpResponse<User>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/user/login',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = User.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => Poi.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

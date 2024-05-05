@@ -10,15 +10,18 @@ class LoginPageCubit extends Cubit<LoginPageState> {
 
   LoginPageCubit(this._userRepository) : super(const LoginPageState());
 
-  Future<void> login({required String email, required String password}) async {
+  Future<bool> login({required String email, required String password}) async {
     var res =  await _userRepository.loginUser(email: email, password: password);
+    bool successful = false;
     res.whenOrNull(success: (value) {
       emit(
         state.copyWith(
           user: value
         )
       );
+      successful = true;
     });
+    return successful;
   }
 
   Future<void> updatePasswordVisible() async {

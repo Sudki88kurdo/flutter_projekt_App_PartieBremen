@@ -15,6 +15,8 @@ class BottomNavigationBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomePageCubit, HomePageState>(
+      buildWhen: (previous, current) =>
+          previous.selectedIndex != current.selectedIndex,
       builder: (context, state) {
         return BottomNavigationBar(
           items: <BottomNavigationBarItem>[
@@ -40,7 +42,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
               backgroundColor: AppStyles.buttonColor,
             ),
           ],
-          currentIndex: 0,
+          currentIndex: state.selectedIndex,
           selectedItemColor: Colors.black,
           onTap: (index) => _onItemTapped(index, context),
         );

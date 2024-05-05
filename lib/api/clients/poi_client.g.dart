@@ -19,6 +19,48 @@ class _PoiClient implements PoiClient {
   String? baseUrl;
 
   @override
+  Future<HttpResponse<Poi>> create({
+    required String title,
+    required String description,
+    required bool active,
+    required String creatorId,
+    required String latitude,
+    required String longitude,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'title': title,
+      'description': description,
+      'active': active,
+      'creatorId': creatorId,
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<HttpResponse<Poi>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/poi',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Poi.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<List<Poi>>> getAllPois() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

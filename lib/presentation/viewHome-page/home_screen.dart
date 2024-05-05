@@ -68,10 +68,14 @@ class HomeScreen extends StatelessWidget {
                                       ? mapstate.pointsOfInterest
                                           .map((poi) => Marker(
                                                 point: LatLng(
-                                                    ((poi.latitude ?? 53.0793)
-                                                        as double),
-                                                    (poi.longitude ?? 8.8017)
-                                                        as double),
+                                                    (poi.latitude != null
+                                                        ? double.parse(
+                                                            poi.latitude!)
+                                                        : 53.0793),
+                                                    (poi.longitude != null
+                                                        ? double.parse(
+                                                            poi.longitude!)
+                                                        : 8.8017)),
                                                 width: 150.0,
                                                 height: 150.0,
                                                 child: GestureDetector(

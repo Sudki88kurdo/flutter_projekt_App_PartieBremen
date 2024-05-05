@@ -20,6 +20,10 @@ mixin _$HomePageState {
   List<Poi> get pointsOfInterest => throw _privateConstructorUsedError;
   double get focusPointLat => throw _privateConstructorUsedError;
   double get focusPointLong => throw _privateConstructorUsedError;
+  String? get newPoiTitle => throw _privateConstructorUsedError;
+  String? get newPoiDescription => throw _privateConstructorUsedError;
+  String? get newPoiOrt => throw _privateConstructorUsedError;
+  String? get newPoiStreet => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomePageStateCopyWith<HomePageState> get copyWith =>
@@ -36,7 +40,11 @@ abstract class $HomePageStateCopyWith<$Res> {
       {int selectedIndex,
       List<Poi> pointsOfInterest,
       double focusPointLat,
-      double focusPointLong});
+      double focusPointLong,
+      String? newPoiTitle,
+      String? newPoiDescription,
+      String? newPoiOrt,
+      String? newPoiStreet});
 }
 
 /// @nodoc
@@ -56,6 +64,10 @@ class _$HomePageStateCopyWithImpl<$Res, $Val extends HomePageState>
     Object? pointsOfInterest = null,
     Object? focusPointLat = null,
     Object? focusPointLong = null,
+    Object? newPoiTitle = freezed,
+    Object? newPoiDescription = freezed,
+    Object? newPoiOrt = freezed,
+    Object? newPoiStreet = freezed,
   }) {
     return _then(_value.copyWith(
       selectedIndex: null == selectedIndex
@@ -74,6 +86,22 @@ class _$HomePageStateCopyWithImpl<$Res, $Val extends HomePageState>
           ? _value.focusPointLong
           : focusPointLong // ignore: cast_nullable_to_non_nullable
               as double,
+      newPoiTitle: freezed == newPoiTitle
+          ? _value.newPoiTitle
+          : newPoiTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPoiDescription: freezed == newPoiDescription
+          ? _value.newPoiDescription
+          : newPoiDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPoiOrt: freezed == newPoiOrt
+          ? _value.newPoiOrt
+          : newPoiOrt // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPoiStreet: freezed == newPoiStreet
+          ? _value.newPoiStreet
+          : newPoiStreet // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -90,7 +118,11 @@ abstract class _$$HomePageStateImplCopyWith<$Res>
       {int selectedIndex,
       List<Poi> pointsOfInterest,
       double focusPointLat,
-      double focusPointLong});
+      double focusPointLong,
+      String? newPoiTitle,
+      String? newPoiDescription,
+      String? newPoiOrt,
+      String? newPoiStreet});
 }
 
 /// @nodoc
@@ -108,6 +140,10 @@ class __$$HomePageStateImplCopyWithImpl<$Res>
     Object? pointsOfInterest = null,
     Object? focusPointLat = null,
     Object? focusPointLong = null,
+    Object? newPoiTitle = freezed,
+    Object? newPoiDescription = freezed,
+    Object? newPoiOrt = freezed,
+    Object? newPoiStreet = freezed,
   }) {
     return _then(_$HomePageStateImpl(
       selectedIndex: null == selectedIndex
@@ -126,6 +162,22 @@ class __$$HomePageStateImplCopyWithImpl<$Res>
           ? _value.focusPointLong
           : focusPointLong // ignore: cast_nullable_to_non_nullable
               as double,
+      newPoiTitle: freezed == newPoiTitle
+          ? _value.newPoiTitle
+          : newPoiTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPoiDescription: freezed == newPoiDescription
+          ? _value.newPoiDescription
+          : newPoiDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPoiOrt: freezed == newPoiOrt
+          ? _value.newPoiOrt
+          : newPoiOrt // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPoiStreet: freezed == newPoiStreet
+          ? _value.newPoiStreet
+          : newPoiStreet // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -137,7 +189,11 @@ class _$HomePageStateImpl implements _HomePageState {
       {this.selectedIndex = 0,
       final List<Poi> pointsOfInterest = const [],
       this.focusPointLat = 53.0793,
-      this.focusPointLong = 8.8017})
+      this.focusPointLong = 8.8017,
+      this.newPoiTitle = null,
+      this.newPoiDescription = null,
+      this.newPoiOrt = null,
+      this.newPoiStreet = null})
       : _pointsOfInterest = pointsOfInterest;
 
   @override
@@ -159,10 +215,22 @@ class _$HomePageStateImpl implements _HomePageState {
   @override
   @JsonKey()
   final double focusPointLong;
+  @override
+  @JsonKey()
+  final String? newPoiTitle;
+  @override
+  @JsonKey()
+  final String? newPoiDescription;
+  @override
+  @JsonKey()
+  final String? newPoiOrt;
+  @override
+  @JsonKey()
+  final String? newPoiStreet;
 
   @override
   String toString() {
-    return 'HomePageState(selectedIndex: $selectedIndex, pointsOfInterest: $pointsOfInterest, focusPointLat: $focusPointLat, focusPointLong: $focusPointLong)';
+    return 'HomePageState(selectedIndex: $selectedIndex, pointsOfInterest: $pointsOfInterest, focusPointLat: $focusPointLat, focusPointLong: $focusPointLong, newPoiTitle: $newPoiTitle, newPoiDescription: $newPoiDescription, newPoiOrt: $newPoiOrt, newPoiStreet: $newPoiStreet)';
   }
 
   @override
@@ -177,7 +245,15 @@ class _$HomePageStateImpl implements _HomePageState {
             (identical(other.focusPointLat, focusPointLat) ||
                 other.focusPointLat == focusPointLat) &&
             (identical(other.focusPointLong, focusPointLong) ||
-                other.focusPointLong == focusPointLong));
+                other.focusPointLong == focusPointLong) &&
+            (identical(other.newPoiTitle, newPoiTitle) ||
+                other.newPoiTitle == newPoiTitle) &&
+            (identical(other.newPoiDescription, newPoiDescription) ||
+                other.newPoiDescription == newPoiDescription) &&
+            (identical(other.newPoiOrt, newPoiOrt) ||
+                other.newPoiOrt == newPoiOrt) &&
+            (identical(other.newPoiStreet, newPoiStreet) ||
+                other.newPoiStreet == newPoiStreet));
   }
 
   @override
@@ -186,7 +262,11 @@ class _$HomePageStateImpl implements _HomePageState {
       selectedIndex,
       const DeepCollectionEquality().hash(_pointsOfInterest),
       focusPointLat,
-      focusPointLong);
+      focusPointLong,
+      newPoiTitle,
+      newPoiDescription,
+      newPoiOrt,
+      newPoiStreet);
 
   @JsonKey(ignore: true)
   @override
@@ -200,7 +280,11 @@ abstract class _HomePageState implements HomePageState {
       {final int selectedIndex,
       final List<Poi> pointsOfInterest,
       final double focusPointLat,
-      final double focusPointLong}) = _$HomePageStateImpl;
+      final double focusPointLong,
+      final String? newPoiTitle,
+      final String? newPoiDescription,
+      final String? newPoiOrt,
+      final String? newPoiStreet}) = _$HomePageStateImpl;
 
   @override
   int get selectedIndex;
@@ -210,6 +294,14 @@ abstract class _HomePageState implements HomePageState {
   double get focusPointLat;
   @override
   double get focusPointLong;
+  @override
+  String? get newPoiTitle;
+  @override
+  String? get newPoiDescription;
+  @override
+  String? get newPoiOrt;
+  @override
+  String? get newPoiStreet;
   @override
   @JsonKey(ignore: true)
   _$$HomePageStateImplCopyWith<_$HomePageStateImpl> get copyWith =>

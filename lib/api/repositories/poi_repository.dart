@@ -11,4 +11,22 @@ class PoiRepository extends BaseRepository<PoiClient> {
   Future<ApiResult<List<Poi>>> getPois() async {
     return execute(() => client.getAllPois());
   }
+
+  Future<ApiResult<Poi>> create({
+    required String title,
+    required String description,
+    required bool active,
+    required String creatorId,
+    required String latitude,
+    required String longitude,
+  }) async =>
+      execute(
+        () => client.create(
+            title: title,
+            description: description,
+            active: true,
+            creatorId: creatorId,
+            latitude: latitude,
+            longitude: longitude),
+      );
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/viewHome-page/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/viewHome-page/home_screen_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocode/geocode.dart';
 import 'package:go_router/go_router.dart';
 
 import '../appStyle.dart';
@@ -10,7 +12,7 @@ import '../presentation/viewHome-page/home_screen.dart';
 class BottomNavigationBarWidget extends StatelessWidget {
   final int initialIndex;
 
-  BottomNavigationBarWidget({this.initialIndex = 0});
+  const BottomNavigationBarWidget({super.key, this.initialIndex = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -65,47 +67,99 @@ class BottomNavigationBarWidget extends StatelessWidget {
           isScrollControlled: true,
           context: context,
           builder: (BuildContext bc) {
-            return Container(
-              height: 500,
-              child: Column(
-                children: [
-                  Text("Neuen Interessenpunkt erstellen"),
-                  Padding(
-                    padding: const EdgeInsets.all(100.0),
-                    child: Flex(
-                      direction: Axis.vertical,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Titel",
-                            filled: false,
-                          ),
+            return BlocBuilder<HomePageCubit, HomePageState>(
+              builder: (context, state) {
+                return Container(
+                  height: 500,
+                  child: Column(
+                    children: [
+                      const Text("Neuen Interessenpunkt erstellen"),
+                      Padding(
+                        padding: const EdgeInsets.all(100.0),
+                        child: Flex(
+                          direction: Axis.vertical,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: "Titel",
+                                  filled: false,
+                                ),
+                                onChanged: (title) => context
+                                    .read<HomePageCubit>()
+                                    .updateNewPoiTitle(title)),
+                            TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: "Beschreibung",
+                                  filled: false,
+                                ),
+                                onChanged: (description) => context
+                                    .read<HomePageCubit>()
+                                    .updateNewPoiDescription(description)),
+                            TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: "Ort",
+                                  filled: false,
+                                ),
+                                onChanged: (ort) => context
+                                    .read<HomePageCubit>()
+                                    .updateNewPoiOrt(ort)),
+                            TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: "Strasse",
+                                  filled: false,
+                                ),
+                                onChanged: (street) => context
+                                    .read<HomePageCubit>()
+                                    .updateNewPoiStreet(street))
+                          ],
                         ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Beschreibung",
-                            filled: false,
-                          ),
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Ort",
-                            filled: false,
-                          ),
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Strasse",
-                            filled: false,
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                      FilledButton(
+                          onPressed: () async {
+                            if (state.newPoiTitle == null ||
+                                state.newPoiDescription == null ||
+                                state.newPoiOrt == null ||
+                                state.newPoiStreet == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Fehler beim Erstellen des Interessenpunktes')));
+                            } else {
+                              GeoCode geoCode = GeoCode();
+                              Coordinates coords = await geoCode
+                                  .forwardGeocoding(
+                                      address:
+                                          "Bremen, ${state.newPoiOrt}, ${state.newPoiStreet}")
+                                  .then((value) {
+                                if (value.latitude == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Fehler beim Erstellen des Interessenpunktes')));
+                                } else {
+                                  context.read<HomePageCubit>().create(
+                                      title: state.newPoiTitle!,
+                                      description: state.newPoiDescription!,
+                                      active: true,
+                                      creatorId: context
+                                          .read<AppCubit>()
+                                          .state
+                                          .user!
+                                          .id!,
+                                      latitude: value.latitude.toString(),
+                                      longitude: value.longitude.toString());
+                                }
+                                return value;
+                              });
+                            }
+                          },
+                          child: const Text("Erstellen"))
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             );
           });
     }

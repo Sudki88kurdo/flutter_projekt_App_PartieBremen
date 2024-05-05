@@ -30,124 +30,121 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: BlocBuilder<HomePageCubit, HomePageState>(
-                builder: (mapcontext, mapstate) {
-                  final MapController _mapController = MapController();
-                  GeoCode geoCode = GeoCode();
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 350,
-                            height: 65.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: SearchBar(
-                                shape: MaterialStatePropertyAll<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadiusDirectional.circular(12),
-                                  ),
-                                ),
-                                backgroundColor:
-                                    const MaterialStatePropertyAll<Color>(
-                                        Color.fromRGBO(223, 238, 218, 1.0)),
-                                padding:
-                                    const MaterialStatePropertyAll<EdgeInsets>(
-                                        EdgeInsets.symmetric(horizontal: 16.0)),
-                                hintText: 'Ort suchen',
-                                onTap: () {},
-                                onChanged: (search) async {
-                                  Coordinates coordinates =
-                                      await geoCode.forwardGeocoding(
-                                          address: "Bremen, $search");
-                                  if (coordinates.latitude != null) {
-                                    _mapController.move(
-                                        LatLng(coordinates.latitude!,
-                                            coordinates.longitude!),
-                                        12);
-                                  }
-                                },
-                                leading: const Icon(Icons.search,
-                                    color: Colors.green),
-                                trailing: const <Widget>[],
+            child: BlocBuilder<HomePageCubit, HomePageState>(
+              builder: (mapcontext, mapstate) {
+                final MapController _mapController = MapController();
+                GeoCode geoCode = GeoCode();
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 1,
+                          height: MediaQuery.of(context).size.height * 1,
+                          child: FlutterMap(
+                            mapController: _mapController,
+                            options: const MapOptions(
+                              initialCenter: LatLng(53.0793, 8.8017),
+                              initialZoom: 12,
+                              interactionOptions: InteractionOptions(
+                                flags: InteractiveFlag.drag |
+                                    InteractiveFlag.flingAnimation |
+                                    InteractiveFlag.pinchMove |
+                                    InteractiveFlag.pinchZoom |
+                                    InteractiveFlag.doubleTapZoom |
+                                    InteractiveFlag.doubleTapDragZoom |
+                                    InteractiveFlag.scrollWheelZoom,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: FlutterMap(
-                          mapController: _mapController,
-                          options: const MapOptions(
-                            initialCenter: LatLng(53.0793, 8.8017),
-                            initialZoom: 12,
-                            interactionOptions: InteractionOptions(
-                              flags: InteractiveFlag.drag |
-                                  InteractiveFlag.flingAnimation |
-                                  InteractiveFlag.pinchMove |
-                                  InteractiveFlag.pinchZoom |
-                                  InteractiveFlag.doubleTapZoom |
-                                  InteractiveFlag.doubleTapDragZoom |
-                                  InteractiveFlag.scrollWheelZoom,
-                            ),
-                          ),
-                          children: [
-                            TileLayer(
-                              urlTemplate:
-                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                              userAgentPackageName: 'com.example.app',
-                            ),
-                            MarkerLayer(
-                                markers: mapstate.pointsOfInterest.isNotEmpty
-                                    ? mapstate.pointsOfInterest
-                                        .map((poi) => Marker(
-                                              point: LatLng(
-                                                  ((poi.latitude ?? 53.0793)
-                                                      as double),
-                                                  (poi.longitude ?? 8.8017)
-                                                      as double),
-                                              width: 150.0,
-                                              height: 150.0,
-                                              child: GestureDetector(
-                                                child: const Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.red,
-                                                  size: 50.0,
+                            children: [
+                              TileLayer(
+                                urlTemplate:
+                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                userAgentPackageName: 'com.example.app',
+                              ),
+                              MarkerLayer(
+                                  markers: mapstate.pointsOfInterest.isNotEmpty
+                                      ? mapstate.pointsOfInterest
+                                          .map((poi) => Marker(
+                                                point: LatLng(
+                                                    ((poi.latitude ?? 53.0793)
+                                                        as double),
+                                                    (poi.longitude ?? 8.8017)
+                                                        as double),
+                                                width: 150.0,
+                                                height: 150.0,
+                                                child: GestureDetector(
+                                                  child: const Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.red,
+                                                    size: 50.0,
+                                                  ),
                                                 ),
-                                              ),
-                                            ))
-                                        .toList()
-                                    : []),
-                            RichAttributionWidget(
-                              attributions: [
-                                TextSourceAttribution(
-                                  'OpenStreetMap contributors',
-                                  onTap: () => launchUrl(Uri.parse(
-                                      'https://openstreetmap.org/copyright')),
+                                              ))
+                                          .toList()
+                                      : []),
+                              RichAttributionWidget(
+                                attributions: [
+                                  TextSourceAttribution(
+                                    'OpenStreetMap contributors',
+                                    onTap: () => launchUrl(Uri.parse(
+                                        'https://openstreetmap.org/copyright')),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Flex(
+                          direction: Axis.horizontal,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 350,
+                              height: 65.0,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: SearchBar(
+                                  shape: MaterialStatePropertyAll<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadiusDirectional.circular(12),
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      const MaterialStatePropertyAll<Color>(
+                                          Color.fromRGBO(223, 238, 218, 1.0)),
+                                  padding: const MaterialStatePropertyAll<
+                                          EdgeInsets>(
+                                      EdgeInsets.symmetric(horizontal: 16.0)),
+                                  hintText: 'Ort suchen',
+                                  onTap: () {},
+                                  onChanged: (search) async {
+                                    Coordinates coordinates =
+                                        await geoCode.forwardGeocoding(
+                                            address: "Bremen, $search");
+                                    if (coordinates.latitude != null) {
+                                      _mapController.move(
+                                          LatLng(coordinates.latitude!,
+                                              coordinates.longitude!),
+                                          12);
+                                    }
+                                  },
+                                  leading: const Icon(Icons.search,
+                                      color: Colors.green),
+                                  trailing: const <Widget>[],
                                 ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           bottomNavigationBar: BottomNavigationBarWidget(initialIndex: 0),

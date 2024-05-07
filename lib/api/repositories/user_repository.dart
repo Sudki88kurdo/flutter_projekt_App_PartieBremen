@@ -33,4 +33,25 @@ class UserRepository extends BaseRepository<UserClient> {
       execute(
             () => client.loginUser(email: email, password: password),
       );
+
+  Future<ApiResult<User>> updateUser({
+    required int userId,
+    String? name,
+    String? surname,
+    DateTime? dob,
+    String? email,
+    String? password,
+    bool? verified,
+    bool? active,
+  }) async =>
+      execute(
+            () => client.updateUser(
+          userId,
+          name: name,
+          surname: surname,
+          dob: dob,
+          email: email,
+          password: password,
+        ),
+      );
 }

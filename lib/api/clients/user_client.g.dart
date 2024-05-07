@@ -9,8 +9,7 @@ part of 'user_client.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
 class _UserClient implements UserClient {
-  _UserClient(
-    this._dio, {
+  _UserClient(this._dio, {
     this.baseUrl,
   });
 
@@ -46,17 +45,17 @@ class _UserClient implements UserClient {
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/user',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+        .compose(
+      _dio.options,
+      '/user',
+      queryParameters: queryParameters,
+      data: _data,
+    )
+        .copyWith(
+        baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
     final value = User.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -80,21 +79,22 @@ class _UserClient implements UserClient {
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/user/login',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
+        .compose(
+      _dio.options,
+      '/user/login',
+      queryParameters: queryParameters,
+      data: _data,
+    )
+        .copyWith(
+        baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
     final value = User.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
+
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
@@ -109,11 +109,11 @@ class _UserClient implements UserClient {
     return requestOptions;
   }
 
-  String _combineBaseUrls(
-    String dioBaseUrl,
-    String? baseUrl,
-  ) {
-    if (baseUrl == null || baseUrl.trim().isEmpty) {
+  String _combineBaseUrls(String dioBaseUrl,
+      String? baseUrl,) {
+    if (baseUrl == null || baseUrl
+        .trim()
+        .isEmpty) {
       return dioBaseUrl;
     }
 
@@ -125,4 +125,50 @@ class _UserClient implements UserClient {
 
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
+
+  @override
+  Future<HttpResponse<User>> updateUser(int userId, {
+    String? name,
+    String? surname,
+    DateTime? dob,
+    String? email,
+    String? password
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      if (name != null) 'name': name,
+      if (surname != null) 'surname': surname,
+      if (dob != null) 'dob': dob,
+      if (email != null) 'email': email,
+      if (password != null) 'password': password,
+    };
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<HttpResponse<User>>(
+        Options(
+          method: 'PUT',
+          headers: _headers,
+          extra: _extra,
+        ).compose(
+          _dio.options,
+          '/user/$userId',
+          queryParameters: queryParameters,
+          data: _data,
+        ).copyWith(
+          baseUrl: _combineBaseUrls(
+            _dio.options.baseUrl,
+            baseUrl,
+          ),
+        ),
+      ),
+    );
+    {
+      // TODO: implement updateUser
+      throw UnimplementedError();
+    }
+  }
 }
+
+
+

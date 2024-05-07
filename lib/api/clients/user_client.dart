@@ -26,5 +26,16 @@ abstract class UserClient {
   }
   );
 
+  @PUT("/user/{userId}")
+  @PUT("/user/{userId}")
+  Future<HttpResponse<User>> updateUser(
+      @Path("userId") int userId, {
+        @Field("name") String? name,
+        @Field("surname") String? surname,
+        @Field("dob") DateTime? dob,
+        @Field("email") String? email,
+        @Field("password") String? password,
+
+      });
 }
 

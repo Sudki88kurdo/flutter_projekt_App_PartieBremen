@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
-
 import '../../../appStyle.dart';
+import '../../../entities/user.dart';
 
-class ProfileEditWidget extends StatefulWidget {
-  @override
-  _ProfileEditWidgetState createState() => _ProfileEditWidgetState();
-}
+class ProfileEditWidget extends StatelessWidget {
+ static User? user1;
+  setUser(User user) {
+    user1 = user;
 
-class _ProfileEditWidgetState extends State<ProfileEditWidget> {
+    print("*****************");
+    print(user1);
+  }
+
+  ProfileEditWidget({Key? key}) : super(key: key);
+
   TextEditingController _nameController = TextEditingController();
   TextEditingController _surnameController = TextEditingController();
   TextEditingController _dobController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+    _nameController.text=user1!.name!;
+    _surnameController.text=user1!.surname!;
+    _dobController.text=user1!.dob!.toString();
+    _emailController.text=user1!.email!;
+    _passwordController.text=user1!.password!;
+
     return Scaffold(
 
       appBar: AppBar(
@@ -50,7 +62,9 @@ class _ProfileEditWidgetState extends State<ProfileEditWidget> {
                 labelText: 'Geburtsdatum',
               ),
             ),
+
             TextField(
+
               controller: _emailController,
               decoration: InputDecoration(
                 labelText: 'E-Mail',
@@ -64,21 +78,12 @@ class _ProfileEditWidgetState extends State<ProfileEditWidget> {
               obscureText: true,
             ),
             SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () {
-                // Hier kannst du die Werte speichern oder verarbeiten
-                String name = _nameController.text;
-                String surname = _surnameController.text;
-                String dob = _dobController.text;
-                String email = _emailController.text;
-                String password = _passwordController.text;
+                print(user1);
 
-                // Beispiel: Ausgabe der eingegebenen Werte
-                print('Name: $name');
-                print('Nachname: $surname');
-                print('Geburtsdatum: $dob');
-                print('E-Mail: $email');
-                print('Passwort: $password');
+
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppStyles.buttonColor,
@@ -93,5 +98,6 @@ class _ProfileEditWidgetState extends State<ProfileEditWidget> {
       ),
     );
   }
+
 }
 

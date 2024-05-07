@@ -7,6 +7,7 @@ part 'user.g.dart';
 
 @freezed
 class User with _$User {
+
   const factory User({
     @Default("") String? id,
     DateTime? createdAt,
@@ -19,6 +20,7 @@ class User with _$User {
     bool? verified,
     bool? active,
   }) = _User;
+
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }

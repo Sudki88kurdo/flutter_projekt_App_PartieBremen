@@ -73,8 +73,8 @@ class HomeScreen extends StatelessWidget {
                                     ? mapstate.pointsOfInterest
                                         .map(
                                           (poi) => isLatLngValid(
-                                            lat: poi.latitude,
-                                            lng: poi.longitude,
+                                            poi.latitude,
+                                            poi.longitude,
                                           )
                                               ? Marker(
                                                   point: LatLng(
@@ -165,7 +165,10 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 
-  bool isLatLngValid({required lat, required lng}) {
+  bool isLatLngValid(String? lat, String? lng) {
+    if (lat == null || lng == null) {
+      return false;
+    }
     return double.tryParse(lat) != null && double.tryParse(lng) != null;
   }
 }

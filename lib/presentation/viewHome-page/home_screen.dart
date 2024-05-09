@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app/main.dart';
 import 'package:flutter_app/presentation/viewHome-page/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/viewHome-page/home_screen_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,30 +69,35 @@ class HomeScreen extends StatelessWidget {
                                 userAgentPackageName: 'com.example.app',
                               ),
                               MarkerLayer(
-                                  markers: mapstate.pointsOfInterest.isNotEmpty
-                                      ? mapstate.pointsOfInterest
-                                          .map((poi) => Marker(
-                                                point: LatLng(
-                                                    (poi.latitude != null
-                                                        ? double.parse(
-                                                            poi.latitude!)
-                                                        : 53.0793),
-                                                    (poi.longitude != null
-                                                        ? double.parse(
-                                                            poi.longitude!)
-                                                        : 8.8017)),
-                                                width: 150.0,
-                                                height: 150.0,
-                                                child: GestureDetector(
-                                                  child: const Icon(
-                                                    Icons.location_on,
-                                                    color: Colors.red,
-                                                    size: 50.0,
+                                markers: mapstate.pointsOfInterest.isNotEmpty
+                                    ? mapstate.pointsOfInterest
+                                        .map(
+                                          (poi) => isLatLngValid(
+                                            lat: poi.latitude,
+                                            lng: poi.longitude,
+                                          )
+                                              ? Marker(
+                                                  point: LatLng(
+                                                    double.parse(poi.latitude!),
+                                                    double.parse(
+                                                        poi.longitude!),
                                                   ),
-                                                ),
-                                              ))
-                                          .toList()
-                                      : []),
+                                                  width: 150.0,
+                                                  height: 150.0,
+                                                  child: GestureDetector(
+                                                    child: const Icon(
+                                                      Icons.location_on,
+                                                      color: Colors.red,
+                                                      size: 50.0,
+                                                    ),
+                                                  ),
+                                                )
+                                              : null,
+                                        )
+                                        .nonNulls
+                                        .toList()
+                                    : [],
+                              ),
                               RichAttributionWidget(
                                 attributions: [
                                   TextSourceAttribution(
@@ -157,11 +165,7 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 
-  void showPois(BuildContext poisContext, HomePageState homePageState) async {
-    await poisContext.read<HomePageCubit>().loadPointsOfInterest().then(
-          (value) => {
-            {poisContext.pushNamed(HomeScreen.routeName)}
-          },
-        );
+  bool isLatLngValid({required lat, required lng}) {
+    return double.tryParse(lat) != null && double.tryParse(lng) != null;
   }
 }

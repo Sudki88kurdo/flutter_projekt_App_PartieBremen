@@ -83,22 +83,23 @@ class LoginPage extends StatelessWidget {
               }),
               const SizedBox(height: 20),
               BlocBuilder<LoginPageCubit, LoginPageState>(
-                  builder: (loginContext, loginState) {
-                return loginState.status != const ScreenStatus.pure()
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () => _login(loginContext, loginPageState),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppStyles.buttonColor,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 100, vertical: 20),
-                        ),
-                        child: const Text(
-                          'Einloggen',
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                      );
-              })
+                builder: (loginContext, loginState) {
+                  return loginState.status != const ScreenStatus.pure()
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: () => _login(loginContext, loginPageState),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppStyles.buttonColor,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 100, vertical: 20),
+                          ),
+                          child: const Text(
+                            'Einloggen',
+                            style: TextStyle(fontSize: 24, color: Colors.white),
+                          ),
+                        );
+                },
+              )
             ],
           ),
         ),
@@ -114,16 +115,20 @@ class LoginPage extends StatelessWidget {
           password: _passwordController.text,
           context: loginContext,
         )
-        .then((value) => {
-              // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
-              if (value)
-                {loginContext.pushNamed(HomeScreen.routeName)}
-              else
-                {
-                  ScaffoldMessenger.of(loginContext).showSnackBar(
-                      const SnackBar(
-                          content: Text('Fehler bei der Registrierung')))
-                }
-            });
+        .then(
+          (value) => {
+            // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
+            if (value)
+              {loginContext.pushNamed(HomeScreen.routeName)}
+            else
+              {
+                ScaffoldMessenger.of(loginContext).showSnackBar(
+                  const SnackBar(
+                    content: Text('Fehler bei der Anmeldung'),
+                  ),
+                )
+              }
+          },
+        );
   }
 }

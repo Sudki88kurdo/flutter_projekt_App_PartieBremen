@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/repositories/poi_repository.dart';
 import 'package:flutter_app/api/repositories/user_repository.dart';
+import 'package:flutter_app/presentation/home-screen/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/login-page/login_page_cubit.dart';
 import 'package:flutter_app/presentation/start-page/start_page_cubit.dart';
-import 'package:flutter_app/presentation/viewHome-page/home_screen_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../register-page/register_page_cubit.dart';

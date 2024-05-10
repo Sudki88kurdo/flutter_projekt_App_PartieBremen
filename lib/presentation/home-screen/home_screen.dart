@@ -1,13 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/viewHome-page/home_screen_cubit.dart';
-import 'package:flutter_app/presentation/viewHome-page/home_screen_state.dart';
+import 'package:flutter_app/presentation/home-screen/home_screen_cubit.dart';
+import 'package:flutter_app/presentation/home-screen/home_screen_state.dart';
+import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common/rounded_bottomNavigationBar.dart';
+
+class CustomIconWidget extends StatelessWidget {
+  const CustomIconWidget(
+      {super.key,
+      required this.poiId,
+      required this.mapcontext,
+      required this.homePageState});
+
+  final String poiId;
+  final BuildContext mapcontext;
+  final HomePageState homePageState;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        mapcontext.pushNamed(
+          PoiViewProvider.routeName,
+          pathParameters: {'poiId': poiId ?? ''},
+        );
+      },
+      child: const Icon(
+        Icons.location_on,
+        color: Colors.red,
+        size: 50.0,
+      ),
+    );
+  }
+}
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -80,14 +111,11 @@ class HomeScreen extends StatelessWidget {
                                                   ),
                                                   width: 150.0,
                                                   height: 150.0,
-                                                  child: GestureDetector(
-                                                    child: const Icon(
-                                                      Icons.location_on,
-                                                      color: Colors.red,
-                                                      size: 50.0,
-                                                    ),
-                                                  ),
-                                                )
+                                                  child: CustomIconWidget(
+                                                    poiId: poi.id!,
+                                                    homePageState: mapstate,
+                                                    mapcontext: mapcontext,
+                                                  ))
                                               : null,
                                         )
                                         .nonNulls
@@ -157,7 +185,7 @@ class HomeScreen extends StatelessWidget {
               },
             ),
           ),
-          bottomNavigationBar: BottomNavigationBarWidget(initialIndex: 0),
+          bottomNavigationBar: const BottomNavigationBarWidget(initialIndex: 0),
         ));
   }
 

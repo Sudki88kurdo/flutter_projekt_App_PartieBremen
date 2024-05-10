@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../appStyle.dart';
 import '../../common/screen_status.dart';
-import '../viewHome-page/home_screen.dart';
+import '../home-screen/home_screen.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();

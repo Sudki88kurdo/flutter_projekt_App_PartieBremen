@@ -8,6 +8,10 @@ class PoiRepository extends BaseRepository<PoiClient> {
   PoiRepository(String baseUrl, Dio dio)
       : super(client: PoiClient(dio, baseUrl: baseUrl), dio: dio);
 
+  Future<ApiResult<Poi>> findOne({required String poiId}) async {
+    return execute(() => client.findOne(poiId: poiId));
+  }
+
   Future<ApiResult<List<Poi>>> getPois() async {
     return execute(() => client.getAllPois());
   }

@@ -33,7 +33,7 @@ final GoRouter router = GoRouter(
         name: HomeScreen.routeName,
         path: '/${HomeScreen.routeName}',
         parentNavigatorKey: _rootNavigationKey,
-        builder: (_,__) => const HomeScreen()
+        builder: (_,__) => HomeScreen()
     ),
     GoRoute(
         name: RegisterPageProvider.routeName,

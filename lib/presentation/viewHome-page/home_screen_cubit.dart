@@ -1,3 +1,4 @@
+import 'package:flutter_app/api/repositories/openplz_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../api/repositories/poi_repository.dart';
@@ -5,9 +6,25 @@ import 'home_screen_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
   final PoiRepository _poiRepository;
+  final OpenplzRepository _openplz_repository;
 
-  HomePageCubit(this._poiRepository) : super(const HomePageState()) {
+  HomePageCubit(this._poiRepository, this._openplz_repository) : super(const HomePageState()) {
     loadPointsOfInterest();
+  }
+
+  Future<void> getStreets(String search) async {
+    try {
+      final streetResponse = await _openplz_repository.getStreets(search, 'Bremen', null, 1, 50);
+      print('Search: $search');
+      print('Street response: $streetResponse');
+      streetResponse.whenOrNull(
+        success: (value) {
+          emit(HomePageState(streetResults: value));
+        }
+      );
+    } catch (e) {
+      print('Error suggesting streets');
+    }
   }
 
   Future<void> loadPointsOfInterest() async {

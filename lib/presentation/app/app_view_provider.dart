@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/api/repositories/openplz_repository.dart';
 import 'package:flutter_app/api/repositories/poi_repository.dart';
 import 'package:flutter_app/api/repositories/user_repository.dart';
 import 'package:flutter_app/presentation/login-page/login_page_cubit.dart';
@@ -29,7 +30,11 @@ class AppViewProvider extends StatelessWidget {
             create: (context) =>
                 RegisterPageCubit(context.read<UserRepository>())),
         BlocProvider(
-            create: (context) => HomePageCubit(context.read<PoiRepository>())),
+          create: (context) => HomePageCubit(
+            context.read<PoiRepository>(),
+            context.read<OpenplzRepository>(),
+          ),
+        ),
       ],
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

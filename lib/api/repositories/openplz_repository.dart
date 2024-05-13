@@ -11,7 +11,8 @@ class OpenplzRepository extends BaseRepository<OpenplzClient> {
   Future<ApiResult<List<Street>>> getStreets(
     String name,
     String locality,
+    String? postalCode,
     int page,
     int pageSize,
-  ) async => execute(() => client.getStreets(name, locality, page, pageSize));
+  ) async => execute(() => client.getStreets(name, locality, postalCode, page, pageSize));
 }

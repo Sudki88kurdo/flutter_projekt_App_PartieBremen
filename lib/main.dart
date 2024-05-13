@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/api/repositories/openplz_repository.dart';
 import 'package:flutter_app/api/repositories/poi_repository.dart';
 import 'package:flutter_app/presentation/app/app_view_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   const baseUrl = 'https://api.partibremen.student.28apps-software.de/';
+  const openPlzBaseUrl = 'https://openplzapi.org/';
   final baseOptions = BaseOptions(
     baseUrl: baseUrl,
     headers: {
@@ -37,6 +39,7 @@ void main() async {
         providers: [
           RepositoryProvider.value(value: UserRepository(baseUrl, dio)),
           RepositoryProvider.value(value: PoiRepository(baseUrl, dio)),
+          RepositoryProvider.value(value: OpenplzRepository(openPlzBaseUrl, dio)),
         ],
         child: const AppViewProvider(),)));
 }

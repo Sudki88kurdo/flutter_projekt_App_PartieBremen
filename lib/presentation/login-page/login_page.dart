@@ -8,13 +8,15 @@ import '../../common/screen_status.dart';
 import '../../entities/user.dart';
 import '../viewHome-page/HomeScreen.dart';
 import '../../appStyle.dart';
-import '../viewHome-page/prfiel_page/ProfileEditWidget.dart';
+import '../viewHome-page/prfileNav/profileEdit-page/ProfileEditWidget.dart';
 
 class LoginPage extends StatelessWidget {
+  static const String routeName = 'profile-page';
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late User user;
   ProfileEditWidget pe=ProfileEditWidget();
+
 
   LoginPage({Key? key}) : super(key: key);
 
@@ -115,17 +117,11 @@ class LoginPage extends StatelessWidget {
       email: _usernameController.text,
       password: _passwordController.text,
     ).then((value) => {
-      // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
-      if(loginPageState.user != null) {
-        // print(loginPageState.user),
+
+        if(loginPageState.user != null) {
         user=loginPageState.user!,
-
-        //hier weiter den Wert von user zu class ProfileEditWidget
-
-
-        print("-----------"),
-        print(user),
         pe.setUser(user),
+
 
         loginContext.pushNamed(HomeScreen.routeName)
       } else {

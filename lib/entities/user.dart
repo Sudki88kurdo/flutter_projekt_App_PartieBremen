@@ -1,6 +1,5 @@
-import 'package:flutter_app/entities/TimestampSerializer.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
+
 
 part 'user.freezed.dart';
 part 'user.g.dart';

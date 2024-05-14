@@ -1,7 +1,7 @@
-import 'package:flutter_app/api/common/api_result.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../api/repositories/user_repository.dart';
-import '../../entities/user.dart';
+
 import 'register_page_state.dart';
 
 class RegisterPageCubit extends Cubit<RegisterPageState> {

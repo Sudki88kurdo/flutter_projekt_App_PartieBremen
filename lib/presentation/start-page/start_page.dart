@@ -6,7 +6,6 @@ import 'package:flutter_app/presentation/start-page/start_page_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../appStyle.dart';
-import '../login-page/login_page.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});

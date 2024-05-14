@@ -5,6 +5,8 @@ import 'package:flutter_app/presentation/login-page/login_page_provider.dart';
 import 'package:flutter_app/presentation/register-page/register_page.dart';
 import 'package:flutter_app/presentation/register-page/register_page_provider.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
+import 'package:flutter_app/presentation/viewHome-page/prfileNav/profile-page/profile_page.dart';
+import 'package:flutter_app/presentation/viewHome-page/prfileNav/profile-page/profile_page_provider.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> _rootNavigationKey =
@@ -40,6 +42,14 @@ final GoRouter router = GoRouter(
         path: '/${RegisterPageProvider.routeName}',
         parentNavigatorKey: _rootNavigationKey,
         builder: (_,__) => RegisterPage()
-    )
+    ),
+    GoRoute(
+        name: ProfilePageProvider.routeName,
+        path: '/${ProfilePageProvider.routeName}',
+        parentNavigatorKey: _rootNavigationKey,
+        builder: (_,__) => const ProfilePage()
+    ),
+
   ],
 );
+

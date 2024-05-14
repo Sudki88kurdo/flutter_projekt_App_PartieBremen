@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/viewHome-page/HomeScreen.dart';
 import 'package:flutter_app/presentation/register-page/register_page_cubit.dart';
+import 'package:flutter_app/presentation/viewHome-page/HomeScreen.dart';
 import 'package:flutter_app/presentation/register-page/register_page_state.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -108,8 +108,6 @@ class RegisterPage extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: () async {
-                    print(registerPageState.pickedDate.runtimeType);
-                    print("pickedDate");
                      await registerPageContext.read<RegisterPageCubit>().register(
                       name: firstNameController.text,
                       surname: lastNameController.text,
@@ -117,7 +115,8 @@ class RegisterPage extends StatelessWidget {
                       email: emailController.text,
                       password: passwordController.text,
                       verified: true,
-                      active: true);
+                      active: true
+                     );
                     if (registerPageState.registerSuccessful) {
                       registerPageContext.pushNamed(HomeScreen.routeName);
                     } else {

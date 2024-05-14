@@ -7,6 +7,7 @@ part 'user_client.g.dart';
 @RestApi()
 abstract class UserClient {
   factory UserClient(Dio dio, {String baseUrl}) = _UserClient;
+
   @POST("/user")
   Future<HttpResponse<User>> registerUser({
        @Field("name") required String name,
@@ -16,26 +17,33 @@ abstract class UserClient {
        @Field("password") required String password,
        @Field("verified") required bool verified,
        @Field("active") required bool active,
-    }
-  );
+    });
 
   @POST("/user/login")
   Future<HttpResponse<User>> loginUser({
     @Field("email") required String email,
     @Field("password") required String password,
-  }
-  );
+  });
 
-  @PUT("/user/{userId}")
-  @PUT("/user/{userId}")
-  Future<HttpResponse<User>> updateUser(
-      @Path("userId") int userId, {
-        @Field("name") String? name,
-        @Field("surname") String? surname,
-        @Field("dob") DateTime? dob,
-        @Field("email") String? email,
-        @Field("password") String? password,
+  @PUT("/user/{id}")
+  Future<HttpResponse<User>> updateUser(@Path("id") String id, {
+    //@Path("id") required String id,
+    @Field("name") required String name,
+    @Field("surname") required String surname,
+    //@Field("dob") required DateTime dob,
+    @Field("email") required String email,
+    @Field("password") required String password,
+    @Field("verified") required bool verified,
+    @Field("role") required int role,
+  });
 
-      });
+  @POST("/user/logout/{id}")
+  Future<void> logoutUser(@Path("id") String id);
+
+  @DELETE("/user/logout/{id}")
+  Future<void> deleteUser(@Path("id") String id);
+
+
+
 }
 

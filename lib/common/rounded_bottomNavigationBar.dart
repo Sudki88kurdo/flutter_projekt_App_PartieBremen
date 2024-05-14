@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/viewHome-page/HomeScreen.dart';
-
 import '../appStyle.dart';
-import '../presentation/viewHome-page/prfiel_page/Profil.dart'; // Stelle sicher, dass der Importpfad korrekt ist
+import '../presentation/viewHome-page/prfileNav/profile-page/profile_page.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {
   final int initialIndex;
@@ -15,6 +14,7 @@ class BottomNavigationBarWidget extends StatefulWidget {
 
 class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   late int _selectedIndex;
+
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
       if (_selectedIndex == 3) { // Wenn Profil-Tab ausgewählt ist
         Navigator.push( // Navigiere zur Profilseite
           context,
-          MaterialPageRoute(builder: (context) => ProfileWidget()),
+          MaterialPageRoute(builder: (context) => ProfilePage()),
         );
       }
       // Optional: Wenn du auch zur Startseite navigieren möchtest, wenn der "Home"-Tab ausgewählt ist

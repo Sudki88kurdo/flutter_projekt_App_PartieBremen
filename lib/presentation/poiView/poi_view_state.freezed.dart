@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$PoiViewState {
   ScreenStatus get status => throw _privateConstructorUsedError;
   Poi? get poi => throw _privateConstructorUsedError;
+  List<CommentsResponse> get comments => throw _privateConstructorUsedError;
+  List<VotingsResponse> get votings => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PoiViewStateCopyWith<PoiViewState> get copyWith =>
@@ -30,7 +32,11 @@ abstract class $PoiViewStateCopyWith<$Res> {
           PoiViewState value, $Res Function(PoiViewState) then) =
       _$PoiViewStateCopyWithImpl<$Res, PoiViewState>;
   @useResult
-  $Res call({ScreenStatus status, Poi? poi});
+  $Res call(
+      {ScreenStatus status,
+      Poi? poi,
+      List<CommentsResponse> comments,
+      List<VotingsResponse> votings});
 
   $ScreenStatusCopyWith<$Res> get status;
   $PoiCopyWith<$Res>? get poi;
@@ -51,6 +57,8 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
   $Res call({
     Object? status = null,
     Object? poi = freezed,
+    Object? comments = null,
+    Object? votings = null,
   }) {
     return _then(_value.copyWith(
       status: null == status
@@ -61,6 +69,14 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
           ? _value.poi
           : poi // ignore: cast_nullable_to_non_nullable
               as Poi?,
+      comments: null == comments
+          ? _value.comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as List<CommentsResponse>,
+      votings: null == votings
+          ? _value.votings
+          : votings // ignore: cast_nullable_to_non_nullable
+              as List<VotingsResponse>,
     ) as $Val);
   }
 
@@ -93,7 +109,11 @@ abstract class _$$PoiViewStateImplCopyWith<$Res>
       __$$PoiViewStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ScreenStatus status, Poi? poi});
+  $Res call(
+      {ScreenStatus status,
+      Poi? poi,
+      List<CommentsResponse> comments,
+      List<VotingsResponse> votings});
 
   @override
   $ScreenStatusCopyWith<$Res> get status;
@@ -114,6 +134,8 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
   $Res call({
     Object? status = null,
     Object? poi = freezed,
+    Object? comments = null,
+    Object? votings = null,
   }) {
     return _then(_$PoiViewStateImpl(
       status: null == status
@@ -124,6 +146,14 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
           ? _value.poi
           : poi // ignore: cast_nullable_to_non_nullable
               as Poi?,
+      comments: null == comments
+          ? _value._comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as List<CommentsResponse>,
+      votings: null == votings
+          ? _value._votings
+          : votings // ignore: cast_nullable_to_non_nullable
+              as List<VotingsResponse>,
     ));
   }
 }
@@ -132,7 +162,12 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
 
 class _$PoiViewStateImpl implements _PoiViewState {
   const _$PoiViewStateImpl(
-      {this.status = const ScreenStatus.pure(), this.poi = null});
+      {this.status = const ScreenStatus.pure(),
+      this.poi = null,
+      final List<CommentsResponse> comments = const [],
+      final List<VotingsResponse> votings = const []})
+      : _comments = comments,
+        _votings = votings;
 
   @override
   @JsonKey()
@@ -140,10 +175,27 @@ class _$PoiViewStateImpl implements _PoiViewState {
   @override
   @JsonKey()
   final Poi? poi;
+  final List<CommentsResponse> _comments;
+  @override
+  @JsonKey()
+  List<CommentsResponse> get comments {
+    if (_comments is EqualUnmodifiableListView) return _comments;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_comments);
+  }
+
+  final List<VotingsResponse> _votings;
+  @override
+  @JsonKey()
+  List<VotingsResponse> get votings {
+    if (_votings is EqualUnmodifiableListView) return _votings;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_votings);
+  }
 
   @override
   String toString() {
-    return 'PoiViewState(status: $status, poi: $poi)';
+    return 'PoiViewState(status: $status, poi: $poi, comments: $comments, votings: $votings)';
   }
 
   @override
@@ -152,11 +204,18 @@ class _$PoiViewStateImpl implements _PoiViewState {
         (other.runtimeType == runtimeType &&
             other is _$PoiViewStateImpl &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.poi, poi) || other.poi == poi));
+            (identical(other.poi, poi) || other.poi == poi) &&
+            const DeepCollectionEquality().equals(other._comments, _comments) &&
+            const DeepCollectionEquality().equals(other._votings, _votings));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, status, poi);
+  int get hashCode => Object.hash(
+      runtimeType,
+      status,
+      poi,
+      const DeepCollectionEquality().hash(_comments),
+      const DeepCollectionEquality().hash(_votings));
 
   @JsonKey(ignore: true)
   @override
@@ -166,13 +225,20 @@ class _$PoiViewStateImpl implements _PoiViewState {
 }
 
 abstract class _PoiViewState implements PoiViewState {
-  const factory _PoiViewState({final ScreenStatus status, final Poi? poi}) =
-      _$PoiViewStateImpl;
+  const factory _PoiViewState(
+      {final ScreenStatus status,
+      final Poi? poi,
+      final List<CommentsResponse> comments,
+      final List<VotingsResponse> votings}) = _$PoiViewStateImpl;
 
   @override
   ScreenStatus get status;
   @override
   Poi? get poi;
+  @override
+  List<CommentsResponse> get comments;
+  @override
+  List<VotingsResponse> get votings;
   @override
   @JsonKey(ignore: true)
   _$$PoiViewStateImplCopyWith<_$PoiViewStateImpl> get copyWith =>

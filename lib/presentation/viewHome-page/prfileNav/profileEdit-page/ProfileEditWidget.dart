@@ -32,7 +32,9 @@ class ProfileEditWidget extends StatelessWidget {
 
     return BlocBuilder<ProfileEditPageCubit, ProfileEditPageState>(
       builder: (profileEditPageContext, profileEditPageState) {
+
         return Scaffold(
+
           appBar: AppBar(
             title: Text('Profil bearbeiten'),
             centerTitle: true,

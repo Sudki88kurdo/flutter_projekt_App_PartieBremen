@@ -99,15 +99,12 @@ class HomeScreen extends StatelessWidget {
                                 markers: mapstate.pointsOfInterest.isNotEmpty
                                     ? mapstate.pointsOfInterest
                                         .map(
-                                          (poi) => isLatLngValid(
-                                            poi.latitude,
-                                            poi.longitude,
-                                          )
+                                          (poi) => poi.latitude != null &&
+                                                  poi.longitude != null
                                               ? Marker(
                                                   point: LatLng(
-                                                    double.parse(poi.latitude!),
-                                                    double.parse(
-                                                        poi.longitude!),
+                                                    poi.latitude!,
+                                                    poi.longitude!,
                                                   ),
                                                   width: 150.0,
                                                   height: 150.0,

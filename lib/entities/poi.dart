@@ -18,13 +18,13 @@ class Poi with _$Poi {
     DateTime? updatedAt,
     String? description,
     bool? active,
-    String? longitude,
+    double? longitude,
     User? creator,
     dynamic reports,
     dynamic surveys,
     dynamic votings,
     dynamic comments,
-    String? latitude,
+    double? latitude,
     String? titel,
   }) = _Poi;
 

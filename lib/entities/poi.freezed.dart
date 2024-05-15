@@ -25,13 +25,13 @@ mixin _$Poi {
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   bool? get active => throw _privateConstructorUsedError;
-  String? get longitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
   User? get creator => throw _privateConstructorUsedError;
   dynamic get reports => throw _privateConstructorUsedError;
   dynamic get surveys => throw _privateConstructorUsedError;
   dynamic get votings => throw _privateConstructorUsedError;
   dynamic get comments => throw _privateConstructorUsedError;
-  String? get latitude => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
   String? get titel => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,13 +50,13 @@ abstract class $PoiCopyWith<$Res> {
       DateTime? updatedAt,
       String? description,
       bool? active,
-      String? longitude,
+      double? longitude,
       User? creator,
       dynamic reports,
       dynamic surveys,
       dynamic votings,
       dynamic comments,
-      String? latitude,
+      double? latitude,
       String? titel});
 
   $UserCopyWith<$Res>? get creator;
@@ -112,7 +112,7 @@ class _$PoiCopyWithImpl<$Res, $Val extends Poi> implements $PoiCopyWith<$Res> {
       longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as double?,
       creator: freezed == creator
           ? _value.creator
           : creator // ignore: cast_nullable_to_non_nullable
@@ -136,7 +136,7 @@ class _$PoiCopyWithImpl<$Res, $Val extends Poi> implements $PoiCopyWith<$Res> {
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as double?,
       titel: freezed == titel
           ? _value.titel
           : titel // ignore: cast_nullable_to_non_nullable
@@ -169,13 +169,13 @@ abstract class _$$PoiImplCopyWith<$Res> implements $PoiCopyWith<$Res> {
       DateTime? updatedAt,
       String? description,
       bool? active,
-      String? longitude,
+      double? longitude,
       User? creator,
       dynamic reports,
       dynamic surveys,
       dynamic votings,
       dynamic comments,
-      String? latitude,
+      double? latitude,
       String? titel});
 
   @override
@@ -229,7 +229,7 @@ class __$$PoiImplCopyWithImpl<$Res> extends _$PoiCopyWithImpl<$Res, _$PoiImpl>
       longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as double?,
       creator: freezed == creator
           ? _value.creator
           : creator // ignore: cast_nullable_to_non_nullable
@@ -253,7 +253,7 @@ class __$$PoiImplCopyWithImpl<$Res> extends _$PoiCopyWithImpl<$Res, _$PoiImpl>
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as double?,
       titel: freezed == titel
           ? _value.titel
           : titel // ignore: cast_nullable_to_non_nullable
@@ -294,7 +294,7 @@ class _$PoiImpl implements _Poi {
   @override
   final bool? active;
   @override
-  final String? longitude;
+  final double? longitude;
   @override
   final User? creator;
   @override
@@ -306,7 +306,7 @@ class _$PoiImpl implements _Poi {
   @override
   final dynamic comments;
   @override
-  final String? latitude;
+  final double? latitude;
   @override
   final String? titel;
 
@@ -379,13 +379,13 @@ abstract class _Poi implements Poi {
       final DateTime? updatedAt,
       final String? description,
       final bool? active,
-      final String? longitude,
+      final double? longitude,
       final User? creator,
       final dynamic reports,
       final dynamic surveys,
       final dynamic votings,
       final dynamic comments,
-      final String? latitude,
+      final double? latitude,
       final String? titel}) = _$PoiImpl;
 
   factory _Poi.fromJson(Map<String, dynamic> json) = _$PoiImpl.fromJson;
@@ -401,7 +401,7 @@ abstract class _Poi implements Poi {
   @override
   bool? get active;
   @override
-  String? get longitude;
+  double? get longitude;
   @override
   User? get creator;
   @override
@@ -413,7 +413,7 @@ abstract class _Poi implements Poi {
   @override
   dynamic get comments;
   @override
-  String? get latitude;
+  double? get latitude;
   @override
   String? get titel;
   @override

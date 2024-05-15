@@ -16,7 +16,7 @@ _$PoiImpl _$$PoiImplFromJson(Map<String, dynamic> json) => _$PoiImpl(
           : DateTime.parse(json['updatedAt'] as String),
       description: json['description'] as String?,
       active: json['active'] as bool?,
-      longitude: json['longitude'] as String?,
+      longitude: (json['longitude'] as num?)?.toDouble(),
       creator: json['creator'] == null
           ? null
           : User.fromJson(json['creator'] as Map<String, dynamic>),
@@ -24,7 +24,7 @@ _$PoiImpl _$$PoiImplFromJson(Map<String, dynamic> json) => _$PoiImpl(
       surveys: json['surveys'],
       votings: json['votings'],
       comments: json['comments'],
-      latitude: json['latitude'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
       titel: json['titel'] as String?,
     );
 

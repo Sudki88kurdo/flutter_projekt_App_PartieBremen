@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_app/entities/poi.dart';
 import 'package:retrofit/retrofit.dart';
@@ -14,8 +16,8 @@ abstract class PoiClient {
     @Field("description") required String description,
     @Field("active") required bool active,
     @Field("creatorId") required String creatorId,
-    @Field("latitude") required String latitude,
-    @Field("longitude") required String longitude,
+    @Field("latitude") required double latitude,
+    @Field("longitude") required double longitude,
   });
 
   @GET("/poi/Only")

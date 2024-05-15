@@ -21,8 +21,8 @@ class PoiRepository extends BaseRepository<PoiClient> {
     required String description,
     required bool active,
     required String creatorId,
-    required String latitude,
-    required String longitude,
+    required double latitude,
+    required double longitude,
   }) async =>
       execute(
         () => client.create(

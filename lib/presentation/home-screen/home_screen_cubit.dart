@@ -58,8 +58,8 @@ class HomePageCubit extends Cubit<HomePageState> {
     required String description,
     required bool active,
     required String creatorId,
-    required String latitude,
-    required String longitude,
+    required double latitude,
+    required double longitude,
   }) async {
     var successful = false;
     var res = await _poiRepository.create(

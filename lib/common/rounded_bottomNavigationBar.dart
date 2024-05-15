@@ -202,10 +202,9 @@ class BottomNavigationBarWidget extends StatelessWidget {
                                                           .state
                                                           .user!
                                                           .id!,
-                                                      latitude: value.latitude
-                                                          .toString(),
-                                                      longitude: value.longitude
-                                                          .toString())
+                                                      latitude: value.latitude!,
+                                                      longitude:
+                                                          value.longitude!)
                                                   .then((value) => context
                                                       .read<HomePageCubit>()
                                                       .loadPointsOfInterest())

@@ -1,7 +1,9 @@
 import 'package:flutter_app/api/repositories/openplz_repository.dart';
+import 'package:flutter_app/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../api/repositories/poi_repository.dart';
+import '../../entities/street.dart';
 import 'home_screen_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
@@ -12,19 +14,19 @@ class HomePageCubit extends Cubit<HomePageState> {
     loadPointsOfInterest();
   }
 
-  Future<void> getStreets(String search) async {
+  Future<List<Street>> getStreets(String search) async {
     try {
       final streetResponse = await _openplz_repository.getStreets(search, 'Bremen', null, 1, 50);
-      print('Search: $search');
-      print('Street response: $streetResponse');
       streetResponse.whenOrNull(
         success: (value) {
-          emit(HomePageState(streetResults: value));
+          emit(state.copyWith(streetResults: value));
         }
       );
+      return state.streetResults;
     } catch (e) {
-      print('Error suggesting streets');
+      logger.e('Error loading streets: $e');
     }
+    return [];
   }
 
   Future<void> loadPointsOfInterest() async {

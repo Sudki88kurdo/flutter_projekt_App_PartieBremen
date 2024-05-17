@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:flutter_app/presentation/home-screen/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen_state.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
+import 'package:flutter_app/entities/street.dart';
+import 'package:flutter_app/main.dart';
+import 'package:flutter_app/presentation/home-screen/home_screen_cubit.dart';
+import 'package:flutter_app/presentation/home-screen/home_screen_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
-import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../common/rounded_bottomNavigationBar.dart';
+import 'package:flutter_app/common/rounded_bottomNavigationBar.dart';
 
 class CustomIconWidget extends StatelessWidget {
   const CustomIconWidget(
@@ -41,12 +45,12 @@ class CustomIconWidget extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   static const String routeName = 'home-page';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -61,21 +65,20 @@ class HomeScreen extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: BlocBuilder<HomePageCubit, HomePageState>(
-              buildWhen: (prev, next) =>
-                  prev.pointsOfInterest.length != next.pointsOfInterest.length,
               builder: (mapcontext, mapstate) {
-                final MapController _mapController = MapController();
-                GeoCode geoCode = GeoCode();
+                logger.i(
+                    "Building Home Screen, street results: ${mapstate.streetResults.length}");
+                final MapController mapController = MapController();
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Stack(
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 1,
-                          height: MediaQuery.of(context).size.height * 1,
+                          width: MediaQuery.of(buildContext).size.width * 1,
+                          height: MediaQuery.of(buildContext).size.height * 1,
                           child: FlutterMap(
-                            mapController: _mapController,
+                            mapController: mapController,
                             options: const MapOptions(
                               initialCenter: LatLng(53.0793, 8.8017),
                               initialZoom: 12,
@@ -132,7 +135,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Flex(
-                          direction: Axis.horizontal,
+                          direction: Axis.vertical,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
@@ -140,36 +143,79 @@ class HomeScreen extends StatelessWidget {
                               height: 65.0,
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: SearchBar(
-                                  shape: MaterialStatePropertyAll<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusDirectional.circular(12),
-                                    ),
-                                  ),
-                                  backgroundColor:
-                                      const MaterialStatePropertyAll<Color>(
-                                          Color.fromRGBO(223, 238, 218, 1.0)),
-                                  padding: const MaterialStatePropertyAll<
-                                          EdgeInsets>(
-                                      EdgeInsets.symmetric(horizontal: 16.0)),
-                                  hintText: 'Ort suchen',
-                                  onTap: () {},
-                                  onChanged: (search) async {
-                                    Coordinates coordinates =
-                                        await geoCode.forwardGeocoding(
-                                            address: "Bremen, $search");
-                                    if (coordinates.latitude != null) {
-                                      _mapController.move(
-                                          LatLng(coordinates.latitude!,
-                                              coordinates.longitude!),
-                                          12);
-                                    }
+                                child: SearchAnchor(
+                                  isFullScreen: false,
+                                  builder: (BuildContext context,
+                                      SearchController controller) {
+                                    return SearchBar(
+                                      controller: controller,
+                                      shape: MaterialStatePropertyAll<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadiusDirectional.circular(
+                                                  12),
+                                        ),
+                                      ),
+                                      backgroundColor:
+                                          const MaterialStatePropertyAll<Color>(
+                                              Color.fromRGBO(
+                                                  223, 238, 218, 1.0)),
+                                      padding: const MaterialStatePropertyAll<
+                                              EdgeInsets>(
+                                          EdgeInsets.symmetric(
+                                              horizontal: 16.0)),
+                                      hintText: 'Ort suchen',
+                                      onTap: () {
+                                        logger.i("On Tap");
+                                        controller.openView();
+                                      },
+                                      leading: const Icon(Icons.search,
+                                          color: Colors.green),
+                                      trailing: const <Widget>[],
+                                    );
                                   },
-                                  leading: const Icon(Icons.search,
-                                      color: Colors.green),
-                                  trailing: const <Widget>[],
+                                  viewOnChanged: (String search) async {},
+                                  suggestionsBuilder: (BuildContext context,
+                                      SearchController controller) {
+                                    var searchFuture = loadSuggestions(
+                                        controller.text, mapcontext);
+                                    return [
+                                      FutureBuilder(
+                                        future: searchFuture,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.done) {
+                                            List<Street> data =
+                                                snapshot.data as List<Street>;
+                                            return ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount: data.length,
+                                              itemBuilder: (context, index) {
+                                                return ListTile(
+                                                  title: Text(
+                                                      data[index].name ?? ""),
+                                                  onTap: () {
+                                                    moveToAddress(
+                                                        mapController:
+                                                            mapController,
+                                                        search:
+                                                            data[index].name ??
+                                                                "");
+                                                    controller.closeView(
+                                                        controller.text);
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          }
+                                          return const LinearProgressIndicator();
+                                        },
+                                      )
+                                    ];
+                                  },
                                 ),
                               ),
                             ),
@@ -191,5 +237,23 @@ class HomeScreen extends StatelessWidget {
       return false;
     }
     return double.tryParse(lat) != null && double.tryParse(lng) != null;
+  }
+
+  Future<void> moveToAddress({
+    required MapController mapController,
+    required String search,
+  }) async {
+    GeoCode geoCode = GeoCode();
+    Coordinates coordinates =
+        await geoCode.forwardGeocoding(address: "Bremen, $search");
+    if (coordinates.latitude != null) {
+      mapController.move(
+          LatLng(coordinates.latitude!, coordinates.longitude!), 16);
+    }
+  }
+
+  Future<List<Street>> loadSuggestions(
+      String search, BuildContext context) async {
+    return await context.read<HomePageCubit>().getStreets(search);
   }
 }

@@ -1,13 +1,32 @@
+import 'package:flutter_app/api/repositories/openplz_repository.dart';
+import 'package:flutter_app/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../api/repositories/poi_repository.dart';
+import '../../entities/street.dart';
 import 'home_screen_state.dart';
 
 class HomePageCubit extends Cubit<HomePageState> {
   final PoiRepository _poiRepository;
+  final OpenplzRepository _openplz_repository;
 
-  HomePageCubit(this._poiRepository) : super(const HomePageState()) {
+  HomePageCubit(this._poiRepository, this._openplz_repository) : super(const HomePageState()) {
     loadPointsOfInterest();
+  }
+
+  Future<List<Street>> getStreets(String search) async {
+    try {
+      final streetResponse = await _openplz_repository.getStreets(search, 'Bremen', null, 1, 50);
+      streetResponse.whenOrNull(
+        success: (value) {
+          emit(state.copyWith(streetResults: value));
+        }
+      );
+      return state.streetResults;
+    } catch (e) {
+      logger.e('Error loading streets: $e');
+    }
+    return [];
   }
 
   Future<void> loadPointsOfInterest() async {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/viewHome-page/prfileNav/profileEdit-page/profileEdit_page_cubit.dart';
+import 'package:flutter_app/presentation/profile/prfileNav/profileEdit-page/profileEdit_page_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../appStyle.dart';
 import '../../../../common/screen_status.dart';
 import '../../../../entities/user.dart';
-import '../../../login-page/login_page_state.dart';
 import 'profileEdit_page_state.dart';
 
 class ProfileEditWidget extends StatelessWidget {
@@ -24,17 +24,14 @@ class ProfileEditWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _nameController.text=user1!.name!;
-    _surnameController.text=user1!.surname!;
-    _dobController.text=user1!.dob!.toIso8601String();
-    _emailController.text=user1!.email!;
-
+    _nameController.text = user1!.name!;
+    _surnameController.text = user1!.surname!;
+    _dobController.text = user1!.dob!.toIso8601String();
+    _emailController.text = user1!.email!;
 
     return BlocBuilder<ProfileEditPageCubit, ProfileEditPageState>(
       builder: (profileEditPageContext, profileEditPageState) {
-
         return Scaffold(
-
           appBar: AppBar(
             title: Text('Profil bearbeiten'),
             centerTitle: true,
@@ -76,8 +73,7 @@ class ProfileEditWidget extends StatelessWidget {
                       ),
                       controller: TextEditingController(
                         text: profileEditPageState.pickedDate != null
-                            ? '${profileEditPageState.pickedDate!.day}.${profileEditPageState.pickedDate!
-                            .month}.${profileEditPageState.pickedDate!.year}'
+                            ? '${profileEditPageState.pickedDate!.day}.${profileEditPageState.pickedDate!.month}.${profileEditPageState.pickedDate!.year}'
                             : '',
                       ),
                     ),
@@ -102,17 +98,18 @@ class ProfileEditWidget extends StatelessWidget {
                 profileEditPageState.status != const ScreenStatus.pure()
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                  onPressed: () => _updateUser(profileEditPageContext,profileEditPageState),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyles.buttonColor,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 100, vertical: 20),
-                  ),
-                  child: Text(
-                    'Speichern',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-                ),
+                        onPressed: () => _updateUser(
+                            profileEditPageContext, profileEditPageState),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppStyles.buttonColor,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 100, vertical: 20),
+                        ),
+                        child: Text(
+                          'Speichern',
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                      ),
               ],
             ),
           ),
@@ -120,6 +117,7 @@ class ProfileEditWidget extends StatelessWidget {
       },
     );
   }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -132,22 +130,17 @@ class ProfileEditWidget extends StatelessWidget {
     }
   }
 
-
-  void _updateUser(BuildContext updateUserContext, ProfileEditPageState profileEditPageSt)
-  async {
-
-
+  void _updateUser(BuildContext updateUserContext,
+      ProfileEditPageState profileEditPageSt) async {
     await updateUserContext.read<ProfileEditPageCubit>().updateUser(
-      id: user1!.id!,
-      name: _nameController.text,
-      surname:  _surnameController.text,
-      //dob:profileEditPageSt.pickedDate!,
-      email: _emailController.text,
-      password: _passwordController.text,
-      verified:true,
-      role:1,
-
-    );
-
+          id: user1!.id!,
+          name: _nameController.text,
+          surname: _surnameController.text,
+          dob: profileEditPageSt.pickedDate!,
+          email: _emailController.text,
+          password: _passwordController.text,
+          verified: true,
+          role: 1,
+        );
   }
 }

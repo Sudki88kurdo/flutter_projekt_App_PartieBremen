@@ -97,11 +97,11 @@ class _UserClient implements UserClient {
   }
 
   @override
-  Future<HttpResponse<User>> updateUser(String id,{
-    //required String id,
+  Future<HttpResponse<User>> updateUser(
+    String id, {
     required String name,
     required String surname,
-    //required  DateTime dob,
+    required DateTime dob,
     required String email,
     required String password,
     required bool verified,
@@ -111,10 +111,9 @@ class _UserClient implements UserClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {
-      //'id':id,
       'name': name,
       'surname': surname,
-      //'dob':dob,
+      'dob': dob,
       'email': email,
       'password': password,
       'verified': verified,
@@ -128,7 +127,7 @@ class _UserClient implements UserClient {
     )
             .compose(
               _dio.options,
-              '/user/$id',
+              '/user/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -155,7 +154,7 @@ class _UserClient implements UserClient {
     )
         .compose(
           _dio.options,
-          '/user/logout/$id',
+          '/user/logout/${id}',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -165,27 +164,26 @@ class _UserClient implements UserClient {
           baseUrl,
         ))));
   }
+
   @override
   Future<void> deleteUser(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-
     await _dio.fetch<void>(_setStreamType<void>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
     )
         .compose(
-      _dio.options,
-      '/user/$id',
-
-      queryParameters: queryParameters,
-      data: _data,
-    )
+          _dio.options,
+          '/user/logout/${id}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
         .copyWith(
-        baseUrl: _combineBaseUrls(
+            baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
         ))));

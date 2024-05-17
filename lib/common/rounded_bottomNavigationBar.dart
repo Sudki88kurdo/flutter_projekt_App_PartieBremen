@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen_state.dart';
+import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocode/geocode.dart';
 import 'package:go_router/go_router.dart';
+
 import '../appStyle.dart';
 import '../presentation/home-screen/home_screen.dart';
 
@@ -67,6 +69,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
     context.read<HomePageCubit>().updateIndex(index);
     if (index == 3) {
       context.pushNamed(
+        ProfilePageProvider.routeName,
       );
     }
     if (index == 1) {

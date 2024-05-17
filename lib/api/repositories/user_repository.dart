@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:dio/dio.dart';
+
 import '../../entities/user.dart';
 import '../clients/user_client.dart';
 import '../common/api_result.dart';
@@ -33,7 +35,7 @@ class UserRepository extends BaseRepository<UserClient> {
             dob: dob.toIso8601String(),
             active: true),
       );
-   User? loggedInUser;
+  User? loggedInUser;
   Future<ApiResult<User>> loginUser({
     required String email,
     required String password,
@@ -41,8 +43,7 @@ class UserRepository extends BaseRepository<UserClient> {
     try {
       final response = await client.loginUser(email: email, password: password);
 
-
-     loggedInUser = response.data; // Setzen des angemeldeten Benutzers
+      loggedInUser = response.data; // Setzen des angemeldeten Benutzers
       return ApiResult.success(data: loggedInUser!);
     } on NetworkExceptions catch (error) {
       return ApiResult.failure(error: error);
@@ -58,12 +59,18 @@ class UserRepository extends BaseRepository<UserClient> {
     required String password,
     required bool verified,
     required int role,
-
-
   }) async {
     try {
-      final response = await client.updateUser(id, name: name, surname: surname, email: email, password: password,verified:verified,role:role, dob: dob,);
-
+      final response = await client.updateUser(
+        id,
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+        verified: verified,
+        role: role,
+        dob: dob,
+      );
 
       loggedInUser = response.data; // Setzen des angemeldeten Benutzers
       print(loggedInUser);
@@ -71,12 +78,13 @@ class UserRepository extends BaseRepository<UserClient> {
       return ApiResult.success(data: loggedInUser!);
     } on NetworkExceptions catch (error) {
       return ApiResult.failure(error: error);
-    }}
+    }
+  }
 
-
-   Future<void> logoutUser() async {
+  Future<void> logoutUser() async {
     try {
-      final loggedInUserId = loggedInUser?.id; // Annahme: loggedInUser hat ein 'id' Feld
+      final loggedInUserId =
+          loggedInUser?.id; // Annahme: loggedInUser hat ein 'id' Feld
       if (loggedInUserId != null) {
         await client.logoutUser(loggedInUserId);
         loggedInUser = null; // Benutzer abmelden
@@ -85,9 +93,11 @@ class UserRepository extends BaseRepository<UserClient> {
       // Fehlerbehandlung
     }
   }
+
   Future<void> deleteUser() async {
     try {
-      final loggedInUserId = loggedInUser?.id; // Annahme: loggedInUser hat ein 'id' Feld
+      final loggedInUserId =
+          loggedInUser?.id; // Annahme: loggedInUser hat ein 'id' Feld
       if (loggedInUserId != null) {
         await client.deleteUser(loggedInUserId);
         //loggedInUser = null; // Benutzer abmelden

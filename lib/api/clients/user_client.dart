@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:retrofit/retrofit.dart';
 import 'package:flutter_app/entities/user.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'user_client.g.dart';
 
 extension Iso8061SerializableDateTime on DateTime {
   String toJson() => this.toIso8601String();
 }
+
 @RestApi()
 abstract class UserClient {
   factory UserClient(Dio dio, {String baseUrl}) = _UserClient;
@@ -29,7 +30,8 @@ abstract class UserClient {
   });
 
   @PUT("/user/{id}")
-  Future<HttpResponse<User>> updateUser(@Path("id") String id, {
+  Future<HttpResponse<User>> updateUser(
+    @Path("id") String id, {
     @Field("name") required String name,
     @Field("surname") required String surname,
     @Field("dob") required DateTime dob,

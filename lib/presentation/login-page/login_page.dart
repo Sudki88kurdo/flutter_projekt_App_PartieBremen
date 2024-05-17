@@ -4,13 +4,12 @@ import 'package:flutter_app/presentation/login-page/login_page_state.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../common/screen_status.dart';
-import '../../entities/user.dart';
-import '../home-sceen/HomeScreen.dart';
+
 import '../../appStyle.dart';
 import '../../common/screen_status.dart';
+import '../../entities/user.dart';
 import '../home-screen/home_screen.dart';
-import '../viewHome-page/prfileNav/profileEdit-page/ProfileEditWidget.dart';
+import '../profile/prfileNav/profileEdit-page/ProfileEditWidget.dart';
 
 class LoginPage extends StatelessWidget {
   static const String routeName = 'profile-page';
@@ -19,7 +18,7 @@ class LoginPage extends StatelessWidget {
 
   LoginPage({super.key});
   late User user;
-  ProfileEditWidget pe=ProfileEditWidget();
+  ProfileEditWidget pe = ProfileEditWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +125,10 @@ class LoginPage extends StatelessWidget {
             // Navigiere zur Hauptseite nach erfolgreicher Anmeldung
             if (value)
               {
-                user=loginPageState.user!,
+                user = loginPageState.user!,
                 pe.setUser(user),
-                loginContext.pushNamed(HomeScreen.routeName)}
+                loginContext.pushNamed(HomeScreen.routeName)
+              }
             else
               {
                 ScaffoldMessenger.of(loginContext).showSnackBar(

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/error/error_page.dart';
-import 'package:flutter_app/presentation/viewHome-page/HomeScreen.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen.dart';
 import 'package:flutter_app/presentation/login-page/login_page_provider.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
+import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page.dart';
+import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_provider.dart';
 import 'package:flutter_app/presentation/register-page/register_page.dart';
 import 'package:flutter_app/presentation/register-page/register_page_provider.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
-import 'package:flutter_app/presentation/viewHome-page/prfileNav/profile-page/profile_page.dart';
-import 'package:flutter_app/presentation/viewHome-page/prfileNav/profile-page/profile_page_provider.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> _rootNavigationKey =
@@ -53,8 +52,6 @@ final GoRouter router = GoRouter(
         name: ProfilePageProvider.routeName,
         path: '/${ProfilePageProvider.routeName}',
         parentNavigatorKey: _rootNavigationKey,
-        builder: (_,__) => const ProfilePage()
-    ),
+        builder: (_, __) => const ProfilePage()),
   ],
 );
-

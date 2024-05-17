@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen.dart';
 import 'package:flutter_app/presentation/register-page/register_page_cubit.dart';
-import 'package:flutter_app/presentation/viewHome-page/HomeScreen.dart';
 import 'package:flutter_app/presentation/register-page/register_page_state.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../appStyle.dart';
 
 class RegisterPage extends StatelessWidget {

@@ -7,6 +7,7 @@ import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/presentation/app/app_view_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+
 import 'api/repositories/comment_repository.dart';
 import 'api/repositories/user_repository.dart';
 import 'presentation/start-page/start_page.dart';
@@ -45,7 +46,8 @@ void main() async {
           RepositoryProvider.value(value: PoiRepository(baseUrl, dio)),
           RepositoryProvider.value(value: CommentRepository(baseUrl, dio)),
           RepositoryProvider.value(value: VotingRepository(baseUrl, dio)),
-          RepositoryProvider.value(value: OpenplzRepository(openPlzBaseUrl, dio)),
+          RepositoryProvider.value(
+              value: OpenplzRepository(openPlzBaseUrl, dio)),
         ],
         child: const AppViewProvider(),
       )));

@@ -22,7 +22,7 @@ class _UserClient implements UserClient {
   Future<HttpResponse<User>> registerUser({
     required String name,
     required String surname,
-    required DateTime dob,
+    required String dob,
     required String email,
     required String password,
     required bool verified,

@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
-
+enum Role { DEFAULT, USER, CREATOR, MODERATOR, ADMIN, DECIDER }
 @freezed
 class User with _$User {
 
@@ -17,6 +17,7 @@ class User with _$User {
     String? email,
     String? password,
     bool? verified,
+    @Default(Role.DEFAULT) Role? role,
     bool? active,
   }) = _User;
 

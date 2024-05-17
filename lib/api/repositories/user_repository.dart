@@ -10,7 +10,7 @@ class UserRepository extends BaseRepository<UserClient> {
   /// Constructor
   UserRepository(String baseUrl, Dio dio)
       : super(
-          client: UserClient(dio, baseUrl: 'https://api.partibremen.student.28apps-software.de'),
+          client: UserClient(dio, baseUrl: baseUrl),
           dio: dio,
         );
 
@@ -24,7 +24,14 @@ class UserRepository extends BaseRepository<UserClient> {
     required bool active,
   }) async =>
       execute(
-        () => client.registerUser(email: email, name: name, surname: surname, password: password, verified: verified, dob: dob, active: true),
+        () => client.registerUser(
+            email: email,
+            name: name,
+            surname: surname,
+            password: password,
+            verified: verified,
+            dob: dob.toIso8601String(),
+            active: true),
       );
    User? loggedInUser;
   Future<ApiResult<User>> loginUser({
@@ -46,7 +53,7 @@ class UserRepository extends BaseRepository<UserClient> {
     required String id,
     required String name,
     required String surname,
-    //required DateTime dob,
+    required DateTime dob,
     required String email,
     required String password,
     required bool verified,
@@ -55,7 +62,7 @@ class UserRepository extends BaseRepository<UserClient> {
 
   }) async {
     try {
-      final response = await client.updateUser(id, name: name, surname: surname, email: email, password: password,verified:verified,role:role);
+      final response = await client.updateUser(id, name: name, surname: surname, email: email, password: password,verified:verified,role:role, dob: dob,);
 
 
       loggedInUser = response.data; // Setzen des angemeldeten Benutzers

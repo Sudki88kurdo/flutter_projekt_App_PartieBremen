@@ -12,17 +12,15 @@ class BaseRepository<C> {
   /// Client eg. [AuthClient] or [MapClient] etc. to use for requests
   final C client;
 
-
   BaseRepository({
     required this.dio,
     required this.client,
   });
 
-
   @protected
   Future<ApiResult<T>> execute<T, F extends HttpResponse<T>>(
-      Future<F> Function() fetchFuture,
-      ) async {
+    Future<F> Function() fetchFuture,
+  ) async {
     try {
       final response = await fetchFuture();
       return ApiResult.success(data: response.data);

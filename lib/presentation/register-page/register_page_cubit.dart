@@ -10,13 +10,16 @@ class RegisterPageCubit extends Cubit<RegisterPageState> {
 
   RegisterPageCubit(this._userRepository) : super(const RegisterPageState());
 
-  Future<void> register({required String name, required String surname, required DateTime dob, required String email, required String password, required bool verified, required bool active}) async {
+  Future<bool> register({required String name, required String surname, required DateTime dob, required String email, required String password, required bool verified, required bool active}) async {
     var res = await _userRepository.registerUser(email: email, name: name, surname: surname, password: password, verified: verified, dob: dob, active: true);
+    bool registerSuccessful = false;
     res.whenOrNull(success: (value) {
       emit(
         state.copyWith(registerSuccessful: true)
       );
+      registerSuccessful = true;
     });
+    return registerSuccessful;
   }
 
   Future<void> updatePickedDate(DateTime pickedDate) async {

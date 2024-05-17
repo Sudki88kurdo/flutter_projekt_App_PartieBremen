@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/presentation/home-screen/home_screen.dart';
 import 'package:flutter_app/presentation/register-page/register_page_cubit.dart';
 import 'package:flutter_app/presentation/viewHome-page/HomeScreen.dart';
 import 'package:flutter_app/presentation/register-page/register_page_state.dart';
@@ -37,7 +38,7 @@ class RegisterPage extends StatelessWidget {
           body: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/hintergrundBremen.jpg'),
+                image: AssetImage('assets/images/hintergrundBremen.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -76,8 +77,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                       controller: TextEditingController(
                         text: registerPageState.pickedDate != null
-                            ? '${registerPageState.pickedDate!.day}.${registerPageState.pickedDate!
-                            .month}.${registerPageState.pickedDate!.year}'
+                            ? '${registerPageState.pickedDate!.day}.${registerPageState.pickedDate!.month}.${registerPageState.pickedDate!.year}'
                             : '',
                       ),
                     ),
@@ -105,24 +105,32 @@ class RegisterPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 ElevatedButton(
                   onPressed: () async {
-                     await registerPageContext.read<RegisterPageCubit>().register(
-                      name: firstNameController.text,
-                      surname: lastNameController.text,
-                      dob: registerPageState.pickedDate!,
-                      email: emailController.text,
-                      password: passwordController.text,
-                      verified: true,
-                      active: true
-                     );
-                    if (registerPageState.registerSuccessful) {
-                      registerPageContext.pushNamed(HomeScreen.routeName);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Fehler bei der Registrierung')));
-                    }
+                    await registerPageContext
+                        .read<RegisterPageCubit>()
+                        .register(
+                            name: firstNameController.text,
+                            surname: lastNameController.text,
+                            dob: registerPageState.pickedDate!,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            verified: true,
+                            active: true)
+                        .then((value) => {
+                              if (value)
+                                {
+                                  registerPageContext
+                                      .pushNamed(HomeScreen.routeName)
+                                }
+                              else
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Fehler bei der Registrierung')))
+                                }
+                            });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppStyles.buttonColor,
@@ -143,14 +151,15 @@ class RegisterPage extends StatelessWidget {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-    );
-    if (picked != null) {
-      await context.read<RegisterPageCubit>().updatePickedDate(picked);
-    }
+    ).then((value) async {
+      if (value != null) {
+        await context.read<RegisterPageCubit>().updatePickedDate(value);
+      }
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:bloc_presentation/bloc_presentation.dart';
-import 'package:flutter_app/api/repositories/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../api/repositories/user_repository.dart';
+import '../../entities/user.dart';
 import 'app_cubit_event.dart';
 import 'app_state.dart';
 
@@ -13,5 +14,10 @@ class AppCubit extends Cubit<AppState>
   /// Constructor
   ///
   final UserRepository _userRepository;
+
   AppCubit(this._userRepository) : super(const AppState());
+
+  Future<void> updateUser(User user) async {
+    emit(state.copyWith(user: user));
+  }
 }

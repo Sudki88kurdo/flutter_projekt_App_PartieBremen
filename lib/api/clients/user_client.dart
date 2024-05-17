@@ -44,6 +44,6 @@ abstract class UserClient {
   @POST("/user/logout/{id}")
   Future<void> logoutUser(@Path("id") String id);
 
-  @DELETE("/user/logout/{id}")
+  @DELETE("/user/delete/{id}")
   Future<void> deleteUser(@Path("id") String id);
 }

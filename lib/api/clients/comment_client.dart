@@ -8,6 +8,14 @@ part 'comment_client.g.dart';
 abstract class CommentClient {
   factory CommentClient(Dio dio, {String baseUrl}) = _CommentClient;
 
+  @POST("/comment")
+  Future<HttpResponse<CommentsResponse>> writeComment({
+    @Field("actualComment") required String actualComment,
+    @Field("commenterId") required String commenterId,
+    @Field("poiId") String? poiId,
+    @Field("commentId") String? commentId,
+  });
+
   @GET("/comment/{poiId}/fromPoI")
   Future<HttpResponse<List<CommentsResponse>>> findAllFromPoI(
       {@Path("poiId") required String poiId});

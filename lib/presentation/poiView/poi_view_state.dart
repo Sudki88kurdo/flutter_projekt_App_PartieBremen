@@ -15,5 +15,11 @@ class PoiViewState with _$PoiViewState {
     @Default(null) Poi? poi,
     @Default([]) List<CommentsResponse> comments,
     @Default([]) List<VotingsResponse> votings,
+    @Default(ScreenStatus.loading()) ScreenStatus commentStatus,
+    required PagingController<int, CommentsResponse> pagingController,
   }) = _PoiViewState;
+
+  factory PoiViewState.initial() => PoiViewState(
+      pagingController:
+          PagingController<int, CommentsResponse>(firstPageKey: 1));
 }

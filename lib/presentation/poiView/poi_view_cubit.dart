@@ -44,7 +44,8 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     var resComment = await _commentRepository.findAllFromPoI(poiId: _poiId);
     resComment.whenOrNull(success: (value) {
       emit(state.copyWith(comments: value));
-      state.pagingController.appendLastPage(value);
+      state.pagingController.itemList = value;
+      ;
     });
 
     return state.comments;

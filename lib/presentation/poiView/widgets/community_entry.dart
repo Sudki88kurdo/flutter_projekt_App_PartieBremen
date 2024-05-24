@@ -39,7 +39,6 @@ class CommunityEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
           ? () => onTap?.call()
           : () => _defaultTapBehavior(context),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: const Color(0xff1c1e24),
           borderRadius: BorderRadius.circular(8),

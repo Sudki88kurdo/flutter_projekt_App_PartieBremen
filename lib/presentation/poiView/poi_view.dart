@@ -1,8 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/app/app_state.dart';
-import 'package:flutter_app/presentation/home-screen/home_screen.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_app/presentation/poiView/widgets/chat_container.dart';
@@ -16,9 +16,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../appStyle.dart';
 import '../../common/no_items_found_error.dart';
 import '../../theme/colors.dart';
+import '../home-screen/home_screen.dart';
 
 class CommentsList<C extends StateStreamable<S>, S> extends StatelessWidget {
   final Widget? noItems;
@@ -121,14 +121,6 @@ class _AccountCreationValue extends StatelessWidget {
     return BlocBuilder<AppCubit, AppState>(
       builder: (context, state) {
         var creationData = state.user!.dob;
-
-        // Get the title
-        var title = creationData.year > 0
-            ? "Erstellung"
-            : creationData.month > 0
-                ? "Erstellungsmonat"
-                : "Erstellungstag";
-
         // Get the value
         var value = creationData.year > 0
             ? creationData.year.toInt()
@@ -138,7 +130,7 @@ class _AccountCreationValue extends StatelessWidget {
 
         return _StatisticsItem(
           icon: Icons.calendar_today,
-          title: title,
+          title: null,
           value: "$value",
         );
       },
@@ -160,30 +152,35 @@ class _StatisticsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Icon
-        Icon(icon ?? Icons.abc, color: Colors.white70, size: 25),
+    return Container(
+      width: MediaQuery.of(context).size.width / 3.2,
+      child: Column(
+        children: [
+          // Icon
+          Icon(icon ?? Icons.abc, color: Colors.white70, size: 25),
 
-        // Padding
-        const SizedBox(height: 5),
+          // Padding
+          const SizedBox(height: 5),
 
-        // Value and Title
-        Text(
-          title ?? "Konnte nicht geladen werden",
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall
-              ?.copyWith(color: Colors.white70),
-        ),
-        Text(
-          value ?? "0",
-          style: Theme.of(context)
-              .textTheme
-              .labelLarge
-              ?.copyWith(color: Colors.white70),
-        ),
-      ],
+          // Value and Title
+          title != null
+              ? Text(
+                  title ?? "Konnte nicht geladen werden",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: Colors.white70),
+                )
+              : Container(),
+          Text(
+            value ?? "0",
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(color: Colors.white70),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -207,47 +204,128 @@ class _Comments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 16, top: 18, bottom: 12, right: 16),
+      height: MediaQuery.of(context).size.height * 0.65,
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: const Color(0xff1c1e24),
-        borderRadius: BorderRadius.circular(16),
+      decoration: const BoxDecoration(
+        color: Color(0xff1c1e24),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _CommentCount(),
-              _Divider(),
-              _UpVotesCount(),
-              _Divider(),
-              _DownVotesCount(),
-              _Divider(),
-              _AccountCreationValue(),
-            ],
-          ),
+      child: Expanded(
+        child: CustomScrollView(
+          slivers: [
+            MultiSliver(
+              children: [
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async => context
+                      .read<PoiViewCubit>()
+                      .state
+                      .pagingController
+                      .refresh(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    BlocBuilder<PoiViewCubit, PoiViewState>(
+                      buildWhen: (prev, curr) =>
+                          prev.poi?.titel != null && curr.poi?.titel != null,
+                      builder: (context, state) {
+                        return state.poi!.titel!.isNotEmpty
+                            ? SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.65,
+                                child: Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 8.0,
+                                      top: 6,
+                                    ),
+                                    child: Text(
+                                      state.poi!.titel!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                              color: Colors.white70,
+                                              fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const Text("");
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: _AccountCreationValue(),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _CommentCount(),
+                    _Divider(),
+                    _UpVotesCount(),
+                    _Divider(),
+                    _DownVotesCount(),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                BlocBuilder<PoiViewCubit, PoiViewState>(
+                  buildWhen: (prev, current) =>
+                      prev.comments.length != current.comments.length ||
+                      prev.comments.isEmpty && current.comments.isNotEmpty,
+                  builder: (context, state) {
+                    return CommentsList<PoiViewCubit, PoiViewState>(
+                      // TODO: Somehow the default Loading Indicator with Shimmers is bugged
+                      // but just here... In the Hub it's working fine..
+                      loadingIndicator: const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ),
+                      noItems: NoItemsFoundError(
+                        text: "Keine Posts",
+                      ),
+                      pagingController: state.pagingController,
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      /*
           BlocBuilder<PoiViewCubit, PoiViewState>(
             buildWhen: (prev, curr) =>
-                prev.poi?.description != null && curr.poi?.description != null,
+            prev.poi?.description != null && curr.poi?.description != null,
             builder: (context, state) {
               return state.poi!.description!.isNotEmpty
                   ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        state.poi!.description!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: Colors.white70),
-                      ),
-                    )
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  state.poi!.description!,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: Colors.white70),
+                ),
+              )
                   : const Text("");
             },
           ),
-        ],
-      ),
+
+           */
+      // Paginated List of Public Posts
     );
   }
 }
@@ -257,34 +335,7 @@ class _PoIData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiSliver(
-      children: [
-        // Statistics
-        const SliverToBoxAdapter(child: _Comments()),
-
-        // Paginated List of Public Posts
-        BlocBuilder<PoiViewCubit, PoiViewState>(
-          buildWhen: (prev, current) =>
-              prev.comments.length != current.comments.length ||
-              prev.comments.isEmpty && current.comments.isNotEmpty,
-          builder: (context, state) {
-            return CommentsList<PoiViewCubit, PoiViewState>(
-              // TODO: Somehow the default Loading Indicator with Shimmers is bugged
-              // but just here... In the Hub it's working fine..
-              loadingIndicator: const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              ),
-              noItems: NoItemsFoundError(
-                text: "Keine Posts",
-              ),
-              pagingController: state.pagingController,
-            );
-          },
-        ),
-      ],
-    );
+    return _Comments();
   }
 }
 
@@ -301,97 +352,137 @@ class PoiView extends StatelessWidget {
         GeoCode geoCode = GeoCode();
         return state.poi != null
             ? Scaffold(
-                appBar: AppBar(
-                  title: Text(
-                    state.poi!.titel!,
-                    style: AppStyles.appBarTitleStyle,
-                  ),
-                  backgroundColor: AppStyles.buttonColor,
-                  leading: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      context.pushNamed(HomeScreen.routeName);
-                    },
-                  ),
-                  iconTheme: const IconThemeData(color: Colors.white),
-                ),
-                body: Stack(
+                appBar: null,
+                body: Column(
                   children: [
-                    CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: 250,
-                            child: FlutterMap(
-                              mapController: _mapController,
-                              options: MapOptions(
-                                initialCenter: LatLng(state.poi!.latitude!,
-                                    state.poi!.longitude!),
-                                initialZoom: 17,
-                                interactionOptions: const InteractionOptions(
-                                  flags: InteractiveFlag.drag |
-                                      InteractiveFlag.flingAnimation |
-                                      InteractiveFlag.pinchMove |
-                                      InteractiveFlag.pinchZoom |
-                                      InteractiveFlag.doubleTapZoom |
-                                      InteractiveFlag.doubleTapDragZoom |
-                                      InteractiveFlag.scrollWheelZoom,
-                                ),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(height: MediaQuery.of(context).size.height),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: FlutterMap(
+                            mapController: _mapController,
+                            options: MapOptions(
+                              initialCenter: LatLng(
+                                  state.poi!.latitude!, state.poi!.longitude!),
+                              initialZoom: 17,
+                              interactionOptions: const InteractionOptions(
+                                flags: InteractiveFlag.drag |
+                                    InteractiveFlag.flingAnimation |
+                                    InteractiveFlag.pinchMove |
+                                    InteractiveFlag.pinchZoom |
+                                    InteractiveFlag.doubleTapZoom |
+                                    InteractiveFlag.doubleTapDragZoom |
+                                    InteractiveFlag.scrollWheelZoom,
                               ),
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName: 'com.example.app',
-                                ),
-                                MarkerLayer(
-                                  markers: [
-                                    Marker(
-                                      point: LatLng(
-                                        state.poi!.latitude!,
-                                        state.poi!.longitude!,
-                                      ),
-                                      width: 150.0,
-                                      height: 150.0,
-                                      child: const Icon(
-                                        Icons.location_on,
-                                        color: Colors.red,
-                                        size: 50.0,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                RichAttributionWidget(
-                                  attributions: [
-                                    TextSourceAttribution(
-                                      'OpenStreetMap contributors',
-                                      onTap: () => launchUrl(Uri.parse(
-                                          'https://openstreetmap.org/copyright')),
+                            ),
+                            children: [
+                              TileLayer(
+                                urlTemplate:
+                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                userAgentPackageName: 'com.example.app',
+                              ),
+                              MarkerLayer(
+                                markers: [
+                                  Marker(
+                                    point: LatLng(
+                                      state.poi!.latitude!,
+                                      state.poi!.longitude!,
                                     ),
-                                  ],
-                                ),
-                              ],
+                                    width: 150.0,
+                                    height: 150.0,
+                                    child: const Icon(
+                                      Icons.location_on,
+                                      color: Colors.red,
+                                      size: 50.0,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              RichAttributionWidget(
+                                attributions: [
+                                  TextSourceAttribution(
+                                    'OpenStreetMap contributors',
+                                    onTap: () => launchUrl(Uri.parse(
+                                        'https://openstreetmap.org/copyright')),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(17.0),
+                          child: CircleAvatar(
+                            backgroundColor: const Color(0xff1c1e24),
+                            child: IconButton(
+                              iconSize: 20,
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () {
+                                context.pushNamed(HomeScreen.routeName);
+                              },
                             ),
                           ),
                         ),
-                        const _PoIData(),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width - 50,
+                              top: 80),
+                          child: CircleAvatar(
+                            backgroundColor: const Color(0xff1c1e24),
+                            child: IconButton(
+                              iconSize: 20,
+                              icon: const Icon(
+                                Icons.thumb_up,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () {
+                                context.pushNamed(HomeScreen.routeName);
+                              },
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width - 50,
+                              top: 150),
+                          child: CircleAvatar(
+                            backgroundColor: const Color(0xff1c1e24),
+                            child: IconButton(
+                              iconSize: 20,
+                              icon: const Icon(
+                                Icons.thumb_down,
+                                color: Colors.white70,
+                              ),
+                              onPressed: () {
+                                context.pushNamed(HomeScreen.routeName);
+                              },
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: _PoIData(),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: ChatContainer(
+                            value: 1,
+                            onSendMessagePressed: (msg) => context
+                                .read<PoiViewCubit>()
+                                .writeComment(
+                                    msg, context.read<AppCubit>().state.user!),
+                          ),
+                        ),
                       ],
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.viewInsetsOf(context).bottom,
-                        ),
-                        child: ChatContainer(
-                          value: 1,
-                          onSendMessagePressed: (msg) => context
-                              .read<PoiViewCubit>()
-                              .writeComment(
-                                  msg, context.read<AppCubit>().state.user!),
-                        ),
-                      ),
                     ),
                   ],
                 ),

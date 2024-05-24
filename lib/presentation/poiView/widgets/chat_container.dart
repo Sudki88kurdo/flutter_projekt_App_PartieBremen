@@ -54,10 +54,10 @@ class ChatContainer extends StatelessWidget {
         child: Opacity(
           opacity: (value > maxOpacityValue) ? 1 : value,
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: tabBarBg,
               border: Border(
-                top: BorderSide(width: 2.0, color: Colors.grey.shade800),
+                top: BorderSide(width: 2.0, color: Colors.white70),
               ),
             ),
             height: Platform.isAndroid ? 90 : 120,
@@ -113,9 +113,11 @@ class _ChatTextField extends StatelessWidget {
             // Message TextField
             Expanded(
               child: TextField(
+                style: TextStyle(color: Colors.white70),
                 controller: controller,
                 decoration: InputDecoration(
                   hintText: "Kommentar schreiben.",
+                  hintStyle: TextStyle(color: Colors.white70.withAlpha(150)),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.all(10),
                 ),
@@ -132,7 +134,7 @@ class _ChatTextField extends StatelessWidget {
                     _onSendMessagePressed(context, controller.text),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.green,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40),
                   ),

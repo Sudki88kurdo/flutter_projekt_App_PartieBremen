@@ -128,10 +128,22 @@ class _AccountCreationValue extends StatelessWidget {
                 ? creationData.month.toInt()
                 : creationData.day.toInt();
 
-        return _StatisticsItem(
-          icon: Icons.calendar_today,
-          title: null,
-          value: "$value",
+        return Column(
+          children: [
+            // Icon
+            const Icon(Icons.calendar_today, color: Colors.white70, size: 25),
+
+            // Padding
+            const SizedBox(height: 5),
+
+            Text(
+              "$value",
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: Colors.white70),
+            ),
+          ],
         );
       },
     );
@@ -224,30 +236,28 @@ class _Comments extends StatelessWidget {
                       .refresh(),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     BlocBuilder<PoiViewCubit, PoiViewState>(
                       buildWhen: (prev, curr) =>
                           prev.poi?.titel != null && curr.poi?.titel != null,
                       builder: (context, state) {
                         return state.poi!.titel!.isNotEmpty
-                            ? SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.65,
-                                child: Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 8.0,
-                                      top: 6,
-                                    ),
-                                    child: Text(
-                                      state.poi!.titel!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                              color: Colors.white70,
-                                              fontSize: 20),
-                                    ),
+                            ? Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8.0,
+                                    top: 6,
+                                    right: 20,
+                                  ),
+                                  child: Text(
+                                    state.poi!.titel!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                            color: Colors.white70,
+                                            fontSize: 20),
                                   ),
                                 ),
                               )
@@ -255,7 +265,7 @@ class _Comments extends StatelessWidget {
                       },
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: const EdgeInsets.only(right: 8.0, top: 8),
                       child: _AccountCreationValue(),
                     ),
                   ],

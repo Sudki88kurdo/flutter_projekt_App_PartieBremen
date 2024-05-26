@@ -14,12 +14,15 @@ class Poll extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Umfragen",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  "Umfragen",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
                 ),
               ),
               Icon(
@@ -29,26 +32,30 @@ class Poll extends StatelessWidget {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              children: [
-                Text(
-                  "Hier steht unsere Frage:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade700,
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 350,
+            color: Colors.green,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      "Hier steht unsere Umfrage:",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                answerCard("Antwort 1", context),
-                answerCard("Antwort 2", context),
-                answerCard("Antwort 3", context),
-                answerCard("Antwort 4", context),
-              ],
+                  answerCard("Antwort 1", context),
+                  answerCard("Antwort 2", context),
+                  answerCard("Antwort 3", context),
+                  answerCard("Antwort 4", context),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );

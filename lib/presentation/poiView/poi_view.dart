@@ -179,8 +179,8 @@ class _Comments extends StatelessWidget {
       margin: const EdgeInsets.all(8),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(1),
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.grey.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

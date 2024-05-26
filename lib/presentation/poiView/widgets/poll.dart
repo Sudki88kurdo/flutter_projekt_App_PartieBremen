@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/presentation/poiView/logic.dart';
 import 'package:flutter_app/presentation/poiView/widgets/poll_answer.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -42,81 +43,99 @@ class _PollState extends State<Poll> {
           ),
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 450,
             decoration: BoxDecoration(
               color: Colors.green,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Flex(
-              mainAxisAlignment: MainAxisAlignment.center,
-              direction: Axis.horizontal,
+            padding: EdgeInsets.only(bottom: 32),
+            child: Row(
               children: [
-                IconButton(
-                  onPressed: () {
-                    if (currentStep != 1) {
-                      setState(() {
-                        currentStep--;
-                      });
-                    }
-                  },
-                  icon: Icon(Icons.arrow_back_ios_new_outlined),
-                  color: Colors.white,
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Hier steht unsere Umfrage:",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
+                currentStep > 1
+                    ? IconButton(
+                        onPressed: () {
+                          if (currentStep != 1) {
+                            setState(() {
+                              currentStep--;
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.arrow_back_ios_new_outlined),
+                        color: Colors.white,
+                      )
+                    : SizedBox(
+                        width: 40,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Aktueller Schritt:",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: StepProgressIndicator(
-                        totalSteps: totalSteps,
-                        currentStep: currentStep,
-                        selectedColor: Colors.white,
-                        unselectedColor: Colors.red,
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(20)),
-                    answerCard("Antwort 1", context),
-                    answerCard("Antwort 2", context),
-                    answerCard("Antwort 3", context),
-                    answerCard("Antwort 4", context),
-                  ],
+                Expanded(
+                  child: _buildAnswers(questionNumber: currentStep),
                 ),
-                IconButton(
-                  onPressed: () {
-                    if (currentStep < totalSteps) {
-                      setState(() {
-                        currentStep++;
-                      });
-                    }
-                  },
-                  icon: Icon(Icons.arrow_forward_ios_outlined),
-                  color: Colors.white,
-                ),
+                currentStep < totalSteps
+                    ? IconButton(
+                        onPressed: () {
+                          if (currentStep < totalSteps) {
+                            setState(() {
+                              currentStep++;
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.arrow_forward_ios_outlined),
+                        color: Colors.white,
+                      )
+                    : SizedBox(
+                        width: 40,
+                      ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAnswers({required int questionNumber}) {
+    var question = loadQuestion(questionNumber);
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(
+            question.question,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              overflow: TextOverflow.ellipsis,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 10,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Aktueller Schritt:",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: StepProgressIndicator(
+            totalSteps: totalSteps,
+            currentStep: currentStep,
+            selectedColor: Colors.white,
+            unselectedColor: Colors.red,
+          ),
+        ),
+        Padding(padding: EdgeInsets.all(20)),
+        ...(List<Widget>.generate(
+          question.answers.length,
+          (int index) {
+            var answer = question.answers[index];
+            return answerCard(answer, context);
+          },
+        )),
+      ],
     );
   }
 }

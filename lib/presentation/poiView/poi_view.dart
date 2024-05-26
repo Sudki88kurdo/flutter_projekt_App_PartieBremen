@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/api/common/error_row.dart';
+import 'package:flutter_app/appStyle.dart';
+import 'package:flutter_app/common/community_entry_progress_indicator.dart';
+import 'package:flutter_app/common/no_items_found_error.dart';
 import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/app/app_state.dart';
@@ -7,6 +11,7 @@ import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_app/presentation/poiView/widgets/poll.dart';
 import 'package:flutter_app/presentation/poiView/widgets/statistics_item.dart';
+import 'package:flutter_app/theme/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
@@ -15,12 +20,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../api/common/error_row.dart';
-import '../../appStyle.dart';
-import '../../common/community_entry_progress_indicator.dart';
-import '../../common/no_items_found_error.dart';
-import '../../theme/colors.dart';
 
 class CommentsList<C extends StateStreamable<S>, S> extends StatelessWidget {
   final Widget? noItems;
@@ -270,7 +269,9 @@ class PoiView extends StatelessWidget {
                           mapController: _mapController,
                           options: MapOptions(
                             initialCenter: LatLng(
-                                state.poi!.latitude!, state.poi!.longitude!),
+                              state.poi!.latitude!,
+                              state.poi!.longitude!,
+                            ),
                             initialZoom: 17,
                             interactionOptions: const InteractionOptions(
                               flags: InteractiveFlag.drag |
@@ -302,15 +303,18 @@ class PoiView extends StatelessWidget {
                                     color: Colors.red,
                                     size: 50.0,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             RichAttributionWidget(
                               attributions: [
                                 TextSourceAttribution(
                                   'OpenStreetMap contributors',
-                                  onTap: () => launchUrl(Uri.parse(
-                                      'https://openstreetmap.org/copyright')),
+                                  onTap: () => launchUrl(
+                                    Uri.parse(
+                                      'https://openstreetmap.org/copyright',
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -318,7 +322,7 @@ class PoiView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const _PoIData()
+                    const _PoIData(),
                   ],
                 ),
               )

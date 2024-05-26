@@ -17,10 +17,11 @@ class PoiViewProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => PoiViewCubit(
-          context.read<PoiRepository>(),
-          context.read<CommentRepository>(),
-          context.read<VotingRepository>(),
-          poiId),
+        context.read<PoiRepository>(),
+        context.read<CommentRepository>(),
+        context.read<VotingRepository>(),
+        poiId,
+      ),
       child: const PoiView(),
     );
   }

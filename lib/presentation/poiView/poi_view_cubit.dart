@@ -1,9 +1,8 @@
 import 'package:flutter_app/api/repositories/comment_repository.dart';
+import 'package:flutter_app/api/repositories/poi_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../api/repositories/poi_repository.dart';
 
 class PoiViewCubit extends Cubit<PoiViewState> {
   final PoiRepository _poIRepository;

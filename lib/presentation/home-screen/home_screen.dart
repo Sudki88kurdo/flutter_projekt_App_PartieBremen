@@ -15,11 +15,12 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CustomIconWidget extends StatelessWidget {
-  const CustomIconWidget(
-      {super.key,
-      required this.poiId,
-      required this.mapcontext,
-      required this.homePageState});
+  const CustomIconWidget({
+    super.key,
+    required this.poiId,
+    required this.mapcontext,
+    required this.homePageState,
+  });
 
   final String poiId;
   final BuildContext mapcontext;
@@ -31,7 +32,7 @@ class CustomIconWidget extends StatelessWidget {
       onTap: () {
         mapcontext.pushNamed(
           PoiViewProvider.routeName,
-          pathParameters: {'poiId': poiId ?? ''},
+          pathParameters: {'poiId': poiId},
         );
       },
       child: const Icon(
@@ -51,183 +52,206 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext buildContext) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text('PartiBremen Home'),
-            centerTitle: true,
-            backgroundColor: Colors.green,
-            titleTextStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('PartiBremen Home'),
+          centerTitle: true,
+          backgroundColor: Colors.green,
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
           ),
-          body: SingleChildScrollView(
-            child: BlocBuilder<HomePageCubit, HomePageState>(
-              builder: (mapcontext, mapstate) {
-                final MapController mapController = MapController();
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Stack(
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(buildContext).size.width * 1,
-                          height: MediaQuery.of(buildContext).size.height * 1,
-                          child: FlutterMap(
-                            mapController: mapController,
-                            options: const MapOptions(
-                              initialCenter: LatLng(53.0793, 8.8017),
-                              initialZoom: 12,
-                              interactionOptions: InteractionOptions(
-                                flags: InteractiveFlag.drag |
-                                    InteractiveFlag.flingAnimation |
-                                    InteractiveFlag.pinchMove |
-                                    InteractiveFlag.pinchZoom |
-                                    InteractiveFlag.doubleTapZoom |
-                                    InteractiveFlag.doubleTapDragZoom |
-                                    InteractiveFlag.scrollWheelZoom,
-                              ),
+        ),
+        body: SingleChildScrollView(
+          child: BlocBuilder<HomePageCubit, HomePageState>(
+            builder: (mapcontext, mapstate) {
+              final MapController mapController = MapController();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Stack(
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(buildContext).size.width * 1,
+                        height: MediaQuery.of(buildContext).size.height * 1,
+                        child: FlutterMap(
+                          mapController: mapController,
+                          options: const MapOptions(
+                            initialCenter: LatLng(53.0793, 8.8017),
+                            initialZoom: 12,
+                            interactionOptions: InteractionOptions(
+                              flags: InteractiveFlag.drag |
+                                  InteractiveFlag.flingAnimation |
+                                  InteractiveFlag.pinchMove |
+                                  InteractiveFlag.pinchZoom |
+                                  InteractiveFlag.doubleTapZoom |
+                                  InteractiveFlag.doubleTapDragZoom |
+                                  InteractiveFlag.scrollWheelZoom,
                             ),
-                            children: [
-                              TileLayer(
-                                urlTemplate:
-                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                userAgentPackageName: 'com.example.app',
-                              ),
-                              MarkerLayer(
-                                markers: mapstate.pointsOfInterest.isNotEmpty
-                                    ? mapstate.pointsOfInterest
-                                        .map(
-                                          (poi) => poi.latitude != null &&
-                                                  poi.longitude != null
-                                              ? Marker(
-                                                  point: LatLng(
-                                                    poi.latitude!,
-                                                    poi.longitude!,
-                                                  ),
-                                                  width: 150.0,
-                                                  height: 150.0,
-                                                  child: CustomIconWidget(
-                                                    poiId: poi.id!,
-                                                    homePageState: mapstate,
-                                                    mapcontext: mapcontext,
-                                                  ))
-                                              : null,
-                                        )
-                                        .nonNulls
-                                        .toList()
-                                    : [],
-                              ),
-                              RichAttributionWidget(
-                                attributions: [
-                                  TextSourceAttribution(
-                                    'OpenStreetMap contributors',
-                                    onTap: () => launchUrl(Uri.parse(
-                                        'https://openstreetmap.org/copyright')),
-                                  ),
-                                ],
-                              ),
-                            ],
                           ),
-                        ),
-                        Flex(
-                          direction: Axis.vertical,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              width: 450,
-                              height: 80,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: SearchAnchor(
-                                  isFullScreen: false,
-                                  builder: (BuildContext context,
-                                      SearchController controller) {
-                                    return SearchBar(
-                                      controller: controller,
-                                      shape: MaterialStatePropertyAll<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadiusDirectional.circular(
-                                                  12),
-                                        ),
-                                      ),
-                                      backgroundColor:
-                                          const MaterialStatePropertyAll<Color>(
-                                              Color.fromRGBO(
-                                                  223, 238, 218, 1.0)),
-                                      padding: const MaterialStatePropertyAll<
-                                              EdgeInsets>(
-                                          EdgeInsets.symmetric(
-                                              horizontal: 16.0)),
-                                      hintText: 'Straßenname eingeben...',
-                                      onTap: () {
-                                        controller.openView();
-                                      },
-                                      leading: const Icon(Icons.search,
-                                          color: Colors.green),
-                                      trailing: const <Widget>[
-                                      ],
-                                    );
-                                  },
-                                  viewOnChanged: (String search) async {},
-                                  suggestionsBuilder: (BuildContext context,
-                                      SearchController controller) {
-                                    var searchFuture = loadSuggestions(
-                                        controller.text, mapcontext);
-                                    return [
-                                      FutureBuilder(
-                                        future: searchFuture,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                            List<Street> data =
-                                                snapshot.data as List<Street>;
-                                            return ListView.builder(
-                                              shrinkWrap: true,
-                                              physics:
-                                              const NeverScrollableScrollPhysics(),
-                                              itemCount: data.length,
-                                              itemBuilder: (context, index) {
-                                                return ListTile(
-                                                  title: Text(
-                                                      data[index].name ?? ""),
-                                                  onTap: () {
-                                                    controller.text = data[index].name ?? "";
-                                                    moveToAddress(
-                                                        mapController:
-                                                            mapController,
-                                                        search:
-                                                            data[index].name ??
-                                                                "");
-                                                    controller.closeView(
-                                                        controller.text);
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          }
-                                          return const LinearProgressIndicator();
-                                        },
+                            TileLayer(
+                              urlTemplate:
+                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              userAgentPackageName: 'com.example.app',
+                            ),
+                            MarkerLayer(
+                              markers: mapstate.pointsOfInterest.isNotEmpty
+                                  ? mapstate.pointsOfInterest
+                                      .map(
+                                        (poi) => poi.latitude != null &&
+                                                poi.longitude != null
+                                            ? Marker(
+                                                point: LatLng(
+                                                  poi.latitude!,
+                                                  poi.longitude!,
+                                                ),
+                                                width: 150.0,
+                                                height: 150.0,
+                                                child: CustomIconWidget(
+                                                  poiId: poi.id!,
+                                                  homePageState: mapstate,
+                                                  mapcontext: mapcontext,
+                                                ),
+                                              )
+                                            : null,
                                       )
-                                    ];
-                                  },
+                                      .nonNulls
+                                      .toList()
+                                  : [],
+                            ),
+                            RichAttributionWidget(
+                              attributions: [
+                                TextSourceAttribution(
+                                  'OpenStreetMap contributors',
+                                  onTap: () => launchUrl(
+                                    Uri.parse(
+                                      'https://openstreetmap.org/copyright',
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
+                      ),
+                      Flex(
+                        direction: Axis.vertical,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 450,
+                            height: 80,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: SearchAnchor(
+                                isFullScreen: false,
+                                builder: (
+                                  BuildContext context,
+                                  SearchController controller,
+                                ) {
+                                  return SearchBar(
+                                    controller: controller,
+                                    shape: MaterialStatePropertyAll<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadiusDirectional.circular(
+                                          12,
+                                        ),
+                                      ),
+                                    ),
+                                    backgroundColor:
+                                        const MaterialStatePropertyAll<Color>(
+                                      Color.fromRGBO(
+                                        223,
+                                        238,
+                                        218,
+                                        1.0,
+                                      ),
+                                    ),
+                                    padding: const MaterialStatePropertyAll<
+                                        EdgeInsets>(
+                                      EdgeInsets.symmetric(
+                                        horizontal: 16.0,
+                                      ),
+                                    ),
+                                    hintText: 'Straßenname eingeben...',
+                                    onTap: () {
+                                      controller.openView();
+                                    },
+                                    leading: const Icon(
+                                      Icons.search,
+                                      color: Colors.green,
+                                    ),
+                                    trailing: const <Widget>[],
+                                  );
+                                },
+                                viewOnChanged: (String search) async {},
+                                suggestionsBuilder: (
+                                  BuildContext context,
+                                  SearchController controller,
+                                ) {
+                                  var searchFuture = loadSuggestions(
+                                    controller.text,
+                                    mapcontext,
+                                  );
+                                  return [
+                                    FutureBuilder(
+                                      future: searchFuture,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.done) {
+                                          List<Street> data =
+                                              snapshot.data as List<Street>;
+                                          return ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount: data.length,
+                                            itemBuilder: (context, index) {
+                                              return ListTile(
+                                                title: Text(
+                                                  data[index].name ?? "",
+                                                ),
+                                                onTap: () {
+                                                  controller.text =
+                                                      data[index].name ?? "";
+                                                  moveToAddress(
+                                                    mapController:
+                                                        mapController,
+                                                    search:
+                                                        data[index].name ?? "",
+                                                  );
+                                                  controller.closeView(
+                                                    controller.text,
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          );
+                                        }
+                                        return const LinearProgressIndicator();
+                                      },
+                                    ),
+                                  ];
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
           ),
-          bottomNavigationBar: const BottomNavigationBarWidget(initialIndex: 0),
-        ));
+        ),
+        bottomNavigationBar: const BottomNavigationBarWidget(initialIndex: 0),
+      ),
+    );
   }
 
   bool isLatLngValid(String? lat, String? lng) {
@@ -243,15 +267,19 @@ class HomeScreen extends StatelessWidget {
   }) async {
     GeoCode geoCode = GeoCode();
     Coordinates coordinates =
-        await geoCode.forwardGeocoding(address: "Bremen, $search");
+        await geoCode.forwardGeocoding(address: 'Bremen, $search');
     if (coordinates.latitude != null) {
       mapController.move(
-          LatLng(coordinates.latitude!, coordinates.longitude!), 16);
+        LatLng(coordinates.latitude!, coordinates.longitude!),
+        16,
+      );
     }
   }
 
   Future<List<Street>> loadSuggestions(
-      String search, BuildContext context) async {
+    String search,
+    BuildContext context,
+  ) async {
     return await context.read<HomePageCubit>().getStreets(search);
   }
 }

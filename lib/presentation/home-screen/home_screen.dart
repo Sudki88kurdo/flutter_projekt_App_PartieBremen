@@ -65,8 +65,6 @@ class HomeScreen extends StatelessWidget {
           body: SingleChildScrollView(
             child: BlocBuilder<HomePageCubit, HomePageState>(
               builder: (mapcontext, mapstate) {
-                logger.i(
-                    "Building Home Screen, street results: ${mapstate.streetResults.length}");
                 final MapController mapController = MapController();
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,10 +136,10 @@ class HomeScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: 350,
-                              height: 65.0,
+                              width: 450,
+                              height: 80,
                               child: Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(15.0),
                                 child: SearchAnchor(
                                   isFullScreen: false,
                                   builder: (BuildContext context,
@@ -164,14 +162,14 @@ class HomeScreen extends StatelessWidget {
                                               EdgeInsets>(
                                           EdgeInsets.symmetric(
                                               horizontal: 16.0)),
-                                      hintText: 'Ort suchen',
+                                      hintText: 'Straßenname eingeben...',
                                       onTap: () {
-                                        logger.i("On Tap");
                                         controller.openView();
                                       },
                                       leading: const Icon(Icons.search,
                                           color: Colors.green),
-                                      trailing: const <Widget>[],
+                                      trailing: const <Widget>[
+                                      ],
                                     );
                                   },
                                   viewOnChanged: (String search) async {},
@@ -190,13 +188,14 @@ class HomeScreen extends StatelessWidget {
                                             return ListView.builder(
                                               shrinkWrap: true,
                                               physics:
-                                                  const NeverScrollableScrollPhysics(),
+                                              const NeverScrollableScrollPhysics(),
                                               itemCount: data.length,
                                               itemBuilder: (context, index) {
                                                 return ListTile(
                                                   title: Text(
                                                       data[index].name ?? ""),
                                                   onTap: () {
+                                                    controller.text = data[index].name ?? "";
                                                     moveToAddress(
                                                         mapController:
                                                             mapController,

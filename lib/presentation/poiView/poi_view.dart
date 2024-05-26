@@ -5,6 +5,8 @@ import 'package:flutter_app/presentation/app/app_state.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
+import 'package:flutter_app/presentation/poiView/widgets/poll.dart';
+import 'package:flutter_app/presentation/poiView/widgets/statistics_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
@@ -74,7 +76,7 @@ class _CommentCount extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.comments.length != current.comments.length,
       builder: (context, state) {
-        return _StatisticsItem(
+        return StatisticsItem(
           icon: Icons.comment,
           title: "Kommentare",
           value: "${state.comments.length}",
@@ -93,7 +95,7 @@ class _DownVotesCount extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.votings.length != current.votings.length,
       builder: (context, state) {
-        return _StatisticsItem(
+        return StatisticsItem(
           icon: Icons.arrow_upward,
           title: "Upvotes",
           value: "${state.votings.length}",
@@ -112,9 +114,9 @@ class _UpVotesCount extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.votings.length != current.votings.length,
       builder: (context, state) {
-        return _StatisticsItem(
+        return StatisticsItem(
           icon: Icons.arrow_downward,
-          title: "Upvotes",
+          title: "Downvotes",
           value: "${state.votings.length}",
         );
       },
@@ -145,54 +147,12 @@ class _AccountCreationValue extends StatelessWidget {
                 ? creationData.month.toInt()
                 : creationData.day.toInt();
 
-        return _StatisticsItem(
+        return StatisticsItem(
           icon: Icons.calendar_today,
           title: title,
           value: "$value",
         );
       },
-    );
-  }
-}
-
-class _StatisticsItem extends StatelessWidget {
-  final String? title;
-  final String? value;
-  final IconData? icon;
-
-  const _StatisticsItem({
-    super.key,
-    this.title,
-    this.value,
-    this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Icon
-        Icon(icon ?? Icons.abc, color: Colors.black54, size: 25),
-
-        // Padding
-        const SizedBox(height: 5),
-
-        // Value and Title
-        Text(
-          title ?? "Konnte nicht geladen werden",
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall
-              ?.copyWith(color: Colors.black54),
-        ),
-        Text(
-          value ?? "0",
-          style: Theme.of(context)
-              .textTheme
-              .labelLarge
-              ?.copyWith(color: Colors.black54),
-        ),
-      ],
     );
   }
 }
@@ -247,6 +207,7 @@ class _PoIData extends StatelessWidget {
       children: [
         // Statistics
         const SliverToBoxAdapter(child: _Comments()),
+        const SliverToBoxAdapter(child: Poll()),
 
         // Paginated List of Public Posts
         BlocBuilder<PoiViewCubit, PoiViewState>(
@@ -357,7 +318,7 @@ class PoiView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const _PoIData(),
+                    const _PoIData()
                   ],
                 ),
               )

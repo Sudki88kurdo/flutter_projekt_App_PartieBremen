@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
         builder: (profilePageContext, profilePageState) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('PartiBrmen Profil'),
+          title: Text('Profil'),
           centerTitle: true,
           backgroundColor: Colors.green,
           titleTextStyle: const TextStyle(
@@ -45,7 +45,7 @@ class ProfilePage extends StatelessWidget {
                 const SizedBox(height: 10.0),
                 ListTile(
                   leading: Icon(Icons.person),
-                  title: Text('Profil change'),
+                  title: Text('Persönliche Daten bearbeiten'),
                   onTap: () {
                     // Öffne ProfileEditWidget
                     Navigator.push(
@@ -64,7 +64,7 @@ class ProfilePage extends StatelessWidget {
                 const SizedBox(height: 10.0),
                 ListTile(
                   leading: Icon(Icons.delete),
-                  title: Text('Account delete'),
+                  title: Text('Konto löschen'),
                   onTap: () => _showDeleteAccountDialog(
                       profilePageContext, profilePageState),
                 ),

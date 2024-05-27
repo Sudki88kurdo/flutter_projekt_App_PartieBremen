@@ -14,5 +14,6 @@ class ProfilePageState with _$ProfilePageState {
     @Default(null) User? user,
 
   }) = _ProfilePageState;
+
 }
 

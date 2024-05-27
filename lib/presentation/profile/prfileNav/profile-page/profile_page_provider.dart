@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/login-page/login_page.dart';
+import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +17,7 @@ class ProfilePageProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfilePageCubit(context.read<UserRepository>()),
-      child: LoginPage(),
+      child: ProfilePage(),
     );
   }
 }

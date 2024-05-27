@@ -113,7 +113,7 @@ class _UserClient implements UserClient {
     final _data = {
       'name': name,
       'surname': surname,
-      'dob': dob,
+      'dob': dob.toJson(),
       'email': email,
       'password': password,
       'verified': verified,
@@ -178,7 +178,7 @@ class _UserClient implements UserClient {
     )
         .compose(
           _dio.options,
-          '/user/logout/${id}',
+          '/user/delete/${id}',
           queryParameters: queryParameters,
           data: _data,
         )

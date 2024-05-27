@@ -11,6 +11,9 @@ class PoiRepository extends BaseRepository<PoiClient> {
   Future<ApiResult<Poi>> findOne({required String poiId}) async {
     return execute(() => client.findOne(poiId: poiId));
   }
+  Future<ApiResult<List<Poi>>> findUserPOIs({required String userId}) async {
+    return execute(() => client.findUserPOIs(userId: userId));
+  }
 
   Future<ApiResult<List<Poi>>> getPois() async {
     return execute(() => client.getAllPois());

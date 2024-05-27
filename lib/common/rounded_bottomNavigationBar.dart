@@ -36,7 +36,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications),
-              label: 'Benachrichtigungen',
+              label: 'Notifications',
               backgroundColor: AppStyles.buttonColor,
             ),
             BottomNavigationBarItem(

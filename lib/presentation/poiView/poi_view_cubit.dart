@@ -16,6 +16,18 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       : super(PoiViewState()) {
     init(poiId: _poiId);
   }
+  Future<void> getAllPois()
+    async {
+      try {
+        var res = await _poIRepository.getPois();
+        print(res);
+        print("++++++++++++++++++++++++++");
+        emit(state.copyWith());
+      } catch (error) {
+        print("Error in Cubit while getAllPOIs: $error");
+      }
+  }
+
 
   Future<bool> init({required String poiId}) async {
     bool successful = false;

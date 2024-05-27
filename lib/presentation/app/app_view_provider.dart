@@ -4,6 +4,7 @@ import 'package:flutter_app/api/repositories/poi_repository.dart';
 import 'package:flutter_app/api/repositories/user_repository.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/login-page/login_page_cubit.dart';
+import 'package:flutter_app/presentation/profile/prfileNav/myPoi-list/myPoi_list_cubit.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_cubit.dart';
 import 'package:flutter_app/presentation/start-page/start_page_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,6 +44,9 @@ class AppViewProvider extends StatelessWidget {
         BlocProvider(
             create: (context) =>
                 ProfileEditPageCubit(context.read<UserRepository>())),
+        BlocProvider(
+            create: (context) =>
+                MyPoiListCubit(context.read<PoiRepository>())),
       ],
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

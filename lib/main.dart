@@ -48,6 +48,7 @@ void main() async {
           RepositoryProvider.value(value: VotingRepository(baseUrl, dio)),
           RepositoryProvider.value(
               value: OpenplzRepository(openPlzBaseUrl, dio)),
+
         ],
         child: const AppViewProvider(),
       )));

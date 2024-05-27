@@ -14,6 +14,8 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../appStyle.dart';
+
 class CustomIconWidget extends StatelessWidget {
   const CustomIconWidget(
       {super.key,
@@ -54,9 +56,13 @@ class HomeScreen extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
-            title: Text('PartiBremen Home'),
+            title: const Text(
+              'Home',
+              style: AppStyles.appBarTitleStyle,
+            ),
+            backgroundColor: AppStyles.buttonColor,
             centerTitle: true,
-            backgroundColor: Colors.green,
+
             titleTextStyle: const TextStyle(
               color: Colors.white,
               fontSize: 20,

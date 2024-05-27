@@ -42,82 +42,73 @@ class RegisterPage extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                TextField(
-                  controller: firstNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Vorname',
-                    fillColor: AppStyles.textFieldFillColor,
-                    filled: true,
-                    labelStyle: AppStyles.labelTextStyle(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: lastNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    fillColor: AppStyles.textFieldFillColor,
-                    filled: true,
-                    labelStyle: AppStyles.labelTextStyle(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () => _selectDate(registerPageContext),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Geburtsdatum auswählen',
-                        fillColor: AppStyles.textFieldFillColor,
-                        filled: true,
-                        labelStyle: AppStyles.labelTextStyle(),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        'Registrieren Sie sich',
+                        style: AppStyles.commonTextStyle,
                       ),
-                      controller: TextEditingController(
-                        text: registerPageState.pickedDate != null
-                            ? '${registerPageState.pickedDate!.day}.${registerPageState.pickedDate!.month}.${registerPageState.pickedDate!.year}'
-                            : '',
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: firstNameController,
+                        style: const TextStyle(color: Colors.green),
+                        decoration: AppStyles.textFieldDecoration('Vorname', Icons.person),
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'E-Mail-Adresse',
-                    fillColor: AppStyles.textFieldFillColor,
-                    filled: true,
-                    labelStyle: AppStyles.labelTextStyle(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Passwort',
-                    fillColor: AppStyles.textFieldFillColor,
-                    filled: true,
-                    labelStyle: AppStyles.labelTextStyle(),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    await registerPageContext
-                        .read<RegisterPageCubit>()
-                        .register(
-                            name: firstNameController.text,
-                            surname: lastNameController.text,
-                            dob: registerPageState.pickedDate!,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            verified: true,
-                            active: true)
-                        .then((value) => {
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: lastNameController,
+                        style: const TextStyle(color: Colors.green),
+                        decoration: AppStyles.textFieldDecoration('Name', Icons.person),
+                      ),
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () => _selectDate(registerPageContext),
+                        child: AbsorbPointer(
+                          child: TextFormField(
+                            style: const TextStyle(color: Colors.green),
+                            decoration: AppStyles.textFieldDecoration('Geburtsdatum auswählen', Icons.calendar_today),
+                            controller: TextEditingController(
+                              text: registerPageState.pickedDate != null
+                                  ? '${registerPageState.pickedDate!.day}.${registerPageState.pickedDate!.month}.${registerPageState.pickedDate!.year}'
+                                  : '',
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: emailController,
+                        style: const TextStyle(color: Colors.green),
+                        decoration: AppStyles.textFieldDecoration('E-Mail-Adresse', Icons.email),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: passwordController,
+                        obscureText: true,
+                        style: const TextStyle(color: Colors.green),
+                        decoration: AppStyles.textFieldDecoration('Passwort', Icons.lock),
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: AppStyles.buttonWidth, // Use the fixed width from AppStyles
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await registerPageContext
+                                .read<RegisterPageCubit>()
+                                .register(
+                                name: firstNameController.text,
+                                surname: lastNameController.text,
+                                dob: registerPageState.pickedDate!,
+                                email: emailController.text,
+                                password: passwordController.text,
+                                verified: true,
+                                active: true)
+                                .then((value) => {
                               if (value)
                                 {
                                   registerPageContext
@@ -125,24 +116,24 @@ class RegisterPage extends StatelessWidget {
                                 }
                               else
                                 {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Fehler bei der Registrierung')))
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                      content: Text(
+                                          'Fehler bei der Registrierung')))
                                 }
                             });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyles.buttonColor,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 100, vertical: 20),
-                  ),
-                  child: const Text(
-                    'Registrieren',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                          },
+                          style: AppStyles.buttonStyle(),
+                          child: const Text(
+                            'Registrieren',
+                            style: AppStyles.commonTextStyle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         );

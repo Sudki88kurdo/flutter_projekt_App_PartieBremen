@@ -14,7 +14,9 @@ class StartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Startseite',style: TextStyle(fontSize: 24, color: Colors.white),
+        title: const Text(
+          'Startseite',
+          style: AppStyles.appBarTitleStyle,
         ),
         backgroundColor: AppStyles.buttonColor,
       ),
@@ -29,40 +31,41 @@ class StartPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              BlocBuilder<StartPageCubit, StartPageState>(builder: (context, state) {
-                return ElevatedButton(
-                  onPressed: () {
-                    context.pushNamed(LoginPageProvider.routeName);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyles.buttonColor,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 100, vertical: 20),
-                  ),
-                  child: const Text(
-                    'Einloggen',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-                );
-              },
+              BlocBuilder<StartPageCubit, StartPageState>(
+                builder: (context, state) {
+                  return SizedBox(
+                    width: AppStyles.buttonWidth, // Use the fixed width from AppStyles
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.pushNamed(LoginPageProvider.routeName);
+                      },
+                      style: AppStyles.buttonStyle(),
+                      child: const Text(
+                        'Einloggen',
+                        style: AppStyles.commonTextStyle,
+                      ),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 20),
-              BlocBuilder<StartPageCubit, StartPageState>(builder: (context, state){
-                return ElevatedButton(
-                  onPressed: () {
-                    context.pushNamed(RegisterPageProvider.routeName);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppStyles.buttonColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-                  ),
-                  child: const Text(
-                    'Registrieren',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-
-                );
-              }),
+              BlocBuilder<StartPageCubit, StartPageState>(
+                builder: (context, state) {
+                  return SizedBox(
+                    width: AppStyles.buttonWidth, // Use the fixed width from AppStyles
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.pushNamed(RegisterPageProvider.routeName);
+                      },
+                      style: AppStyles.buttonStyle(),
+                      child: const Text(
+                        'Registrieren',
+                        style: AppStyles.commonTextStyle,
+                      ),
+                    ),
+                  );
+                },
+              ),
               const SizedBox(height: 70),
             ],
           ),

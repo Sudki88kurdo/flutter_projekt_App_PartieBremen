@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../api/repositories/user_repository.dart';
 import '../../../home-screen/home_screen.dart';
+import 'ProfileEdit_page.dart';
 
 /// Main entry point of the application if the user is authenticated.
 
 class ProfileEditPageProvider extends StatelessWidget {
+  static const String routeName = 'ProfileEdit-page';
   const ProfileEditPageProvider({super.key});
 
   @override
@@ -15,7 +17,7 @@ class ProfileEditPageProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileEditPageCubit(context.read<UserRepository>()),
-      child: HomeScreen(),
+      child: ProfileEditPage(),
     );
   }
 }

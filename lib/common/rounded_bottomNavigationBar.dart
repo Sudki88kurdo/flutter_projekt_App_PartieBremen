@@ -46,7 +46,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             ),
           ],
           currentIndex: state.selectedIndex,
-          selectedItemColor: Colors.amber,
+          selectedItemColor: Colors.amber             ,
           onTap: (index) async =>
               await _onItemTapped(index, homePageContext, context),
         );

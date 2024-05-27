@@ -172,7 +172,8 @@ class ProfileEditPage extends StatelessWidget {
   void _updateUser(BuildContext updateUserContext,
       ProfileEditPageState profileEditPageSt) async {
     if(_passwordController.text.isEmpty){
-      _showDialog(updateUserContext);
+      _showDialog(updateUserContext,"Info",
+          "Sie müssen Passwort eingeben, um Profile zu bearbeiten");
     }else{
       await updateUserContext.read<ProfileEditPageCubit>().updateUser(
         id: user1!.id!,
@@ -184,16 +185,19 @@ class ProfileEditPage extends StatelessWidget {
         verified: true,
         role: 1,
       );
+      _showDialog(updateUserContext,"Info",
+          "Sie haben erfolgreich den Profile geändert");
+
     }
   }
   void _showDialog(
-      BuildContext profileEditPageContaxt) {
+      BuildContext profileEditPageContaxt, String titel,String massage) {
     showDialog(
       context: profileEditPageContaxt,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text('Konto löschen'),
-          content: Text('Sie müssen Passwort eingeben, um Profile zu bearbeiten'),
+          title: Text('$titel'),
+          content: Text('$massage'),
           actions: <Widget>[
             TextButton(
 

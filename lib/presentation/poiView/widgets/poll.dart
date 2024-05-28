@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/poiView/logic.dart';
+import 'package:flutter_app/presentation/poiView/questions.dart';
 import 'package:flutter_app/presentation/poiView/widgets/poll_answer.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -13,6 +13,8 @@ class Poll extends StatefulWidget {
 class _PollState extends State<Poll> {
   int currentStep = 1;
   int totalSteps = 6;
+  var selectedAnswerMap = {};
+  bool isSent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class _PollState extends State<Poll> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  "Umfragen",
+                  'Umfragen',
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -111,7 +113,7 @@ class _PollState extends State<Poll> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            "Aktueller Schritt:",
+            'Aktueller Schritt:',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -132,10 +134,73 @@ class _PollState extends State<Poll> {
           question.answers.length,
           (int index) {
             var answer = question.answers[index];
-            return answerCard(answer, context);
+            var isSelected = selectedAnswerMap[question.id] == index;
+            return GestureDetector(
+              child: answerCard(answer, context, isSelected),
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    selectedAnswerMap[question.id] = null;
+                  } else {
+                    selectedAnswerMap[question.id] = index;
+                    Future.delayed(Duration(milliseconds: 500), () {
+                      loadNewQuestion(questionNumber + 1);
+                    });
+                  }
+                });
+              },
+            );
           },
         )),
+        Container(
+          alignment: Alignment.bottomRight,
+          child: TextButton(
+            onPressed: () {
+              if (!isSent) {
+                setState(() {
+                  isSent = true;
+                });
+                sendAnswers();
+              } else {
+                _showErrorMessage();
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10, left: 10),
+              child: Text(
+                'Abschicken',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
+  }
+
+  void _showErrorMessage() {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: new Text('Sie haben die Umfrage bereits abgeschickt!'),
+          backgroundColor: Colors.red,
+        )
+    );
+  }
+
+  void loadNewQuestion(int questionNumber) {
+    setState(() {
+      if (questionNumber <= totalSteps) {
+        currentStep = questionNumber;
+      }
+    });
+  }
+
+  void sendAnswers() {
+    selectedAnswerMap.clear();
   }
 }

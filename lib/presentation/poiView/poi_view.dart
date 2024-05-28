@@ -75,8 +75,26 @@ class _CommentCount extends StatelessWidget {
   }
 }
 
-class _DownVotesCount extends StatelessWidget {
-  const _DownVotesCount({super.key});
+class _Discription extends StatelessWidget {
+  const _Discription({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PoiViewCubit, PoiViewState>(
+      buildWhen: (previous, current) => previous.poi != current.poi,
+      builder: (context, state) {
+        return _StatisticsItem(
+          icon: Icons.info,
+          title: "Beschreibung",
+          value: "${state.poi?.description!.length}",
+        );
+      },
+    );
+  }
+}
+
+class _Surveys extends StatelessWidget {
+  const _Surveys({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +103,8 @@ class _DownVotesCount extends StatelessWidget {
           previous.votings.length != current.votings.length,
       builder: (context, state) {
         return _StatisticsItem(
-          icon: Icons.arrow_downward,
-          title: "Down",
+          icon: Icons.question_answer,
+          title: "Umfragen",
           value: "${state.votings.length}",
         );
       },
@@ -94,8 +112,8 @@ class _DownVotesCount extends StatelessWidget {
   }
 }
 
-class _UpVotesCount extends StatelessWidget {
-  const _UpVotesCount({super.key});
+class _Petitions extends StatelessWidget {
+  const _Petitions({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +122,8 @@ class _UpVotesCount extends StatelessWidget {
           previous.votings.length != current.votings.length,
       builder: (context, state) {
         return _StatisticsItem(
-          icon: Icons.arrow_upward,
-          title: "Up",
+          icon: Icons.local_post_office,
+          title: "Petitionen",
           value: "${state.votings.length}",
         );
       },
@@ -165,7 +183,7 @@ class _StatisticsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width / 3.2,
+      width: MediaQuery.of(context).size.width / 4.22,
       child: Column(
         children: [
           // Icon
@@ -264,13 +282,32 @@ class _Comments extends StatelessWidget {
                             : const Text("");
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0, top: 8),
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8.0, top: 8),
                       child: _AccountCreationValue(),
                     ),
                   ],
                 ),
-                SizedBox(
+                BlocBuilder<PoiViewCubit, PoiViewState>(
+                  buildWhen: (prev, curr) =>
+                      prev.poi?.description != null &&
+                      curr.poi?.description != null,
+                  builder: (context, state) {
+                    return state.poi!.description!.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              state.poi!.description!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(color: Colors.white70),
+                            ),
+                          )
+                        : const Text("");
+                  },
+                ),
+                const SizedBox(
                   height: 30,
                 ),
                 const Row(
@@ -278,12 +315,12 @@ class _Comments extends StatelessWidget {
                   children: [
                     _CommentCount(),
                     _Divider(),
-                    _UpVotesCount(),
+                    _Surveys(),
                     _Divider(),
-                    _DownVotesCount(),
+                    _Petitions(),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 BlocBuilder<PoiViewCubit, PoiViewState>(
@@ -314,28 +351,6 @@ class _Comments extends StatelessWidget {
           ],
         ),
       ),
-      /*
-          BlocBuilder<PoiViewCubit, PoiViewState>(
-            buildWhen: (prev, curr) =>
-            prev.poi?.description != null && curr.poi?.description != null,
-            builder: (context, state) {
-              return state.poi!.description!.isNotEmpty
-                  ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  state.poi!.description!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.white70),
-                ),
-              )
-                  : const Text("");
-            },
-          ),
-
-           */
-      // Paginated List of Public Posts
     );
   }
 }
@@ -441,38 +456,97 @@ class PoiView extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width - 50,
-                              top: 80),
-                          child: CircleAvatar(
-                            backgroundColor: const Color(0xff1c1e24),
-                            child: IconButton(
-                              iconSize: 20,
-                              icon: const Icon(
-                                Icons.thumb_up,
-                                color: Colors.white70,
+                            left: MediaQuery.of(context).size.width - 50,
+                            top: 80,
+                          ),
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: const Color(0xff1c1e24),
+                                child: IconButton(
+                                  iconSize: 20,
+                                  icon: const Icon(
+                                    Icons.thumb_up,
+                                    color: Colors.white70,
+                                  ),
+                                  onPressed: () {
+                                    context.read<PoiViewCubit>().createVote(
+                                        VoteType.UP,
+                                        context
+                                            .read<AppCubit>()
+                                            .state
+                                            .user!
+                                            .id!,
+                                        poiId: state.poi!.id!);
+                                  },
+                                ),
                               ),
-                              onPressed: () {
-                                context.pushNamed(HomeScreen.routeName);
-                              },
-                            ),
+                              BlocBuilder<PoiViewCubit, PoiViewState>(
+                                buildWhen: (prev, curr) =>
+                                    prev.votings.length !=
+                                        curr.votings.length ||
+                                    prev.votings != curr.votings,
+                                builder: (context, state) {
+                                  return Text(
+                                    "${state.votings.where((element) => element.voteType!.name == VoteType.UP.name).toList().length}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          color: Colors.black54,
+                                          fontSize: 20,
+                                        ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(
                               left: MediaQuery.of(context).size.width - 50,
                               top: 150),
-                          child: CircleAvatar(
-                            backgroundColor: const Color(0xff1c1e24),
-                            child: IconButton(
-                              iconSize: 20,
-                              icon: const Icon(
-                                Icons.thumb_down,
-                                color: Colors.white70,
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: const Color(0xff1c1e24),
+                                child: IconButton(
+                                  iconSize: 20,
+                                  icon: const Icon(
+                                    Icons.thumb_down,
+                                    color: Colors.white70,
+                                  ),
+                                  onPressed: () {
+                                    context.read<PoiViewCubit>().createVote(
+                                        VoteType.DOWN,
+                                        context
+                                            .read<AppCubit>()
+                                            .state
+                                            .user!
+                                            .id!,
+                                        poiId: state.poi!.id!);
+                                  },
+                                ),
                               ),
-                              onPressed: () {
-                                context.pushNamed(HomeScreen.routeName);
-                              },
-                            ),
+                              BlocBuilder<PoiViewCubit, PoiViewState>(
+                                buildWhen: (prev, curr) =>
+                                    prev.votings.length !=
+                                        curr.votings.length ||
+                                    prev.votings != curr.votings,
+                                builder: (context, state) {
+                                  return Text(
+                                    "${state.votings.where((element) => element.voteType!.name == VoteType.DOWN.name).toList().length}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          color: Colors.black54,
+                                          fontSize: 20,
+                                        ),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                         Positioned(
@@ -484,12 +558,17 @@ class PoiView extends StatelessWidget {
                         ),
                         Positioned(
                           bottom: 0,
-                          child: ChatContainer(
-                            value: 1,
-                            onSendMessagePressed: (msg) => context
-                                .read<PoiViewCubit>()
-                                .writeComment(
-                                    msg, context.read<AppCubit>().state.user!),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.viewInsetsOf(context).bottom,
+                            ),
+                            child: ChatContainer(
+                              value: 1,
+                              onSendMessagePressed: (msg) => context
+                                  .read<PoiViewCubit>()
+                                  .writeComment(msg,
+                                      context.read<AppCubit>().state.user!),
+                            ),
                           ),
                         ),
                       ],

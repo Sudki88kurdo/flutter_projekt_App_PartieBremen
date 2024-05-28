@@ -16,7 +16,7 @@ _$VotingsResponseImpl _$$VotingsResponseImplFromJson(
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
-      voteType: json['voteType'] as String?,
+      voteType: $enumDecodeNullable(_$VoteTypeEnumMap, json['voteType']),
     );
 
 Map<String, dynamic> _$$VotingsResponseImplToJson(
@@ -25,5 +25,10 @@ Map<String, dynamic> _$$VotingsResponseImplToJson(
       'id': instance.id,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'voteType': instance.voteType,
+      'voteType': _$VoteTypeEnumMap[instance.voteType],
     };
+
+const _$VoteTypeEnumMap = {
+  VoteType.UP: 'UP',
+  VoteType.DOWN: 'DOWN',
+};

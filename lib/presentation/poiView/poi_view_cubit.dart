@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../api/repositories/poi_repository.dart';
 import '../../entities/user.dart';
 
+enum VoteType { UP, DOWN }
+
 class PoiViewCubit extends Cubit<PoiViewState> {
   final PoiRepository _poIRepository;
   final CommentRepository _commentRepository;
@@ -66,6 +68,28 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       ));
       findAllCommentsFromPoI();
       state.pagingController.refresh();
+    });
+  }
+
+  void createVote(VoteType voteType, String voterId,
+      {String? poiId, String? commentId}) async {
+    emit(state.copyWith(
+      commentStatus: const ScreenStatus.loading(),
+    ));
+    var postedVoting = await _votingRepository.createVoting(
+        voteType: voteType,
+        voterId: voterId,
+        poiId: poiId,
+        commentId: commentId);
+    postedVoting.whenOrNull(success: (value) {
+      emit(state.copyWith(
+        commentStatus: const ScreenStatus.success(),
+      ));
+    });
+
+    var resVoting = await _votingRepository.findAllFromPoI(poiId: _poiId);
+    resVoting.whenOrNull(success: (value) {
+      emit(state.copyWith(votings: value));
     });
   }
 }

@@ -2,11 +2,13 @@
 //
 //     final votingsResponse = votingsResponseFromJson(jsonString);
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-part 'votings_response.freezed.dart';
+import 'package:flutter_app/entities/user.dart';
+import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'votings_response.freezed.dart';
 part 'votings_response.g.dart';
 
 List<VotingsResponse> votingsResponseFromJson(String str) =>
@@ -22,7 +24,7 @@ class VotingsResponse with _$VotingsResponse {
     String? id,
     DateTime? createdAt,
     DateTime? updatedAt,
-    String? voteType,
+    VoteType? voteType,
   }) = _VotingsResponse;
 
   factory VotingsResponse.fromJson(Map<String, dynamic> json) =>

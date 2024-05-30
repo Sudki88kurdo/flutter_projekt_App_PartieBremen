@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'votings_response.dart';
+part of 'petition_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$VotingsResponseImpl _$$VotingsResponseImplFromJson(
+_$PetitionResponseImpl _$$PetitionResponseImplFromJson(
         Map<String, dynamic> json) =>
-    _$VotingsResponseImpl(
+    _$PetitionResponseImpl(
       id: json['id'] as String?,
       createdAt: json['createdAt'] == null
           ? null
@@ -16,19 +16,24 @@ _$VotingsResponseImpl _$$VotingsResponseImplFromJson(
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
-      voteType: $enumDecodeNullable(_$VoteTypeEnumMap, json['voteType']),
+      titel: json['titel'] as String?,
+      description: json['description'] as String?,
+      expireAt: json['expireAt'] == null
+          ? null
+          : DateTime.parse(json['expireAt'] as String),
+      goal: (json['goal'] as num?)?.toInt(),
+      poiId: json['poiId'] as String?,
     );
 
-Map<String, dynamic> _$$VotingsResponseImplToJson(
-        _$VotingsResponseImpl instance) =>
+Map<String, dynamic> _$$PetitionResponseImplToJson(
+        _$PetitionResponseImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'voteType': _$VoteTypeEnumMap[instance.voteType],
+      'titel': instance.titel,
+      'description': instance.description,
+      'expireAt': instance.expireAt?.toIso8601String(),
+      'goal': instance.goal,
+      'poiId': instance.poiId,
     };
-
-const _$VoteTypeEnumMap = {
-  VoteType.UP: 'UP',
-  VoteType.DOWN: 'DOWN',
-};

@@ -19,6 +19,46 @@ class _VotingClient implements VotingClient {
   String? baseUrl;
 
   @override
+  Future<HttpResponse<VotingsResponse>> createVote({
+    required String voteType,
+    required String voterId,
+    String? poiId,
+    String? commentId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'voteType': voteType,
+      'voterId': voterId,
+      'poiId': poiId,
+      'commentId': commentId,
+    };
+    _data.removeWhere((k, v) => v == null);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<VotingsResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/voting',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = VotingsResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<List<VotingsResponse>>> findAllFromPoI(
       {required String poiId}) async {
     final _extra = <String, dynamic>{};

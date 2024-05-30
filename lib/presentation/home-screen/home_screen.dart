@@ -70,6 +70,8 @@ class HomeScreen extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: BlocBuilder<HomePageCubit, HomePageState>(
+              buildWhen: (prev, curr) =>
+                  prev.pointsOfInterest.length != curr.pointsOfInterest.length,
               builder: (mapcontext, mapstate) {
                 logger.i(
                     "Building Home Screen, street results: ${mapstate.streetResults.length}");

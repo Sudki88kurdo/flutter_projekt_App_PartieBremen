@@ -23,7 +23,7 @@ mixin _$VotingsResponse {
   String? get id => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
-  String? get voteType => throw _privateConstructorUsedError;
+  VoteType? get voteType => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,7 +38,10 @@ abstract class $VotingsResponseCopyWith<$Res> {
       _$VotingsResponseCopyWithImpl<$Res, VotingsResponse>;
   @useResult
   $Res call(
-      {String? id, DateTime? createdAt, DateTime? updatedAt, String? voteType});
+      {String? id,
+      DateTime? createdAt,
+      DateTime? updatedAt,
+      VoteType? voteType});
 }
 
 /// @nodoc
@@ -75,7 +78,7 @@ class _$VotingsResponseCopyWithImpl<$Res, $Val extends VotingsResponse>
       voteType: freezed == voteType
           ? _value.voteType
           : voteType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as VoteType?,
     ) as $Val);
   }
 }
@@ -89,7 +92,10 @@ abstract class _$$VotingsResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id, DateTime? createdAt, DateTime? updatedAt, String? voteType});
+      {String? id,
+      DateTime? createdAt,
+      DateTime? updatedAt,
+      VoteType? voteType});
 }
 
 /// @nodoc
@@ -124,7 +130,7 @@ class __$$VotingsResponseImplCopyWithImpl<$Res>
       voteType: freezed == voteType
           ? _value.voteType
           : voteType // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as VoteType?,
     ));
   }
 }
@@ -145,7 +151,7 @@ class _$VotingsResponseImpl implements _VotingsResponse {
   @override
   final DateTime? updatedAt;
   @override
-  final String? voteType;
+  final VoteType? voteType;
 
   @override
   String toString() {
@@ -191,7 +197,7 @@ abstract class _VotingsResponse implements VotingsResponse {
       {final String? id,
       final DateTime? createdAt,
       final DateTime? updatedAt,
-      final String? voteType}) = _$VotingsResponseImpl;
+      final VoteType? voteType}) = _$VotingsResponseImpl;
 
   factory _VotingsResponse.fromJson(Map<String, dynamic> json) =
       _$VotingsResponseImpl.fromJson;
@@ -203,7 +209,7 @@ abstract class _VotingsResponse implements VotingsResponse {
   @override
   DateTime? get updatedAt;
   @override
-  String? get voteType;
+  VoteType? get voteType;
   @override
   @JsonKey(ignore: true)
   _$$VotingsResponseImplCopyWith<_$VotingsResponseImpl> get copyWith =>

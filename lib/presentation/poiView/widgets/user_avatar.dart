@@ -4,7 +4,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/poiView/widgets/touchable_opacity.dart';
-import 'package:flutter_app/entities/comments_response.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../entities/user.dart';
@@ -24,8 +23,6 @@ class UserAvatar extends StatelessWidget {
 
   final DateTime? time;
 
-  final CommentsResponse? comment;
-
   const UserAvatar({
     super.key,
     this.user,
@@ -33,7 +30,6 @@ class UserAvatar extends StatelessWidget {
     this.showName = false,
     this.time,
     this.nameSuffix,
-    this.comment,
   });
 
   @override

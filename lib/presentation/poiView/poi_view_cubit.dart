@@ -1,4 +1,5 @@
 import 'package:flutter_app/api/repositories/comment_repository.dart';
+import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/common/screen_status.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
@@ -13,16 +14,20 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final PoiRepository _poIRepository;
   final CommentRepository _commentRepository;
   final VotingRepository _votingRepository;
+
+  final SurveyRepository _surveyRepository;
   final String _poiId;
 
   PoiViewCubit(this._poIRepository, this._commentRepository,
-      this._votingRepository, this._poiId)
+      this._votingRepository, this._surveyRepository, this._poiId)
       : super(PoiViewState.initial()) {
     init(poiId: _poiId);
-    state.pagingController.addPageRequestListener(
+    state.commentsPagingController.addPageRequestListener(
       (pageKey) => findAllCommentsFromPoI(),
     );
-    findAllCommentsFromPoI();
+    state.surveyPagingController.addPageRequestListener(
+      (pageKey) => findAllSurveysFromPoI(),
+    );
   }
 
   Future<bool> init({required String poiId}) async {
@@ -39,6 +44,12 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       successful = true;
     });
 
+    var resSurvey = await _surveyRepository.getAllSurveys();
+    resSurvey.whenOrNull(success: (value) {
+      emit(state.copyWith(surveys: value));
+      successful = true;
+    });
+
     return successful;
   }
 
@@ -46,11 +57,22 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     var resComment = await _commentRepository.findAllFromPoI(poiId: _poiId);
     resComment.whenOrNull(success: (value) {
       emit(state.copyWith(comments: value));
-      state.pagingController.itemList = value;
-      ;
+      state.commentsPagingController.appendLastPage(value);
     });
 
     return state.comments;
+  }
+
+  findAllSurveysFromPoI() async {
+    //TODO change to from poi request
+    print("here");
+    var resSurvey = await _surveyRepository.getAllSurveys();
+    resSurvey.whenOrNull(success: (value) {
+      emit(state.copyWith(surveys: value));
+      state.surveyPagingController.appendLastPage(value);
+    });
+
+    return state.surveys;
   }
 
   void writeComment(String comment, User user) async {
@@ -63,11 +85,12 @@ class PoiViewCubit extends Cubit<PoiViewState> {
         poiId: _poiId,
         commentId: null);
     postedComment.whenOrNull(success: (value) {
+      state.commentsPagingController.itemList = [];
       emit(state.copyWith(
         commentStatus: const ScreenStatus.success(),
+        comments: [],
       ));
       findAllCommentsFromPoI();
-      state.pagingController.refresh();
     });
   }
 
@@ -91,5 +114,15 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     resVoting.whenOrNull(success: (value) {
       emit(state.copyWith(votings: value));
     });
+  }
+
+  void updateIndex(int index) async {
+    emit(state.copyWith(listIndex: index));
+  }
+
+  void refreshControllers() async {
+    state.commentsPagingController.refresh();
+    state.surveyPagingController.refresh();
+    state.petitionPagingController.refresh();
   }
 }

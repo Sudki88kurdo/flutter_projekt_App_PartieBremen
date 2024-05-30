@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/entities/poi.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
 import 'package:flutter_app/presentation/poiView/widgets/touchable_opacity.dart';
@@ -16,17 +15,19 @@ import '../../../theme/colors.dart';
 class CommunityEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
   final Poi? poi;
 
-  /// Comment to display
-  final CommentsResponse? comment;
-
   /// User to display
   final User? user;
 
   /// Callback when the entry is tapped
   final VoidCallback? onTap;
 
+  final DateTime? createdAt;
+
+  final String? text;
+
   /// Constructor
-  CommunityEntry({super.key, this.user, this.onTap, this.comment, this.poi});
+  const CommunityEntry(
+      {super.key, this.user, this.onTap, this.createdAt, this.poi, this.text});
 
   void _defaultTapBehavior(BuildContext context) => context.pushNamed(
         PoiViewProvider.routeName,
@@ -40,7 +41,7 @@ class CommunityEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
           : () => _defaultTapBehavior(context),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xff1c1e24),
+          color: const Color(0xff24262c),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -50,16 +51,15 @@ class CommunityEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
             if (user == null) const SizedBox(height: 4),
 
             // Header with User Avatar
-
             _Header(
-              user: comment?.commenter ?? comment?.commenter ?? user,
-              comment: comment,
+              user: user,
+              createdAt: createdAt,
             ),
 
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "${comment?.actualcomment?.substring(0, min(comment!.actualcomment!.length, 150))}${150 < comment!.actualcomment!.length ? "..." : ""}" ??
+                "${text?.substring(0, min(text!.length, 150))}${150 < text!.length ? "..." : ""}" ??
                     "GENERAL.UNKNOWN".tr(),
                 style: Theme.of(context)
                     .textTheme
@@ -171,9 +171,9 @@ class _CommentButton extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final User? user;
-  final CommentsResponse? comment;
+  final DateTime? createdAt;
 
-  const _Header({this.user, this.comment});
+  const _Header({this.user, this.createdAt});
 
   @override
   Widget build(BuildContext context) {
@@ -187,8 +187,7 @@ class _Header extends StatelessWidget {
             child: UserAvatar(
               showName: true,
               user: user,
-              comment: comment,
-              time: comment?.createdAt,
+              time: createdAt,
             ),
           ),
         ],

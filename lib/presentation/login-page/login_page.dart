@@ -64,7 +64,6 @@ class LoginPage extends StatelessWidget {
                         const SizedBox(height: 20),
                         TextField(
                           controller: _usernameController,
-                          style: TextStyle(color: Colors.green),
                           decoration: AppStyles.textFieldDecoration('Benutzername', Icons.person),
                         ),
                         const SizedBox(height: 20),
@@ -73,7 +72,6 @@ class LoginPage extends StatelessWidget {
                               return TextField(
                                 controller: _passwordController,
                                 obscureText: !loginPageState.passwordVisible,
-                                style: TextStyle(color: Colors.green),
                                 decoration: AppStyles.textFieldDecoration('Passwort', Icons.lock).copyWith(
                                   suffixIcon: IconButton(
                                     icon: Icon(

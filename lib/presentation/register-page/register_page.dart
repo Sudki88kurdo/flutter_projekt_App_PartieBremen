@@ -56,13 +56,11 @@ class RegisterPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextField(
                         controller: firstNameController,
-                        style: const TextStyle(color: Colors.green),
                         decoration: AppStyles.textFieldDecoration('Vorname', Icons.person),
                       ),
                       const SizedBox(height: 20),
                       TextField(
                         controller: lastNameController,
-                        style: const TextStyle(color: Colors.green),
                         decoration: AppStyles.textFieldDecoration('Name', Icons.person),
                       ),
                       const SizedBox(height: 20),
@@ -70,7 +68,6 @@ class RegisterPage extends StatelessWidget {
                         onTap: () => _selectDate(registerPageContext),
                         child: AbsorbPointer(
                           child: TextFormField(
-                            style: const TextStyle(color: Colors.green),
                             decoration: AppStyles.textFieldDecoration('Geburtsdatum auswählen', Icons.calendar_today),
                             controller: TextEditingController(
                               text: registerPageState.pickedDate != null
@@ -83,14 +80,12 @@ class RegisterPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       TextField(
                         controller: emailController,
-                        style: const TextStyle(color: Colors.green),
                         decoration: AppStyles.textFieldDecoration('E-Mail-Adresse', Icons.email),
                       ),
                       const SizedBox(height: 20),
                       TextField(
                         controller: passwordController,
                         obscureText: true,
-                        style: const TextStyle(color: Colors.green),
                         decoration: AppStyles.textFieldDecoration('Passwort', Icons.lock),
                       ),
                       const SizedBox(height: 20),

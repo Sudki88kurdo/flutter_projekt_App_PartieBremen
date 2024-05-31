@@ -14,8 +14,6 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../appStyle.dart';
-
 class CustomIconWidget extends StatelessWidget {
   const CustomIconWidget(
       {super.key,
@@ -56,13 +54,9 @@ class HomeScreen extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
-            title: const Text(
-              'Home',
-              style: AppStyles.appBarTitleStyle,
-            ),
-            backgroundColor: AppStyles.buttonColor,
+            title: Text('PartiBremen Home'),
             centerTitle: true,
-
+            backgroundColor: Colors.green,
             titleTextStyle: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -70,8 +64,6 @@ class HomeScreen extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: BlocBuilder<HomePageCubit, HomePageState>(
-              buildWhen: (prev, curr) =>
-                  prev.pointsOfInterest.length != curr.pointsOfInterest.length,
               builder: (mapcontext, mapstate) {
                 logger.i(
                     "Building Home Screen, street results: ${mapstate.streetResults.length}");

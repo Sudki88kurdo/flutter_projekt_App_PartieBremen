@@ -12,7 +12,7 @@ abstract class PoiClient {
 
   @POST("/poi")
   Future<HttpResponse<Poi>> create({
-    @Field("title") required String title,
+    @Field("titel") required String titel,
     @Field("description") required String description,
     @Field("active") required bool active,
     @Field("creatorId") required String creatorId,
@@ -27,5 +27,6 @@ abstract class PoiClient {
   Future<HttpResponse<Poi>> findOne({@Path("poiId") required String poiId});
 
   @GET("/poi/user/{userId}")
-  Future<HttpResponse<List<Poi>>>  findUserPOIs({@Path("userId") required String userId});
-  }
+  Future<HttpResponse<List<Poi>>> findUserPOIs(
+      {@Path("userId") required String userId});
+}

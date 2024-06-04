@@ -122,11 +122,13 @@ class PetitionList<C extends StateStreamable<S>, S> extends StatelessWidget {
     return PagedSliverList.separated(
       builderDelegate: PagedChildBuilderDelegate<PetitionResponse>(
         itemBuilder: (context, item, index) {
-          return CommunityEntry(
+          return PetitionEntry(
             user: context.read<AppCubit>().state.user!,
             poi: context.read<PoiViewCubit>().state.poi,
             createdAt: item.createdAt,
-            text: item.titel ?? '\n\n${item.description!}' ?? '',
+            text: item.titel ?? '',
+            description: item.description! ?? '',
+            petitionResponse: item,
           );
         },
         noItemsFoundIndicatorBuilder: (context) =>
@@ -186,12 +188,12 @@ class _Petitions extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PoiViewCubit, PoiViewState>(
       buildWhen: (previous, current) =>
-          previous.votings.length != current.votings.length,
+          previous.petitions.length != current.petitions.length,
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.local_post_office,
           title: "Petitionen",
-          value: "${state.votings.length}",
+          value: "${state.petitions.length}",
           index: 2,
         );
       },
@@ -677,7 +679,7 @@ class PoiView extends StatelessWidget {
                                     prev.votings != curr.votings,
                                 builder: (context, state) {
                                   return Text(
-                                    "${state.votings.where((element) => element.voteType!.name == VoteType.DOWN.name).toList().length}",
+                                    '${state.votings.where((element) => element.voteType!.name == VoteType.DOWN.name).toList().length}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge

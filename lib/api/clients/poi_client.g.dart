@@ -20,7 +20,7 @@ class _PoiClient implements PoiClient {
 
   @override
   Future<HttpResponse<Poi>> create({
-    required String title,
+    required String titel,
     required String description,
     required bool active,
     required String creatorId,
@@ -31,7 +31,7 @@ class _PoiClient implements PoiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {
-      'title': title,
+      'titel': titel,
       'description': description,
       'active': active,
       'creatorId': creatorId,

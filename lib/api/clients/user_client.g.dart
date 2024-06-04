@@ -113,7 +113,7 @@ class _UserClient implements UserClient {
     final _data = {
       'name': name,
       'surname': surname,
-      'dob': dob.toJson(),
+      'dob': dob,
       'email': email,
       'password': password,
       'verified': verified,

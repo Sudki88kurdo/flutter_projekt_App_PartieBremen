@@ -15,6 +15,9 @@ class PoiViewState with _$PoiViewState {
   const factory PoiViewState({
     @Default(ScreenStatus.pure()) ScreenStatus status,
     @Default(null) Poi? poi,
+    @Default(null) String? newPetitionTitle,
+    @Default(null) String? newPetitionDescription,
+    @Default(null) int? newPetitionGoal,
     @Default([]) List<CommentsResponse> comments,
     @Default([]) List<SurveyResponse> surveys,
     @Default([]) List<PetitionResponse> petitions,

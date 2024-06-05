@@ -27,4 +27,14 @@ abstract class SurveyClient {
   @GET("/survey/{surveyId}")
   Future<HttpResponse<SurveyResponse>> findOne(
       {@Path("surveyId") required String surveyId});
+
+  @PUT("/survey/{surveyId}")
+  Future<HttpResponse<List<SurveyResponse>>> updateSurvey({
+    @Path("surveyId") required String surveyId,
+    @Field("titel") required String titel,
+    @Field("beschreibung") required String beschreibung,
+    @Field("expiresAt") required String expiresAt,
+    @Field("userId") required String userId,
+    @Field("poiId") required double poiId,
+  });
 }

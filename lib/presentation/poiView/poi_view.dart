@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/entities/survey_response.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_app/presentation/poiView/widgets/chat_container.dart';
 import 'package:flutter_app/presentation/poiView/widgets/community_entry.dart';
+import 'package:flutter_app/presentation/poiView/widgets/poll.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
@@ -41,22 +43,44 @@ class CommentsList<C extends StateStreamable<S>, S> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList.separated(
-      builderDelegate: PagedChildBuilderDelegate<CommentsResponse>(
-        itemBuilder: (context, item, index) {
-          return CommunityEntry(
-            user: item.commenter,
-            poi: context.read<PoiViewCubit>().state.poi,
-            createdAt: item.createdAt,
-            text: item.actualcomment ?? '',
-          );
-        },
-        noItemsFoundIndicatorBuilder: (context) =>
-            noItems ?? const NoItemsFoundError(),
-      ),
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      shrinkWrapFirstPageIndicators: false,
-      pagingController: pagingController,
+    return SliverStack(
+      children: [
+        PagedSliverList.separated(
+          builderDelegate: PagedChildBuilderDelegate<CommentsResponse>(
+            itemBuilder: (context, item, index) {
+              return CommunityEntry(
+                user: item.commenter,
+                poi: context.read<PoiViewCubit>().state.poi,
+                createdAt: item.createdAt,
+                text: item.actualcomment ?? '',
+              );
+            },
+            noItemsFoundIndicatorBuilder: (context) =>
+                noItems ?? const NoItemsFoundError(),
+          ),
+          separatorBuilder: (context, index) => const SizedBox(height: 8),
+          shrinkWrapFirstPageIndicators: false,
+          pagingController: pagingController,
+        ),
+        SliverPositioned(
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.viewInsetsOf(context).bottom,
+            ),
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              child: ChatContainer(
+                onSendMessagePressed: (msg) =>
+                    context.read<PoiViewCubit>().writeComment(
+                          msg,
+                          context.read<AppCubit>().state.user!,
+                        ),
+                value: 1,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -80,22 +104,24 @@ class SurveyList<C extends StateStreamable<S>, S> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PagedSliverList.separated(
-      builderDelegate: PagedChildBuilderDelegate<SurveyResponse>(
-        itemBuilder: (context, item, index) {
-          return CommunityEntry(
-            user: item.creator,
-            poi: context.read<PoiViewCubit>().state.poi,
-            createdAt: item.createdAt,
-            text: (item.titel ?? '') + ('\n\n${item.beschreibung!}' ?? ''),
-          );
-        },
-        noItemsFoundIndicatorBuilder: (context) =>
-            noItems ?? const NoItemsFoundError(),
+    return Poll(
+      PagedSliverList.separated(
+        builderDelegate: PagedChildBuilderDelegate<SurveyResponse>(
+          itemBuilder: (context, item, index) {
+            return CommunityEntry(
+              user: item.creator,
+              poi: context.read<PoiViewCubit>().state.poi,
+              createdAt: item.createdAt,
+              text: (item.titel ?? '') + ('\n\n${item.beschreibung!}' ?? ''),
+            );
+          },
+          noItemsFoundIndicatorBuilder: (context) =>
+              noItems ?? const NoItemsFoundError(),
+        ),
+        separatorBuilder: (context, index) => const SizedBox(height: 8),
+        shrinkWrapFirstPageIndicators: false,
+        pagingController: pagingController,
       ),
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      shrinkWrapFirstPageIndicators: false,
-      pagingController: pagingController,
     );
   }
 }
@@ -150,8 +176,8 @@ class _CommentCount extends StatelessWidget {
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.comment,
-          title: "Kommentare",
-          value: "${state.comments.length}",
+          title: 'Kommentare',
+          value: '${state.comments.length}',
           index: 0,
         );
       },
@@ -170,8 +196,8 @@ class _Surveys extends StatelessWidget {
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.question_answer,
-          title: "Umfragen",
-          value: "${state.surveys.length}",
+          title: 'Umfragen',
+          value: '${state.surveys.length}',
           index: 1,
         );
       },
@@ -190,8 +216,8 @@ class _Petitions extends StatelessWidget {
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.local_post_office,
-          title: "Petitionen",
-          value: "${state.votings.length}",
+          title: 'Petitionen',
+          value: '${state.votings.length}',
           index: 2,
         );
       },
@@ -223,7 +249,7 @@ class _AccountCreationValue extends StatelessWidget {
             const SizedBox(height: 5),
 
             Text(
-              "$value",
+              '$value',
               style: Theme.of(context)
                   .textTheme
                   .labelLarge
@@ -259,10 +285,11 @@ class _StatisticsItem extends StatelessWidget {
           onTap: () => context.read<PoiViewCubit>().updateIndex(index),
           child: Container(
             decoration: BoxDecoration(
-                color: state.listIndex == index
-                    ? Color(0xff24262c)
-                    : Color(0xff1c1e24),
-                borderRadius: BorderRadius.circular(32)),
+              color: state.listIndex == index
+                  ? Color(0xff24262c)
+                  : Color(0xff1c1e24),
+              borderRadius: BorderRadius.circular(32),
+            ),
             width: MediaQuery.of(context).size.width / 4.22,
             child: Column(
               children: [
@@ -275,7 +302,7 @@ class _StatisticsItem extends StatelessWidget {
                 // Value and Title
                 title != null
                     ? Text(
-                        title ?? "Konnte nicht geladen werden",
+                        title ?? 'Konnte nicht geladen werden',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
@@ -283,7 +310,7 @@ class _StatisticsItem extends StatelessWidget {
                       )
                     : Container(),
                 Text(
-                  value ?? "0",
+                  value ?? '0',
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge
@@ -322,7 +349,9 @@ class _Comments extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Color(0xff1c1e24),
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
       ),
       child: CustomScrollView(
         shrinkWrap: false,
@@ -354,11 +383,13 @@ class _Comments extends StatelessWidget {
                                       .textTheme
                                       .bodyLarge
                                       ?.copyWith(
-                                          color: Colors.white70, fontSize: 20),
+                                        color: Colors.white70,
+                                        fontSize: 20,
+                                      ),
                                 ),
                               ),
                             )
-                          : const Text("");
+                          : const Text('');
                     },
                   ),
                   const Padding(
@@ -383,7 +414,7 @@ class _Comments extends StatelessWidget {
                                 ?.copyWith(color: Colors.white70),
                           ),
                         )
-                      : const Text("");
+                      : const Text('');
                 },
               ),
               const SizedBox(
@@ -399,10 +430,10 @@ class _Comments extends StatelessWidget {
                   _Petitions(),
                 ],
               ),
+              _List(),
               const SizedBox(
                 height: 30,
               ),
-              const _List(),
               SizedBox(
                 height: 100,
               ),
@@ -422,72 +453,42 @@ class _List extends StatelessWidget {
     return BlocBuilder<PoiViewCubit, PoiViewState>(
       builder: (context, state) {
         if (state.listIndex == 0) {
-          return BlocBuilder<PoiViewCubit, PoiViewState>(
-            buildWhen: (prev, current) =>
-                prev.comments.isEmpty ||
-                prev.comments.length != current.comments.length ||
-                prev.comments.isEmpty && current.comments.isNotEmpty,
-            builder: (context, state) {
-              return CommentsList<PoiViewCubit, PoiViewState>(
-                // TODO: Somehow the default Loading Indicator with Shimmers is bugged
-                // but just here... In the Hub it's working fine..
-                loadingIndicator: const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-                noItems: NoItemsFoundError(
-                  text: "Keine Posts",
-                ),
-                pagingController: state.commentsPagingController,
-              );
-            },
+          return CommentsList<PoiViewCubit, PoiViewState>(
+            loadingIndicator: const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
+            noItems: NoItemsFoundError(
+              text: 'Keine Kommentare',
+            ),
+            pagingController: state.commentsPagingController,
           );
         }
         if (state.listIndex == 1) {
-          return BlocBuilder<PoiViewCubit, PoiViewState>(
-            buildWhen: (prev, current) =>
-                prev.surveys.isEmpty ||
-                prev.surveys.length != current.surveys.length ||
-                prev.surveys.isEmpty && current.surveys.isNotEmpty,
-            builder: (context, state) {
-              return SurveyList<PoiViewCubit, PoiViewState>(
-                // TODO: Somehow the default Loading Indicator with Shimmers is bugged
-                // but just here... In the Hub it's working fine..
-                loadingIndicator: const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-                noItems: NoItemsFoundError(
-                  text: "Keine Posts",
-                ),
-                pagingController: state.surveyPagingController,
-              );
-            },
+          return SurveyList<PoiViewCubit, PoiViewState>(
+            loadingIndicator: const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
+            noItems: NoItemsFoundError(
+              text: 'Keine Umfragen',
+            ),
+            pagingController: state.surveyPagingController,
           );
         }
         if (state.listIndex == 2) {
-          return BlocBuilder<PoiViewCubit, PoiViewState>(
-            buildWhen: (prev, current) =>
-                prev.petitions.isEmpty ||
-                prev.petitions.length != current.petitions.length ||
-                prev.petitions.isEmpty && current.petitions.isNotEmpty,
-            builder: (context, state) {
-              return PetitionList<PoiViewCubit, PoiViewState>(
-                // TODO: Somehow the default Loading Indicator with Shimmers is bugged
-                // but just here... In the Hub it's working fine..
-                loadingIndicator: const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-                noItems: NoItemsFoundError(
-                  text: "Keine Posts",
-                ),
-                pagingController: state.petitionPagingController,
-              );
-            },
+          return PetitionList<PoiViewCubit, PoiViewState>(
+            loadingIndicator: const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
+            noItems: NoItemsFoundError(
+              text: 'Keine Posts',
+            ),
+            pagingController: state.petitionPagingController,
           );
         }
         return CircularProgressIndicator();
@@ -533,7 +534,9 @@ class PoiView extends StatelessWidget {
                             mapController: _mapController,
                             options: MapOptions(
                               initialCenter: LatLng(
-                                  state.poi!.latitude!, state.poi!.longitude!),
+                                state.poi!.latitude!,
+                                state.poi!.longitude!,
+                              ),
                               initialZoom: 17,
                               interactionOptions: const InteractionOptions(
                                 flags: InteractiveFlag.drag |
@@ -565,15 +568,18 @@ class PoiView extends StatelessWidget {
                                       color: Colors.red,
                                       size: 50.0,
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               RichAttributionWidget(
                                 attributions: [
                                   TextSourceAttribution(
                                     'OpenStreetMap contributors',
-                                    onTap: () => launchUrl(Uri.parse(
-                                        'https://openstreetmap.org/copyright')),
+                                    onTap: () => launchUrl(
+                                      Uri.parse(
+                                        'https://openstreetmap.org/copyright',
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -613,13 +619,14 @@ class PoiView extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     context.read<PoiViewCubit>().createVote(
-                                        VoteType.UP,
-                                        context
-                                            .read<AppCubit>()
-                                            .state
-                                            .user!
-                                            .id!,
-                                        poiId: state.poi!.id!);
+                                          VoteType.UP,
+                                          context
+                                              .read<AppCubit>()
+                                              .state
+                                              .user!
+                                              .id!,
+                                          poiId: state.poi!.id!,
+                                        );
                                   },
                                 ),
                               ),
@@ -630,7 +637,7 @@ class PoiView extends StatelessWidget {
                                     prev.votings != curr.votings,
                                 builder: (context, state) {
                                   return Text(
-                                    "${state.votings.where((element) => element.voteType!.name == VoteType.UP.name).toList().length}",
+                                    '${state.votings.where((element) => element.voteType!.name == VoteType.UP.name).toList().length}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge
@@ -646,8 +653,9 @@ class PoiView extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width - 50,
-                              top: 150),
+                            left: MediaQuery.of(context).size.width - 50,
+                            top: 150,
+                          ),
                           child: Column(
                             children: [
                               CircleAvatar(
@@ -660,13 +668,14 @@ class PoiView extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     context.read<PoiViewCubit>().createVote(
-                                        VoteType.DOWN,
-                                        context
-                                            .read<AppCubit>()
-                                            .state
-                                            .user!
-                                            .id!,
-                                        poiId: state.poi!.id!);
+                                          VoteType.DOWN,
+                                          context
+                                              .read<AppCubit>()
+                                              .state
+                                              .user!
+                                              .id!,
+                                          poiId: state.poi!.id!,
+                                        );
                                   },
                                 ),
                               ),
@@ -677,7 +686,7 @@ class PoiView extends StatelessWidget {
                                     prev.votings != curr.votings,
                                 builder: (context, state) {
                                   return Text(
-                                    "${state.votings.where((element) => element.voteType!.name == VoteType.DOWN.name).toList().length}",
+                                    '${state.votings.where((element) => element.voteType!.name == VoteType.DOWN.name).toList().length}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge
@@ -698,21 +707,7 @@ class PoiView extends StatelessWidget {
                             child: _PoIData(),
                           ),
                         ),
-                        Positioned(
-                          bottom: 0,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              bottom: MediaQuery.viewInsetsOf(context).bottom,
-                            ),
-                            child: ChatContainer(
-                              value: 1,
-                              onSendMessagePressed: (msg) => context
-                                  .read<PoiViewCubit>()
-                                  .writeComment(msg,
-                                      context.read<AppCubit>().state.user!),
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ],

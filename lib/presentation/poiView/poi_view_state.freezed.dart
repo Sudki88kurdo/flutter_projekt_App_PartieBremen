@@ -23,6 +23,7 @@ mixin _$PoiViewState {
   List<PetitionResponse> get petitions => throw _privateConstructorUsedError;
   List<VotingsResponse> get votings => throw _privateConstructorUsedError;
   ScreenStatus get commentStatus => throw _privateConstructorUsedError;
+  ScreenStatus get surveyStatus => throw _privateConstructorUsedError;
   int get listIndex => throw _privateConstructorUsedError;
   PagingController<int, CommentsResponse> get commentsPagingController =>
       throw _privateConstructorUsedError;
@@ -50,6 +51,7 @@ abstract class $PoiViewStateCopyWith<$Res> {
       List<PetitionResponse> petitions,
       List<VotingsResponse> votings,
       ScreenStatus commentStatus,
+      ScreenStatus surveyStatus,
       int listIndex,
       PagingController<int, CommentsResponse> commentsPagingController,
       PagingController<int, SurveyResponse> surveyPagingController,
@@ -58,6 +60,7 @@ abstract class $PoiViewStateCopyWith<$Res> {
   $ScreenStatusCopyWith<$Res> get status;
   $PoiCopyWith<$Res>? get poi;
   $ScreenStatusCopyWith<$Res> get commentStatus;
+  $ScreenStatusCopyWith<$Res> get surveyStatus;
 }
 
 /// @nodoc
@@ -80,6 +83,7 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
     Object? petitions = null,
     Object? votings = null,
     Object? commentStatus = null,
+    Object? surveyStatus = null,
     Object? listIndex = null,
     Object? commentsPagingController = null,
     Object? surveyPagingController = null,
@@ -113,6 +117,10 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
       commentStatus: null == commentStatus
           ? _value.commentStatus
           : commentStatus // ignore: cast_nullable_to_non_nullable
+              as ScreenStatus,
+      surveyStatus: null == surveyStatus
+          ? _value.surveyStatus
+          : surveyStatus // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
       listIndex: null == listIndex
           ? _value.listIndex
@@ -160,6 +168,14 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
       return _then(_value.copyWith(commentStatus: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ScreenStatusCopyWith<$Res> get surveyStatus {
+    return $ScreenStatusCopyWith<$Res>(_value.surveyStatus, (value) {
+      return _then(_value.copyWith(surveyStatus: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -178,6 +194,7 @@ abstract class _$$PoiViewStateImplCopyWith<$Res>
       List<PetitionResponse> petitions,
       List<VotingsResponse> votings,
       ScreenStatus commentStatus,
+      ScreenStatus surveyStatus,
       int listIndex,
       PagingController<int, CommentsResponse> commentsPagingController,
       PagingController<int, SurveyResponse> surveyPagingController,
@@ -189,6 +206,8 @@ abstract class _$$PoiViewStateImplCopyWith<$Res>
   $PoiCopyWith<$Res>? get poi;
   @override
   $ScreenStatusCopyWith<$Res> get commentStatus;
+  @override
+  $ScreenStatusCopyWith<$Res> get surveyStatus;
 }
 
 /// @nodoc
@@ -209,6 +228,7 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
     Object? petitions = null,
     Object? votings = null,
     Object? commentStatus = null,
+    Object? surveyStatus = null,
     Object? listIndex = null,
     Object? commentsPagingController = null,
     Object? surveyPagingController = null,
@@ -243,6 +263,10 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
           ? _value.commentStatus
           : commentStatus // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
+      surveyStatus: null == surveyStatus
+          ? _value.surveyStatus
+          : surveyStatus // ignore: cast_nullable_to_non_nullable
+              as ScreenStatus,
       listIndex: null == listIndex
           ? _value.listIndex
           : listIndex // ignore: cast_nullable_to_non_nullable
@@ -274,6 +298,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
       final List<PetitionResponse> petitions = const [],
       final List<VotingsResponse> votings = const [],
       this.commentStatus = const ScreenStatus.loading(),
+      this.surveyStatus = const ScreenStatus.loading(),
       this.listIndex = 0,
       required this.commentsPagingController,
       required this.surveyPagingController,
@@ -330,6 +355,9 @@ class _$PoiViewStateImpl implements _PoiViewState {
   final ScreenStatus commentStatus;
   @override
   @JsonKey()
+  final ScreenStatus surveyStatus;
+  @override
+  @JsonKey()
   final int listIndex;
   @override
   final PagingController<int, CommentsResponse> commentsPagingController;
@@ -340,7 +368,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
 
   @override
   String toString() {
-    return 'PoiViewState(status: $status, poi: $poi, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
+    return 'PoiViewState(status: $status, poi: $poi, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, surveyStatus: $surveyStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
   }
 
   @override
@@ -357,6 +385,8 @@ class _$PoiViewStateImpl implements _PoiViewState {
             const DeepCollectionEquality().equals(other._votings, _votings) &&
             (identical(other.commentStatus, commentStatus) ||
                 other.commentStatus == commentStatus) &&
+            (identical(other.surveyStatus, surveyStatus) ||
+                other.surveyStatus == surveyStatus) &&
             (identical(other.listIndex, listIndex) ||
                 other.listIndex == listIndex) &&
             (identical(
@@ -379,6 +409,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
       const DeepCollectionEquality().hash(_petitions),
       const DeepCollectionEquality().hash(_votings),
       commentStatus,
+      surveyStatus,
       listIndex,
       commentsPagingController,
       surveyPagingController,
@@ -400,6 +431,7 @@ abstract class _PoiViewState implements PoiViewState {
       final List<PetitionResponse> petitions,
       final List<VotingsResponse> votings,
       final ScreenStatus commentStatus,
+      final ScreenStatus surveyStatus,
       final int listIndex,
       required final PagingController<int, CommentsResponse>
           commentsPagingController,
@@ -422,6 +454,8 @@ abstract class _PoiViewState implements PoiViewState {
   List<VotingsResponse> get votings;
   @override
   ScreenStatus get commentStatus;
+  @override
+  ScreenStatus get surveyStatus;
   @override
   int get listIndex;
   @override

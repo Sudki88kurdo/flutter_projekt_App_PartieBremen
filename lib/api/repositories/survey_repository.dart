@@ -30,6 +30,26 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
             beschreibung: beschreibung,
             expiresAt: DateTime.now().add(const Duration(days: 90)).toString(),
             userId: creatorId,
-            poiId: poiId),
+            poiId: poiId
+        ),
+      );
+
+  Future<ApiResult<List<SurveyResponse>>> updateSurvey({
+    required String surveyId,
+    required String title,
+    required String description,
+    required String expiresAt,
+    required String userId,
+    required double poiId,
+  }) async =>
+      execute(
+        () => client.updateSurvey(
+            surveyId: surveyId,
+            titel: title,
+            beschreibung: description,
+            expiresAt: expiresAt,
+            userId: userId,
+            poiId: poiId
+        ),
       );
 }

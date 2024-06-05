@@ -117,6 +117,49 @@ class _SurveyClient implements SurveyClient {
     return httpResponse;
   }
 
+  @override
+  Future<HttpResponse<List<SurveyResponse>>> updateSurvey({
+    required String surveyId,
+    required String titel,
+    required String beschreibung,
+    required String expiresAt,
+    required String userId,
+    required double poiId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'titel': titel,
+      'beschreibung': beschreibung,
+      'expiresAt': expiresAt,
+      'userId': userId,
+      'poiId': poiId,
+    };
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<SurveyResponse>>>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/survey/${surveyId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => SurveyResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

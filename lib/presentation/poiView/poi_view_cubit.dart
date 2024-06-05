@@ -2,6 +2,7 @@ import 'package:flutter_app/api/repositories/comment_repository.dart';
 import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/common/screen_status.dart';
+import 'package:flutter_app/entities/survey_response.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,6 +30,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       (pageKey) => findAllSurveysFromPoI(),
     );
   }
+
   Future<void> getAllPois()
     async {
       try {
@@ -40,7 +42,6 @@ class PoiViewCubit extends Cubit<PoiViewState> {
         print("Error in Cubit while getAllPOIs: $error");
       }
   }
-
 
   Future<bool> init({required String poiId}) async {
     bool successful = false;
@@ -75,7 +76,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     return state.comments;
   }
 
-  findAllSurveysFromPoI() async {
+  Future<List<SurveyResponse>> findAllSurveysFromPoI() async {
     //TODO change to from poi request
     print("here");
     var resSurvey = await _surveyRepository.getAllSurveys();
@@ -86,6 +87,49 @@ class PoiViewCubit extends Cubit<PoiViewState> {
 
     return state.surveys;
   }
+
+  Future<void> createSurvey({
+    required String title,
+    required String description,
+    required String expiresAt,
+    required String creatorId,
+    required double poiId,
+  }) async {
+    emit(state.copyWith(
+      surveyStatus: const ScreenStatus.loading(),
+    ));
+    try {
+      final resSurvey = await _surveyRepository.create(
+        titel: title,
+        beschreibung: description,
+        expiresAt: expiresAt,
+        creatorId: creatorId,
+        poiId: poiId,
+      );
+
+      resSurvey.whenOrNull(
+        success: (newSurvey) {
+          final updatedSurveys = List<SurveyResponse>.from(state.surveys)
+            ..add(newSurvey);
+          emit(state.copyWith(
+            surveys: updatedSurveys,
+            surveyStatus: const ScreenStatus.success(),
+          ));
+          state.surveyPagingController.appendLastPage([newSurvey]);
+        },
+        failure: (error) {
+          emit(state.copyWith(
+            surveyStatus: ScreenStatus.error(msg: error.toString()),
+          ));
+        },
+      );
+    } catch (error) {
+      emit(state.copyWith(
+        surveyStatus: ScreenStatus.error(msg: error.toString()),
+      ));
+    }
+  }
+
 
   void writeComment(String comment, User user) async {
     emit(state.copyWith(

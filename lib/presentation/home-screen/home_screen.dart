@@ -137,87 +137,86 @@ class HomeScreen extends StatelessWidget {
                           direction: Axis.vertical,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              width: 350,
-                              height: 65.0,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: SearchAnchor(
-                                  isFullScreen: false,
-                                  builder: (BuildContext context,
-                                      SearchController controller) {
-                                    return SearchBar(
-                                      controller: controller,
-                                      shape: MaterialStatePropertyAll<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadiusDirectional.circular(
-                                                  12),
+                            Container(
+                              alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: SearchAnchor(
+                                    isFullScreen: false,
+                                    builder: (BuildContext context,
+                                        SearchController controller) {
+                                      return SearchBar(
+                                        controller: controller,
+                                        shape: MaterialStatePropertyAll<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadiusDirectional.circular(
+                                                    12),
+                                          ),
                                         ),
-                                      ),
-                                      backgroundColor:
-                                          const MaterialStatePropertyAll<Color>(
-                                              Color.fromRGBO(
-                                                  223, 238, 218, 1.0)),
-                                      padding: const MaterialStatePropertyAll<
-                                              EdgeInsets>(
-                                          EdgeInsets.symmetric(
-                                              horizontal: 16.0)),
-                                      hintText: 'Ort suchen',
-                                      onTap: () {
-                                        logger.i("On Tap");
-                                        controller.openView();
-                                      },
-                                      leading: const Icon(Icons.search,
-                                          color: Colors.green),
-                                      trailing: const <Widget>[],
-                                    );
-                                  },
-                                  viewOnChanged: (String search) async {},
-                                  suggestionsBuilder: (BuildContext context,
-                                      SearchController controller) {
-                                    var searchFuture = loadSuggestions(
-                                        controller.text, mapcontext);
-                                    return [
-                                      FutureBuilder(
-                                        future: searchFuture,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                            List<Street> data =
-                                                snapshot.data as List<Street>;
-                                            return ListView.builder(
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemCount: data.length,
-                                              itemBuilder: (context, index) {
-                                                return ListTile(
-                                                  title: Text(
-                                                      data[index].name ?? ""),
-                                                  onTap: () {
-                                                    moveToAddress(
-                                                        mapController:
-                                                            mapController,
-                                                        search:
-                                                            data[index].name ??
-                                                                "");
-                                                    controller.closeView(
-                                                        controller.text);
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          }
-                                          return const LinearProgressIndicator();
+                                        backgroundColor:
+                                            const MaterialStatePropertyAll<Color>(
+                                                Color.fromRGBO(
+                                                    223, 238, 218, 1.0)),
+                                        padding: const MaterialStatePropertyAll<
+                                                EdgeInsets>(
+                                            EdgeInsets.symmetric(
+                                                horizontal: 16.0)),
+                                        hintText: 'Straßenname eingeben...',
+                                        onTap: () {
+                                          controller.openView();
                                         },
-                                      )
-                                    ];
-                                  },
+                                        leading: const Icon(Icons.search,
+                                            color: Colors.green),
+                                        trailing: const <Widget>[],
+                                      );
+                                    },
+                                    viewOnChanged: (String search) async {},
+                                    suggestionsBuilder: (BuildContext context,
+                                        SearchController controller) {
+                                      var searchFuture = loadSuggestions(
+                                          controller.text, mapcontext);
+                                      return [
+                                        FutureBuilder(
+                                          future: searchFuture,
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.done) {
+                                              List<Street> data =
+                                                  snapshot.data as List<Street>;
+                                              return ListView.builder(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                itemCount: data.length,
+                                                itemBuilder: (context, index) {
+                                                  return ListTile(
+                                                    title: Text(
+                                                        data[index].name ?? ""),
+                                                    onTap: () {
+                                                      moveToAddress(
+                                                          mapController:
+                                                              mapController,
+                                                          search:
+                                                              data[index].name ??
+                                                                  "");
+                                                      controller.closeView(
+                                                          controller.text);
+                                                      controller.text = data[index].name ?? "";
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            }
+                                            return const LinearProgressIndicator();
+                                          },
+                                        )
+                                      ];
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ],

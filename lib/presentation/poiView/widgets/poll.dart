@@ -1,10 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/entities/survey_response.dart';
 import 'package:flutter_app/presentation/poiView/questions.dart';
+import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
 import 'package:flutter_app/presentation/poiView/widgets/poll_answer.dart';
+import 'package:go_router/go_router.dart';
+import 'package:infinite_scroll_pagination/src/widgets/layouts/paged_sliver_list.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class Poll extends StatefulWidget {
-  const Poll({super.key});
+  static const String routeName = 'add_survey';
+
+  const Poll(PagedSliverList<int, SurveyResponse> pagedSliverList, {super.key});
 
   @override
   State<Poll> createState() => _PollState();
@@ -32,13 +39,13 @@ class _PollState extends State<Poll> {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: Colors.white,
                   ),
                 ),
               ),
               Icon(
                 Icons.poll,
-                color: Colors.green,
+                color: Colors.white,
                 size: 30,
               ),
             ],
@@ -88,6 +95,7 @@ class _PollState extends State<Poll> {
               ],
             ),
           ),
+          _buildSurvey(),
         ],
       ),
     );
@@ -182,13 +190,43 @@ class _PollState extends State<Poll> {
     );
   }
 
+  Widget _buildSurvey() {
+    return Padding(
+      padding: const EdgeInsets.all(25.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.7,
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: TextButton.icon(
+          label: Text(
+            "Umfrage erstellen",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          ),
+          onPressed: () {
+            showBottomSheet(
+                context: context,
+                builder: (context) => AddSurvey(),
+                showDragHandle: true);
+          },
+          icon: Icon(CupertinoIcons.chat_bubble_text, color: Colors.white, size: 20),
+          iconAlignment: IconAlignment.end,
+        ),
+      ),
+    );
+  }
+
   void _showErrorMessage() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: new Text('Sie haben die Umfrage bereits abgeschickt!'),
-          backgroundColor: Colors.red,
-        )
+      SnackBar(
+        content: new Text('Sie haben die Umfrage bereits abgeschickt!'),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 

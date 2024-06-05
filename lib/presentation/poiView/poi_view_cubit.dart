@@ -1,8 +1,11 @@
+import 'package:flutter_app/api/common/api_result.dart';
 import 'package:flutter_app/api/repositories/comment_repository.dart';
+import 'package:flutter_app/api/repositories/petition_repository.dart';
 import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/common/screen_status.dart';
 import 'package:flutter_app/entities/survey_response.dart';
+import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,13 +18,19 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final PoiRepository _poIRepository;
   final CommentRepository _commentRepository;
   final VotingRepository _votingRepository;
-
   final SurveyRepository _surveyRepository;
+
+  final PetitionRepository _petitionRepository;
   final String _poiId;
 
-  PoiViewCubit(this._poIRepository, this._commentRepository,
-      this._votingRepository, this._surveyRepository, this._poiId)
-      : super(PoiViewState.initial()) {
+  PoiViewCubit(
+    this._poIRepository,
+    this._commentRepository,
+    this._votingRepository,
+    this._surveyRepository,
+    this._petitionRepository,
+    this._poiId,
+  ) : super(PoiViewState.initial()) {
     init(poiId: _poiId);
     state.commentsPagingController.addPageRequestListener(
       (pageKey) => findAllCommentsFromPoI(),
@@ -29,6 +38,8 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     state.surveyPagingController.addPageRequestListener(
       (pageKey) => findAllSurveysFromPoI(),
     );
+    state.petitionPagingController
+        .addPageRequestListener((pageKey) => findAllPetitionsFromPoI());
   }
 
   Future<void> getAllPois()
@@ -63,6 +74,16 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       successful = true;
     });
 
+    var resPetition =
+        await _petitionRepository.findPOIsPetitions(poiId: _poiId);
+    resPetition.whenOrNull(failure: (value) {
+      emit(state.copyWith(petitions: []));
+      state.petitionPagingController.appendLastPage([]);
+    }, success: (value) {
+      emit(state.copyWith(petitions: value));
+      successful = true;
+    });
+
     return successful;
   }
 
@@ -78,7 +99,6 @@ class PoiViewCubit extends Cubit<PoiViewState> {
 
   Future<List<SurveyResponse>> findAllSurveysFromPoI() async {
     //TODO change to from poi request
-    print("here");
     var resSurvey = await _surveyRepository.getAllSurveys();
     resSurvey.whenOrNull(success: (value) {
       emit(state.copyWith(surveys: value));
@@ -86,6 +106,21 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     });
 
     return state.surveys;
+  }
+
+  findAllPetitionsFromPoI() async {
+    var resPetition =
+        await _petitionRepository.findPOIsPetitions(poiId: _poiId);
+    resPetition.whenOrNull(failure: (value) {
+      print("here123");
+      emit(state.copyWith(petitions: []));
+      state.petitionPagingController.appendLastPage([]);
+    }, success: (value) {
+      emit(state.copyWith(petitions: value));
+      state.petitionPagingController.appendLastPage(value);
+    });
+
+    return state.petitions;
   }
 
   Future<void> createSurvey({
@@ -174,6 +209,30 @@ class PoiViewCubit extends Cubit<PoiViewState> {
 
   void updateIndex(int index) async {
     emit(state.copyWith(listIndex: index));
+  }
+
+  Future<ApiResult<PetitionResponse>> createPetition() async {
+    var res = await _petitionRepository.create(
+      title: state.newPetitionTitle!,
+      description: state.newPetitionDescription!,
+      expireAt: DateTime.now().toString(),
+      goal: state.newPetitionGoal!,
+      poiId: _poiId,
+    );
+
+    return res;
+  }
+
+  void updateNewPetitionTitle(String title) {
+    emit(state.copyWith(newPetitionTitle: title));
+  }
+
+  void updateNewPetitionDescription(String title) {
+    emit(state.copyWith(newPetitionDescription: title));
+  }
+
+  void updateNewPetitionGoal(String title) {
+    emit(state.copyWith(newPetitionGoal: int.parse(title)));
   }
 
   void refreshControllers() async {

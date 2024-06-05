@@ -18,6 +18,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$PoiViewState {
   ScreenStatus get status => throw _privateConstructorUsedError;
   Poi? get poi => throw _privateConstructorUsedError;
+  String? get newPetitionTitle => throw _privateConstructorUsedError;
+  String? get newPetitionDescription => throw _privateConstructorUsedError;
+  int? get newPetitionGoal => throw _privateConstructorUsedError;
   List<CommentsResponse> get comments => throw _privateConstructorUsedError;
   List<SurveyResponse> get surveys => throw _privateConstructorUsedError;
   List<PetitionResponse> get petitions => throw _privateConstructorUsedError;
@@ -46,6 +49,9 @@ abstract class $PoiViewStateCopyWith<$Res> {
   $Res call(
       {ScreenStatus status,
       Poi? poi,
+      String? newPetitionTitle,
+      String? newPetitionDescription,
+      int? newPetitionGoal,
       List<CommentsResponse> comments,
       List<SurveyResponse> surveys,
       List<PetitionResponse> petitions,
@@ -78,6 +84,9 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
   $Res call({
     Object? status = null,
     Object? poi = freezed,
+    Object? newPetitionTitle = freezed,
+    Object? newPetitionDescription = freezed,
+    Object? newPetitionGoal = freezed,
     Object? comments = null,
     Object? surveys = null,
     Object? petitions = null,
@@ -98,6 +107,18 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
           ? _value.poi
           : poi // ignore: cast_nullable_to_non_nullable
               as Poi?,
+      newPetitionTitle: freezed == newPetitionTitle
+          ? _value.newPetitionTitle
+          : newPetitionTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPetitionDescription: freezed == newPetitionDescription
+          ? _value.newPetitionDescription
+          : newPetitionDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPetitionGoal: freezed == newPetitionGoal
+          ? _value.newPetitionGoal
+          : newPetitionGoal // ignore: cast_nullable_to_non_nullable
+              as int?,
       comments: null == comments
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
@@ -189,6 +210,9 @@ abstract class _$$PoiViewStateImplCopyWith<$Res>
   $Res call(
       {ScreenStatus status,
       Poi? poi,
+      String? newPetitionTitle,
+      String? newPetitionDescription,
+      int? newPetitionGoal,
       List<CommentsResponse> comments,
       List<SurveyResponse> surveys,
       List<PetitionResponse> petitions,
@@ -223,6 +247,9 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
   $Res call({
     Object? status = null,
     Object? poi = freezed,
+    Object? newPetitionTitle = freezed,
+    Object? newPetitionDescription = freezed,
+    Object? newPetitionGoal = freezed,
     Object? comments = null,
     Object? surveys = null,
     Object? petitions = null,
@@ -243,6 +270,18 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
           ? _value.poi
           : poi // ignore: cast_nullable_to_non_nullable
               as Poi?,
+      newPetitionTitle: freezed == newPetitionTitle
+          ? _value.newPetitionTitle
+          : newPetitionTitle // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPetitionDescription: freezed == newPetitionDescription
+          ? _value.newPetitionDescription
+          : newPetitionDescription // ignore: cast_nullable_to_non_nullable
+              as String?,
+      newPetitionGoal: freezed == newPetitionGoal
+          ? _value.newPetitionGoal
+          : newPetitionGoal // ignore: cast_nullable_to_non_nullable
+              as int?,
       comments: null == comments
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
@@ -293,6 +332,9 @@ class _$PoiViewStateImpl implements _PoiViewState {
   const _$PoiViewStateImpl(
       {this.status = const ScreenStatus.pure(),
       this.poi = null,
+      this.newPetitionTitle = null,
+      this.newPetitionDescription = null,
+      this.newPetitionGoal = null,
       final List<CommentsResponse> comments = const [],
       final List<SurveyResponse> surveys = const [],
       final List<PetitionResponse> petitions = const [],
@@ -314,6 +356,15 @@ class _$PoiViewStateImpl implements _PoiViewState {
   @override
   @JsonKey()
   final Poi? poi;
+  @override
+  @JsonKey()
+  final String? newPetitionTitle;
+  @override
+  @JsonKey()
+  final String? newPetitionDescription;
+  @override
+  @JsonKey()
+  final int? newPetitionGoal;
   final List<CommentsResponse> _comments;
   @override
   @JsonKey()
@@ -369,6 +420,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
   @override
   String toString() {
     return 'PoiViewState(status: $status, poi: $poi, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, surveyStatus: $surveyStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
+    return 'PoiViewState(status: $status, poi: $poi, newPetitionTitle: $newPetitionTitle, newPetitionDescription: $newPetitionDescription, newPetitionGoal: $newPetitionGoal, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
   }
 
   @override
@@ -378,6 +430,12 @@ class _$PoiViewStateImpl implements _PoiViewState {
             other is _$PoiViewStateImpl &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.poi, poi) || other.poi == poi) &&
+            (identical(other.newPetitionTitle, newPetitionTitle) ||
+                other.newPetitionTitle == newPetitionTitle) &&
+            (identical(other.newPetitionDescription, newPetitionDescription) ||
+                other.newPetitionDescription == newPetitionDescription) &&
+            (identical(other.newPetitionGoal, newPetitionGoal) ||
+                other.newPetitionGoal == newPetitionGoal) &&
             const DeepCollectionEquality().equals(other._comments, _comments) &&
             const DeepCollectionEquality().equals(other._surveys, _surveys) &&
             const DeepCollectionEquality()
@@ -404,6 +462,9 @@ class _$PoiViewStateImpl implements _PoiViewState {
       runtimeType,
       status,
       poi,
+      newPetitionTitle,
+      newPetitionDescription,
+      newPetitionGoal,
       const DeepCollectionEquality().hash(_comments),
       const DeepCollectionEquality().hash(_surveys),
       const DeepCollectionEquality().hash(_petitions),
@@ -426,6 +487,9 @@ abstract class _PoiViewState implements PoiViewState {
   const factory _PoiViewState(
       {final ScreenStatus status,
       final Poi? poi,
+      final String? newPetitionTitle,
+      final String? newPetitionDescription,
+      final int? newPetitionGoal,
       final List<CommentsResponse> comments,
       final List<SurveyResponse> surveys,
       final List<PetitionResponse> petitions,
@@ -444,6 +508,12 @@ abstract class _PoiViewState implements PoiViewState {
   ScreenStatus get status;
   @override
   Poi? get poi;
+  @override
+  String? get newPetitionTitle;
+  @override
+  String? get newPetitionDescription;
+  @override
+  int? get newPetitionGoal;
   @override
   List<CommentsResponse> get comments;
   @override

@@ -419,8 +419,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
 
   @override
   String toString() {
-    return 'PoiViewState(status: $status, poi: $poi, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, surveyStatus: $surveyStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
-    return 'PoiViewState(status: $status, poi: $poi, newPetitionTitle: $newPetitionTitle, newPetitionDescription: $newPetitionDescription, newPetitionGoal: $newPetitionGoal, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
+    return 'PoiViewState(status: $status, poi: $poi, newPetitionTitle: $newPetitionTitle, newPetitionDescription: $newPetitionDescription, newPetitionGoal: $newPetitionGoal, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, surveyStatus: $surveyStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
   }
 
   @override

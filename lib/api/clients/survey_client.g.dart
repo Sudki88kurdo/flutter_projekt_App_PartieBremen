@@ -24,7 +24,7 @@ class _SurveyClient implements SurveyClient {
     required String beschreibung,
     required String expiresAt,
     required String userId,
-    required double poiId,
+    required String poiId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -124,7 +124,7 @@ class _SurveyClient implements SurveyClient {
     required String beschreibung,
     required String expiresAt,
     required String userId,
-    required double poiId,
+    required String poiId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

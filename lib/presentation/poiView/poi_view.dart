@@ -43,9 +43,7 @@ class CommentsList<C extends StateStreamable<S>, S> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverStack(
-      children: [
-        PagedSliverList.separated(
+        return PagedSliverList.separated(
           builderDelegate: PagedChildBuilderDelegate<CommentsResponse>(
             itemBuilder: (context, item, index) {
               return CommunityEntry(
@@ -61,27 +59,7 @@ class CommentsList<C extends StateStreamable<S>, S> extends StatelessWidget {
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           shrinkWrapFirstPageIndicators: false,
           pagingController: pagingController,
-        ),
-        SliverPositioned(
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.viewInsetsOf(context).bottom,
-            ),
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: ChatContainer(
-                onSendMessagePressed: (msg) =>
-                    context.read<PoiViewCubit>().writeComment(
-                          msg,
-                          context.read<AppCubit>().state.user!,
-                        ),
-                value: 1,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+        );
   }
 }
 
@@ -430,10 +408,11 @@ class _Comments extends StatelessWidget {
                   _Petitions(),
                 ],
               ),
-              _List(),
+
               const SizedBox(
                 height: 30,
               ),
+              _List(),
               SizedBox(
                 height: 100,
               ),
@@ -736,20 +715,25 @@ class PoiView extends StatelessWidget {
                             child: _PoIData(),
                           ),
                         ),
-                        Positioned(
-                          bottom: 0,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              bottom: MediaQuery.viewInsetsOf(context).bottom,
+                        BlocBuilder<PoiViewCubit, PoiViewState>(
+                          builder: (context, state) {
+                            return state.listIndex == 0 ?
+                            Positioned(
+                            bottom: 0,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                bottom: MediaQuery.viewInsetsOf(context).bottom,
+                              ),
+                              child: ChatContainer(
+                                value: 1,
+                                onSendMessagePressed: (msg) => context
+                                    .read<PoiViewCubit>()
+                                    .writeComment(msg,
+                                    context.read<AppCubit>().state.user!),
+                              ),
                             ),
-                            child: ChatContainer(
-                              value: 1,
-                              onSendMessagePressed: (msg) => context
-                                  .read<PoiViewCubit>()
-                                  .writeComment(msg,
-                                      context.read<AppCubit>().state.user!),
-                            ),
-                          ),
+                          ) : Container();
+                          },
                         ),
                       ],
                     ),

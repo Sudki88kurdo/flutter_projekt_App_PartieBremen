@@ -22,7 +22,7 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
     required String beschreibung,
     required String expiresAt,
     required String creatorId,
-    required double poiId,
+    required String poiId,
   }) async =>
       execute(
         () => client.create(
@@ -40,7 +40,7 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
     required String description,
     required String expiresAt,
     required String userId,
-    required double poiId,
+    required String poiId,
   }) async =>
       execute(
         () => client.updateSurvey(

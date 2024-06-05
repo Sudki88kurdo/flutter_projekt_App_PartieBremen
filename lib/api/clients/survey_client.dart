@@ -18,7 +18,7 @@ abstract class SurveyClient {
     @Field("beschreibung") required String beschreibung,
     @Field("expiresAt") required String expiresAt,
     @Field("userId") required String userId,
-    @Field("poiId") required double poiId,
+    @Field("poiId") required String poiId,
   });
 
   @GET("/survey")
@@ -35,6 +35,6 @@ abstract class SurveyClient {
     @Field("beschreibung") required String beschreibung,
     @Field("expiresAt") required String expiresAt,
     @Field("userId") required String userId,
-    @Field("poiId") required double poiId,
+    @Field("poiId") required String poiId,
   });
 }

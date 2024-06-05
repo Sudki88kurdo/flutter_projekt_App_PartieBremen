@@ -128,7 +128,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     required String description,
     required String expiresAt,
     required String creatorId,
-    required double poiId,
+
   }) async {
     emit(state.copyWith(
       surveyStatus: const ScreenStatus.loading(),
@@ -139,7 +139,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
         beschreibung: description,
         expiresAt: expiresAt,
         creatorId: creatorId,
-        poiId: poiId,
+        poiId: _poiId,
       );
 
       resSurvey.whenOrNull(

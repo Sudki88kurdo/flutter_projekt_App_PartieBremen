@@ -205,8 +205,7 @@ class _AddSurveyState extends State<AddSurvey> {
           title: titleController.text,
           description: descriptionController.text,
           expiresAt: expiresAtController.text,
-          creatorId: context.read<AppCubit>().state.user!.id!,
-          poiId: 0, //muss geholt werden, keine Ahnung von wo
+          creatorId: context.read<AppCubit>().state.user!.id!, //muss geholt werden, keine Ahnung von wo
         );
         showMessage(
             'Umfrage erfolgreich erstellt!'); //Snackbar wird nicht angezeigt

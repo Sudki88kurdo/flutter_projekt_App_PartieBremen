@@ -14,6 +14,7 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../appStyle.dart';
 import '../app/app_cubit.dart';
 
 class CustomIconWidget extends StatelessWidget {
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text('PartiBremen Home'),
             centerTitle: true,
-            backgroundColor: Colors.green,
+            backgroundColor: AppStyles.buttonColor,
             titleTextStyle: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -321,84 +322,85 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Container(
                               alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: SearchAnchor(
-                                    isFullScreen: false,
-                                    builder: (BuildContext context,
-                                        SearchController controller) {
-                                      return SearchBar(
-                                        controller: controller,
-                                        shape: MaterialStatePropertyAll<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadiusDirectional.circular(
-                                                    12),
-                                          ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: SearchAnchor(
+                                  isFullScreen: false,
+                                  builder: (BuildContext context,
+                                      SearchController controller) {
+                                    return SearchBar(
+                                      controller: controller,
+                                      shape: MaterialStatePropertyAll<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadiusDirectional.circular(
+                                                  12),
                                         ),
-                                        backgroundColor:
-                                            const MaterialStatePropertyAll<Color>(
-                                                Color.fromRGBO(
-                                                    223, 238, 218, 1.0)),
-                                        padding: const MaterialStatePropertyAll<
-                                                EdgeInsets>(
-                                            EdgeInsets.symmetric(
-                                                horizontal: 16.0)),
-                                        hintText: 'Straßenname eingeben...',
-                                        onTap: () {
-                                          controller.openView();
+                                      ),
+                                      backgroundColor:
+                                          const MaterialStatePropertyAll<Color>(
+                                              Color.fromRGBO(
+                                                  223, 238, 218, 1.0)),
+                                      padding: const MaterialStatePropertyAll<
+                                              EdgeInsets>(
+                                          EdgeInsets.symmetric(
+                                              horizontal: 16.0)),
+                                      hintText: 'Straßenname eingeben...',
+                                      onTap: () {
+                                        controller.openView();
+                                      },
+                                      leading: const Icon(Icons.search,
+                                          color: Colors.green),
+                                      trailing: const <Widget>[],
+                                    );
+                                  },
+                                  viewOnChanged: (String search) async {},
+                                  suggestionsBuilder: (BuildContext context,
+                                      SearchController controller) {
+                                    var searchFuture = loadSuggestions(
+                                        controller.text, mapcontext);
+                                    return [
+                                      FutureBuilder(
+                                        future: searchFuture,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.done) {
+                                            List<Street> data =
+                                                snapshot.data as List<Street>;
+                                            return ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount: data.length,
+                                              itemBuilder: (context, index) {
+                                                return ListTile(
+                                                  title: Text(
+                                                      data[index].name ?? ""),
+                                                  onTap: () {
+                                                    moveToAddress(
+                                                        mapController:
+                                                            mapController,
+                                                        search:
+                                                            data[index].name ??
+                                                                "");
+                                                    controller.closeView(
+                                                        controller.text);
+                                                    controller.text =
+                                                        data[index].name ?? "";
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          }
+                                          return const LinearProgressIndicator();
                                         },
-                                        leading: const Icon(Icons.search,
-                                            color: Colors.green),
-                                        trailing: const <Widget>[],
-                                      );
-                                    },
-                                    viewOnChanged: (String search) async {},
-                                    suggestionsBuilder: (BuildContext context,
-                                        SearchController controller) {
-                                      var searchFuture = loadSuggestions(
-                                          controller.text, mapcontext);
-                                      return [
-                                        FutureBuilder(
-                                          future: searchFuture,
-                                          builder: (context, snapshot) {
-                                            if (snapshot.connectionState ==
-                                                ConnectionState.done) {
-                                              List<Street> data =
-                                                  snapshot.data as List<Street>;
-                                              return ListView.builder(
-                                                shrinkWrap: true,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(),
-                                                itemCount: data.length,
-                                                itemBuilder: (context, index) {
-                                                  return ListTile(
-                                                    title: Text(
-                                                        data[index].name ?? ""),
-                                                    onTap: () {
-                                                      moveToAddress(
-                                                          mapController:
-                                                              mapController,
-                                                          search:
-                                                              data[index].name ??
-                                                                  "");
-                                                      controller.closeView(
-                                                          controller.text);
-                                                      controller.text = data[index].name ?? "";
-                                                    },
-                                                  );
-                                                },
-                                              );
-                                            }
-                                            return const LinearProgressIndicator();
-                                          },
-                                        )
-                                      ];
-                                    },
-                                  ),
+                                      )
+                                    ];
+                                  },
                                 ),
                               ),
+                            ),
                           ],
                         ),
                       ],

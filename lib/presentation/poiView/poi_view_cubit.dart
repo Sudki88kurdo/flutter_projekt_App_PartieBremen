@@ -22,21 +22,19 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final SignatureRepository _signatureRepository;
   final String _poiId;
 
-  PoiViewCubit(
-    this._poIRepository,
-    this._commentRepository,
-    this._votingRepository,
-    this._surveyRepository,
-    this._petitionRepository,
-    this._signatureRepository,
-    this._poiId,
-  ) : super(PoiViewState.initial()) {
+  PoiViewCubit(this._poIRepository,
+      this._commentRepository,
+      this._votingRepository,
+      this._surveyRepository,
+      this._petitionRepository,
+      this._signatureRepository,
+      this._poiId,) : super(PoiViewState.initial()) {
     init(poiId: _poiId);
     state.commentsPagingController.addPageRequestListener(
-      (pageKey) => findAllCommentsFromPoI(),
+          (pageKey) => findAllCommentsFromPoI(),
     );
     state.surveyPagingController.addPageRequestListener(
-      (pageKey) => findAllSurveysFromPoI(),
+          (pageKey) => findAllSurveysFromPoI(),
     );
     state.petitionPagingController
         .addPageRequestListener((pageKey) => findAllPetitionsFromPoI());
@@ -74,7 +72,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     });
 
     var resPetition =
-        await _petitionRepository.findPOIsPetitions(poiId: _poiId);
+    await _petitionRepository.findPOIsPetitions(poiId: _poiId);
     resPetition.whenOrNull(failure: (value) {
       emit(state.copyWith(petitions: []));
       state.petitionPagingController.appendLastPage([]);
@@ -109,7 +107,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
 
   findAllPetitionsFromPoI() async {
     var resPetition =
-        await _petitionRepository.findPOIsPetitions(poiId: _poiId);
+    await _petitionRepository.findPOIsPetitions(poiId: _poiId);
     resPetition.whenOrNull(failure: (value) {
       emit(state.copyWith(petitions: []));
       state.petitionPagingController.appendLastPage([]);
@@ -121,8 +119,9 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     return state.petitions;
   }
 
-  Future<void> createSignature(
+  Future<bool> createSignature(
       {required String petitionId, required String userId}) async {
+    var success = false;
     final resSignature = await _signatureRepository.create(
         signerId: userId, petitionId: petitionId);
     await resSignature.whenOrNull(
@@ -132,9 +131,11 @@ class PoiViewCubit extends Cubit<PoiViewState> {
           commentStatus: const ScreenStatus.success(),
           petitions: [],
         ));
+        success = true;
         await findAllPetitionsFromPoI();
       },
     );
+    return success;
   }
 
   Future<void> createSurvey({
@@ -197,8 +198,9 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     });
   }
 
-  void createVote(VoteType voteType, String voterId,
+  Future<bool> createVote(VoteType voteType, String voterId,
       {String? poiId, String? commentId}) async {
+    var success = false;
     emit(state.copyWith(
       commentStatus: const ScreenStatus.loading(),
     ));
@@ -211,19 +213,22 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       emit(state.copyWith(
         commentStatus: const ScreenStatus.success(),
       ));
+      success = true;
     });
 
     var resVoting = await _votingRepository.findAllFromPoI(poiId: _poiId);
     resVoting.whenOrNull(success: (value) {
       emit(state.copyWith(votings: value));
     });
+    return success;
   }
 
   void updateIndex(int index) async {
     emit(state.copyWith(listIndex: index));
   }
 
-  void createPetition() async {
+  Future<bool> createPetition() async {
+    var success = false;
     emit(state.copyWith(
       commentStatus: const ScreenStatus.loading(),
     ));
@@ -243,6 +248,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
             commentStatus: const ScreenStatus.success(),
           ),
         );
+        success = true;
       },
     );
     state.petitionPagingController.itemList = [];
@@ -251,7 +257,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       petitions: [],
     ));
     findAllPetitionsFromPoI();
-    return;
+    return success;
   }
 
   void updateNewPetitionTitle(String title) {

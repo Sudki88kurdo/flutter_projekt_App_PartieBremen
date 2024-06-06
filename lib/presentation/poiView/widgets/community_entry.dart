@@ -151,7 +151,16 @@ class PetitionEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
                                   .state!
                                   .user!
                                   .id!,
-                            ),
+                            )
+                            .then((value) {
+                          if (value) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Petition wurde Erfolgreich unterschrieben!')),
+                            );
+                          }
+                        }),
                       ),
                     ),
                   ),

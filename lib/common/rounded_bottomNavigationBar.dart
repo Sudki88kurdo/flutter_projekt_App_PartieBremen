@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen_cubit.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen_state.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocode/geocode.dart';
 import 'package:go_router/go_router.dart';
 
 import '../appStyle.dart';
@@ -29,11 +27,11 @@ class BottomNavigationBarWidget extends StatelessWidget {
               backgroundColor: AppStyles.buttonColor,
             ),
             // BottomNavigationBarItem für Favoriten entfernt
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'Add point',
-              backgroundColor: AppStyles.buttonColor,
-            ),
+            //BottomNavigationBarItem(
+            //  icon: Icon(Icons.add),
+            //  label: 'Add point',
+            //  backgroundColor: AppStyles.buttonColor,
+            //),
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications),
               label: 'Notifications',
@@ -46,7 +44,8 @@ class BottomNavigationBarWidget extends StatelessWidget {
             ),
           ],
           currentIndex: state.selectedIndex,
-          selectedItemColor: Colors.amber             ,
+          backgroundColor: AppStyles.buttonColor,
+          selectedItemColor: Colors.amber,
           onTap: (index) async =>
               await _onItemTapped(index, homePageContext, context),
         );
@@ -67,11 +66,12 @@ class BottomNavigationBarWidget extends StatelessWidget {
   Future? _onItemTapped(
       int index, BuildContext context, BuildContext buildContext) async {
     context.read<HomePageCubit>().updateIndex(index);
-    if (index == 3) {
+    if (index == 2) {
       context.pushNamed(
         ProfilePageProvider.routeName,
       );
     }
+    /*
     if (index == 1) {
       return showModalBottomSheet(
           enableDrag: true,
@@ -237,6 +237,8 @@ class BottomNavigationBarWidget extends StatelessWidget {
             );
           });
     }
+
+     */
     if (index == 0) {
       await context
           .read<HomePageCubit>()

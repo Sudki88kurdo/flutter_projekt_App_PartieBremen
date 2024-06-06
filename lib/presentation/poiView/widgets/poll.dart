@@ -4,7 +4,6 @@ import 'package:flutter_app/entities/survey_response.dart';
 import 'package:flutter_app/presentation/poiView/questions.dart';
 import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
 import 'package:flutter_app/presentation/poiView/widgets/poll_answer.dart';
-import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/src/widgets/layouts/paged_sliver_list.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -209,12 +208,12 @@ class _PollState extends State<Poll> {
           ),
           onPressed: () {
             showBottomSheet(
-                context: context,
-                builder: (context) => AddSurvey(),
-                showDragHandle: true);
+              context: context,
+              builder: (context) => AddSurvey(),
+            );
           },
-          icon: Icon(CupertinoIcons.chat_bubble_text, color: Colors.white, size: 20),
-          iconAlignment: IconAlignment.end,
+          icon: Icon(CupertinoIcons.chat_bubble_text,
+              color: Colors.white, size: 20),
         ),
       ),
     );

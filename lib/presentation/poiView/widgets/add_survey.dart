@@ -1,16 +1,8 @@
-import 'dart:ffi';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/entities/poi.dart';
 import 'package:flutter_app/presentation/app/app_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_app/api/repositories/survey_repository.dart';
-import 'package:flutter_app/api/repositories/poi_repository.dart';
-import 'package:flutter_app/api/repositories/comment_repository.dart';
-import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
-import 'package:flutter_app/entities/user.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddSurvey extends StatefulWidget {
   static const String routeName = 'add_survey';
@@ -164,7 +156,6 @@ class _AddSurveyState extends State<AddSurvey> {
                           child: TextButton.icon(
                             onPressed: () async => await _postSurvey,
                             icon: const Icon(Icons.check, color: Colors.white),
-                            iconAlignment: IconAlignment.end,
                             label: const Text(
                               'Erstellen',
                               style: TextStyle(
@@ -205,7 +196,11 @@ class _AddSurveyState extends State<AddSurvey> {
           title: titleController.text,
           description: descriptionController.text,
           expiresAt: expiresAtController.text,
-          creatorId: context.read<AppCubit>().state.user!.id!, //muss geholt werden, keine Ahnung von wo
+          creatorId: context
+              .read<AppCubit>()
+              .state
+              .user!
+              .id!, //muss geholt werden, keine Ahnung von wo
         );
         showMessage(
             'Umfrage erfolgreich erstellt!'); //Snackbar wird nicht angezeigt

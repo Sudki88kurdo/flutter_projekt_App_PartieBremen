@@ -24,6 +24,10 @@ abstract class SurveyClient {
   @GET("/survey")
   Future<HttpResponse<List<SurveyResponse>>> getAllSurveys();
 
+  @GET("/survey/poi/{poiId}")
+  Future<HttpResponse<List<SurveyResponse>>> findAllToPoiId(
+      {@Path("poiId") required String poiId});
+
   @GET("/survey/{surveyId}")
   Future<HttpResponse<SurveyResponse>> findOne(
       {@Path("surveyId") required String surveyId});

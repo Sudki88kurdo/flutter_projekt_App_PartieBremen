@@ -17,6 +17,11 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
     return execute(() => client.getAllSurveys());
   }
 
+  Future<ApiResult<List<SurveyResponse>>> getAllToPoiId(
+      {required String poiId}) async {
+    return execute(() => client.findAllToPoiId(poiId: poiId));
+  }
+
   Future<ApiResult<SurveyResponse>> create({
     required String titel,
     required String beschreibung,
@@ -30,8 +35,7 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
             beschreibung: beschreibung,
             expiresAt: DateTime.now().add(const Duration(days: 90)).toString(),
             userId: creatorId,
-            poiId: poiId
-        ),
+            poiId: poiId),
       );
 
   Future<ApiResult<List<SurveyResponse>>> updateSurvey({
@@ -49,7 +53,6 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
             beschreibung: description,
             expiresAt: expiresAt,
             userId: userId,
-            poiId: poiId
-        ),
+            poiId: poiId),
       );
 }

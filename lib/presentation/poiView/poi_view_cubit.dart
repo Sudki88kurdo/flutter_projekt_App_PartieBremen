@@ -22,19 +22,21 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final SignatureRepository _signatureRepository;
   final String _poiId;
 
-  PoiViewCubit(this._poIRepository,
-      this._commentRepository,
-      this._votingRepository,
-      this._surveyRepository,
-      this._petitionRepository,
-      this._signatureRepository,
-      this._poiId,) : super(PoiViewState.initial()) {
+  PoiViewCubit(
+    this._poIRepository,
+    this._commentRepository,
+    this._votingRepository,
+    this._surveyRepository,
+    this._petitionRepository,
+    this._signatureRepository,
+    this._poiId,
+  ) : super(PoiViewState.initial()) {
     init(poiId: _poiId);
     state.commentsPagingController.addPageRequestListener(
-          (pageKey) => findAllCommentsFromPoI(),
+      (pageKey) => findAllCommentsFromPoI(),
     );
     state.surveyPagingController.addPageRequestListener(
-          (pageKey) => findAllSurveysFromPoI(),
+      (pageKey) => findAllSurveysFromPoI(),
     );
     state.petitionPagingController
         .addPageRequestListener((pageKey) => findAllPetitionsFromPoI());
@@ -65,14 +67,14 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       successful = true;
     });
 
-    var resSurvey = await _surveyRepository.getAllSurveys();
+    var resSurvey = await _surveyRepository.getAllToPoiId(poiId: poiId);
     resSurvey.whenOrNull(success: (value) {
       emit(state.copyWith(surveys: value));
       successful = true;
     });
 
     var resPetition =
-    await _petitionRepository.findPOIsPetitions(poiId: _poiId);
+        await _petitionRepository.findPOIsPetitions(poiId: _poiId);
     resPetition.whenOrNull(failure: (value) {
       emit(state.copyWith(petitions: []));
       state.petitionPagingController.appendLastPage([]);
@@ -96,7 +98,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
 
   Future<List<SurveyResponse>> findAllSurveysFromPoI() async {
     //TODO change to from poi request
-    var resSurvey = await _surveyRepository.getAllSurveys();
+    var resSurvey = await _surveyRepository.getAllToPoiId(poiId: _poiId);
     resSurvey.whenOrNull(success: (value) {
       emit(state.copyWith(surveys: value));
       state.surveyPagingController.appendLastPage(value);
@@ -107,7 +109,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
 
   findAllPetitionsFromPoI() async {
     var resPetition =
-    await _petitionRepository.findPOIsPetitions(poiId: _poiId);
+        await _petitionRepository.findPOIsPetitions(poiId: _poiId);
     resPetition.whenOrNull(failure: (value) {
       emit(state.copyWith(petitions: []));
       state.petitionPagingController.appendLastPage([]);

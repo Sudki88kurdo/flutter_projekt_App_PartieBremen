@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/entities/survey_response.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_app/presentation/poiView/widgets/chat_container.dart';
 import 'package:flutter_app/presentation/poiView/widgets/community_entry.dart';
-import 'package:flutter_app/presentation/poiView/widgets/poll.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
@@ -43,23 +41,23 @@ class CommentsList<C extends StateStreamable<S>, S> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        return PagedSliverList.separated(
-          builderDelegate: PagedChildBuilderDelegate<CommentsResponse>(
-            itemBuilder: (context, item, index) {
-              return CommunityEntry(
-                user: item.commenter,
-                poi: context.read<PoiViewCubit>().state.poi,
-                createdAt: item.createdAt,
-                text: item.actualcomment ?? '',
-              );
-            },
-            noItemsFoundIndicatorBuilder: (context) =>
-                noItems ?? const NoItemsFoundError(),
-          ),
-          separatorBuilder: (context, index) => const SizedBox(height: 8),
-          shrinkWrapFirstPageIndicators: false,
-          pagingController: pagingController,
-        );
+    return PagedSliverList.separated(
+      builderDelegate: PagedChildBuilderDelegate<CommentsResponse>(
+        itemBuilder: (context, item, index) {
+          return CommunityEntry(
+            user: item.commenter,
+            poi: context.read<PoiViewCubit>().state.poi,
+            createdAt: item.createdAt,
+            text: item.actualcomment ?? '',
+          );
+        },
+        noItemsFoundIndicatorBuilder: (context) =>
+            noItems ?? const NoItemsFoundError(),
+      ),
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      shrinkWrapFirstPageIndicators: false,
+      pagingController: pagingController,
+    );
   }
 }
 
@@ -131,6 +129,7 @@ class PetitionList<C extends StateStreamable<S>, S> extends StatelessWidget {
             text: item.titel ?? '',
             description: item.description! ?? '',
             petitionResponse: item,
+            blocBuilderContext: context,
           );
         },
         noItemsFoundIndicatorBuilder: (context) =>
@@ -190,7 +189,8 @@ class _Petitions extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PoiViewCubit, PoiViewState>(
       buildWhen: (previous, current) =>
-          previous.petitions.length != current.petitions.length,
+          previous.petitions.length != current.petitions.length ||
+          previous.postSignatureStatus != current.postSignatureStatus,
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.local_post_office,
@@ -408,7 +408,6 @@ class _Comments extends StatelessWidget {
                   _Petitions(),
                 ],
               ),
-
               const SizedBox(
                 height: 30,
               ),
@@ -482,7 +481,8 @@ class _List extends StatelessWidget {
             buildWhen: (prev, current) =>
                 prev.petitions.isEmpty ||
                 prev.petitions.length != current.petitions.length ||
-                prev.petitions.isEmpty && current.petitions.isNotEmpty,
+                prev.petitions.isEmpty && current.petitions.isNotEmpty ||
+                prev.postSignatureStatus != current.postSignatureStatus,
             builder: (context, state) {
               return PetitionList<PoiViewCubit, PoiViewState>(
                 // TODO: Somehow the default Loading Indicator with Shimmers is bugged
@@ -717,22 +717,51 @@ class PoiView extends StatelessWidget {
                         ),
                         BlocBuilder<PoiViewCubit, PoiViewState>(
                           builder: (context, state) {
-                            return state.listIndex == 0 ?
-                            Positioned(
-                            bottom: 0,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: MediaQuery.viewInsetsOf(context).bottom,
+                            return Positioned(
+                              bottom: 0,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.viewInsetsOf(context).bottom,
+                                ),
+                                child: state.listIndex == 0
+                                    ? ChatContainer(
+                                        value: 1,
+                                        onSendMessagePressed: (msg) => context
+                                            .read<PoiViewCubit>()
+                                            .writeComment(
+                                                msg,
+                                                context
+                                                    .read<AppCubit>()
+                                                    .state
+                                                    .user!),
+                                      )
+                                    : state.listIndex == 1
+                                        ? Container()
+                                        : Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: 20,
+                                              left: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.82,
+                                            ),
+                                            child: CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor: Colors.white70,
+                                              child: IconButton(
+                                                color: Colors.deepPurple,
+                                                onPressed: () =>
+                                                    createPressed(context),
+                                                icon: Icon(
+                                                  size: 35,
+                                                  Icons.add,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                               ),
-                              child: ChatContainer(
-                                value: 1,
-                                onSendMessagePressed: (msg) => context
-                                    .read<PoiViewCubit>()
-                                    .writeComment(msg,
-                                    context.read<AppCubit>().state.user!),
-                              ),
-                            ),
-                          ) : Container();
+                            );
                           },
                         ),
                       ],
@@ -741,6 +770,119 @@ class PoiView extends StatelessWidget {
                 ),
               )
             : CircularProgressIndicator();
+      },
+    );
+  }
+
+  createPressed(BuildContext context) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      showDragHandle: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext bc) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.60,
+            maxChildSize: 1,
+            snap: true,
+            expand: false,
+            builder: (contexte, scrollController) => Container(
+              height: 800,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  const Flex(
+                    direction: Axis.vertical,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 50),
+                      Text(
+                        "Neue Petition erstellen",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Arial',
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 100.0,
+                      right: 100,
+                      top: 20,
+                      bottom: 40,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          onChanged: (value) => context
+                              .read<PoiViewCubit>()
+                              .updateNewPetitionTitle(value),
+                          decoration: const InputDecoration(
+                            hintText: "Titel",
+                            filled: false,
+                          ),
+                        ),
+                        TextFormField(
+                          onChanged: (value) => context
+                              .read<PoiViewCubit>()
+                              .updateNewPetitionDescription(value),
+                          decoration: const InputDecoration(
+                            hintText: "Beschreibung",
+                            filled: false,
+                          ),
+                        ),
+                        TextFormField(
+                          onChanged: (value) => context
+                              .read<PoiViewCubit>()
+                              .updateNewPetitionGoal(value),
+                          decoration: const InputDecoration(
+                            hintText: "Ziel",
+                            filled: false,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: TextButton.icon(
+                              onPressed: () async =>
+                                  context.read<PoiViewCubit>().createPetition(),
+                              icon:
+                                  const Icon(Icons.check, color: Colors.white),
+                              label: const Text(
+                                'Erstellen',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }

@@ -1,11 +1,10 @@
-import 'package:flutter_app/api/common/api_result.dart';
 import 'package:flutter_app/api/repositories/comment_repository.dart';
 import 'package:flutter_app/api/repositories/petition_repository.dart';
+import 'package:flutter_app/api/repositories/signature_repository.dart';
 import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/common/screen_status.dart';
 import 'package:flutter_app/entities/survey_response.dart';
-import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,8 +18,8 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final CommentRepository _commentRepository;
   final VotingRepository _votingRepository;
   final SurveyRepository _surveyRepository;
-
   final PetitionRepository _petitionRepository;
+  final SignatureRepository _signatureRepository;
   final String _poiId;
 
   PoiViewCubit(
@@ -29,6 +28,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     this._votingRepository,
     this._surveyRepository,
     this._petitionRepository,
+    this._signatureRepository,
     this._poiId,
   ) : super(PoiViewState.initial()) {
     init(poiId: _poiId);
@@ -42,16 +42,15 @@ class PoiViewCubit extends Cubit<PoiViewState> {
         .addPageRequestListener((pageKey) => findAllPetitionsFromPoI());
   }
 
-  Future<void> getAllPois()
-    async {
-      try {
-        var res = await _poIRepository.getPois();
-        print(res);
-        print("++++++++++++++++++++++++++");
-        emit(state.copyWith());
-      } catch (error) {
-        print("Error in Cubit while getAllPOIs: $error");
-      }
+  Future<void> getAllPois() async {
+    try {
+      var res = await _poIRepository.getPois();
+      print(res);
+      print("++++++++++++++++++++++++++");
+      emit(state.copyWith());
+    } catch (error) {
+      print("Error in Cubit while getAllPOIs: $error");
+    }
   }
 
   Future<bool> init({required String poiId}) async {
@@ -112,7 +111,6 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     var resPetition =
         await _petitionRepository.findPOIsPetitions(poiId: _poiId);
     resPetition.whenOrNull(failure: (value) {
-      print("here123");
       emit(state.copyWith(petitions: []));
       state.petitionPagingController.appendLastPage([]);
     }, success: (value) {
@@ -123,12 +121,27 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     return state.petitions;
   }
 
+  Future<void> createSignature(
+      {required String petitionId, required String userId}) async {
+    final resSignature = await _signatureRepository.create(
+        signerId: userId, petitionId: petitionId);
+    await resSignature.whenOrNull(
+      success: (value) async {
+        state.petitionPagingController.itemList = [];
+        emit(state.copyWith(
+          commentStatus: const ScreenStatus.success(),
+          petitions: [],
+        ));
+        await findAllPetitionsFromPoI();
+      },
+    );
+  }
+
   Future<void> createSurvey({
     required String title,
     required String description,
     required String expiresAt,
     required String creatorId,
-
   }) async {
     emit(state.copyWith(
       surveyStatus: const ScreenStatus.loading(),
@@ -164,7 +177,6 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       ));
     }
   }
-
 
   void writeComment(String comment, User user) async {
     emit(state.copyWith(
@@ -211,16 +223,35 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     emit(state.copyWith(listIndex: index));
   }
 
-  Future<ApiResult<PetitionResponse>> createPetition() async {
+  void createPetition() async {
+    emit(state.copyWith(
+      commentStatus: const ScreenStatus.loading(),
+    ));
+
     var res = await _petitionRepository.create(
       title: state.newPetitionTitle!,
       description: state.newPetitionDescription!,
-      expireAt: DateTime.now().toString(),
+      expireAt: DateTime.now().add(Duration(days: 30)),
       goal: state.newPetitionGoal!,
       poiId: _poiId,
     );
 
-    return res;
+    res.whenOrNull(
+      success: (value) {
+        emit(
+          state.copyWith(
+            commentStatus: const ScreenStatus.success(),
+          ),
+        );
+      },
+    );
+    state.petitionPagingController.itemList = [];
+    emit(state.copyWith(
+      commentStatus: const ScreenStatus.success(),
+      petitions: [],
+    ));
+    findAllPetitionsFromPoI();
+    return;
   }
 
   void updateNewPetitionTitle(String title) {

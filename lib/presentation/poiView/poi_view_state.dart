@@ -2,7 +2,6 @@ import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/entities/poi.dart';
 import 'package:flutter_app/entities/survey_response.dart';
-import 'package:flutter_app/entities/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -15,6 +14,7 @@ part 'poi_view_state.freezed.dart';
 class PoiViewState with _$PoiViewState {
   const factory PoiViewState({
     @Default(ScreenStatus.pure()) ScreenStatus status,
+    @Default(ScreenStatus.pure()) ScreenStatus postSignatureStatus,
     @Default(null) Poi? poi,
     @Default(null) String? newPetitionTitle,
     @Default(null) String? newPetitionDescription,

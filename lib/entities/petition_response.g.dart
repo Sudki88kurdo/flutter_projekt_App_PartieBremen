@@ -23,6 +23,9 @@ _$PetitionResponseImpl _$$PetitionResponseImplFromJson(
           : DateTime.parse(json['expireAt'] as String),
       goal: (json['goal'] as num?)?.toInt(),
       poiId: json['poiId'] as String?,
+      signatures: (json['signatures'] as List<dynamic>?)
+          ?.map((e) => Signature.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$PetitionResponseImplToJson(
@@ -36,4 +39,5 @@ Map<String, dynamic> _$$PetitionResponseImplToJson(
       'expireAt': instance.expireAt?.toIso8601String(),
       'goal': instance.goal,
       'poiId': instance.poiId,
+      'signatures': instance.signatures,
     };

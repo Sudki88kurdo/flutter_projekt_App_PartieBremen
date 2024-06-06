@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PoiViewState {
   ScreenStatus get status => throw _privateConstructorUsedError;
+  ScreenStatus get postSignatureStatus => throw _privateConstructorUsedError;
   Poi? get poi => throw _privateConstructorUsedError;
   String? get newPetitionTitle => throw _privateConstructorUsedError;
   String? get newPetitionDescription => throw _privateConstructorUsedError;
@@ -48,6 +49,7 @@ abstract class $PoiViewStateCopyWith<$Res> {
   @useResult
   $Res call(
       {ScreenStatus status,
+      ScreenStatus postSignatureStatus,
       Poi? poi,
       String? newPetitionTitle,
       String? newPetitionDescription,
@@ -64,6 +66,7 @@ abstract class $PoiViewStateCopyWith<$Res> {
       PagingController<int, PetitionResponse> petitionPagingController});
 
   $ScreenStatusCopyWith<$Res> get status;
+  $ScreenStatusCopyWith<$Res> get postSignatureStatus;
   $PoiCopyWith<$Res>? get poi;
   $ScreenStatusCopyWith<$Res> get commentStatus;
   $ScreenStatusCopyWith<$Res> get surveyStatus;
@@ -83,6 +86,7 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
   @override
   $Res call({
     Object? status = null,
+    Object? postSignatureStatus = null,
     Object? poi = freezed,
     Object? newPetitionTitle = freezed,
     Object? newPetitionDescription = freezed,
@@ -102,6 +106,10 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
+              as ScreenStatus,
+      postSignatureStatus: null == postSignatureStatus
+          ? _value.postSignatureStatus
+          : postSignatureStatus // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
       poi: freezed == poi
           ? _value.poi
@@ -172,6 +180,14 @@ class _$PoiViewStateCopyWithImpl<$Res, $Val extends PoiViewState>
 
   @override
   @pragma('vm:prefer-inline')
+  $ScreenStatusCopyWith<$Res> get postSignatureStatus {
+    return $ScreenStatusCopyWith<$Res>(_value.postSignatureStatus, (value) {
+      return _then(_value.copyWith(postSignatureStatus: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
   $PoiCopyWith<$Res>? get poi {
     if (_value.poi == null) {
       return null;
@@ -209,6 +225,7 @@ abstract class _$$PoiViewStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {ScreenStatus status,
+      ScreenStatus postSignatureStatus,
       Poi? poi,
       String? newPetitionTitle,
       String? newPetitionDescription,
@@ -226,6 +243,8 @@ abstract class _$$PoiViewStateImplCopyWith<$Res>
 
   @override
   $ScreenStatusCopyWith<$Res> get status;
+  @override
+  $ScreenStatusCopyWith<$Res> get postSignatureStatus;
   @override
   $PoiCopyWith<$Res>? get poi;
   @override
@@ -246,6 +265,7 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = null,
+    Object? postSignatureStatus = null,
     Object? poi = freezed,
     Object? newPetitionTitle = freezed,
     Object? newPetitionDescription = freezed,
@@ -265,6 +285,10 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
+              as ScreenStatus,
+      postSignatureStatus: null == postSignatureStatus
+          ? _value.postSignatureStatus
+          : postSignatureStatus // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
       poi: freezed == poi
           ? _value.poi
@@ -331,6 +355,7 @@ class __$$PoiViewStateImplCopyWithImpl<$Res>
 class _$PoiViewStateImpl implements _PoiViewState {
   const _$PoiViewStateImpl(
       {this.status = const ScreenStatus.pure(),
+      this.postSignatureStatus = const ScreenStatus.pure(),
       this.poi = null,
       this.newPetitionTitle = null,
       this.newPetitionDescription = null,
@@ -353,6 +378,9 @@ class _$PoiViewStateImpl implements _PoiViewState {
   @override
   @JsonKey()
   final ScreenStatus status;
+  @override
+  @JsonKey()
+  final ScreenStatus postSignatureStatus;
   @override
   @JsonKey()
   final Poi? poi;
@@ -419,7 +447,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
 
   @override
   String toString() {
-    return 'PoiViewState(status: $status, poi: $poi, newPetitionTitle: $newPetitionTitle, newPetitionDescription: $newPetitionDescription, newPetitionGoal: $newPetitionGoal, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, surveyStatus: $surveyStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
+    return 'PoiViewState(status: $status, postSignatureStatus: $postSignatureStatus, poi: $poi, newPetitionTitle: $newPetitionTitle, newPetitionDescription: $newPetitionDescription, newPetitionGoal: $newPetitionGoal, comments: $comments, surveys: $surveys, petitions: $petitions, votings: $votings, commentStatus: $commentStatus, surveyStatus: $surveyStatus, listIndex: $listIndex, commentsPagingController: $commentsPagingController, surveyPagingController: $surveyPagingController, petitionPagingController: $petitionPagingController)';
   }
 
   @override
@@ -428,6 +456,8 @@ class _$PoiViewStateImpl implements _PoiViewState {
         (other.runtimeType == runtimeType &&
             other is _$PoiViewStateImpl &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.postSignatureStatus, postSignatureStatus) ||
+                other.postSignatureStatus == postSignatureStatus) &&
             (identical(other.poi, poi) || other.poi == poi) &&
             (identical(other.newPetitionTitle, newPetitionTitle) ||
                 other.newPetitionTitle == newPetitionTitle) &&
@@ -460,6 +490,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
   int get hashCode => Object.hash(
       runtimeType,
       status,
+      postSignatureStatus,
       poi,
       newPetitionTitle,
       newPetitionDescription,
@@ -485,6 +516,7 @@ class _$PoiViewStateImpl implements _PoiViewState {
 abstract class _PoiViewState implements PoiViewState {
   const factory _PoiViewState(
       {final ScreenStatus status,
+      final ScreenStatus postSignatureStatus,
       final Poi? poi,
       final String? newPetitionTitle,
       final String? newPetitionDescription,
@@ -505,6 +537,8 @@ abstract class _PoiViewState implements PoiViewState {
 
   @override
   ScreenStatus get status;
+  @override
+  ScreenStatus get postSignatureStatus;
   @override
   Poi? get poi;
   @override

@@ -20,7 +20,7 @@ class PetitionRepository extends BaseRepository<PetitionClient> {
   Future<ApiResult<PetitionResponse>> create({
     required String title,
     required String description,
-    required String expireAt,
+    required DateTime expireAt,
     required int goal,
     required String poiId,
   }) async =>
@@ -28,7 +28,7 @@ class PetitionRepository extends BaseRepository<PetitionClient> {
         () => client.createPetition(
           titel: title,
           description: description,
-          expireAt: expireAt,
+          expireAt: expireAt.toIso8601String(),
           goal: goal,
           poiId: poiId,
         ),

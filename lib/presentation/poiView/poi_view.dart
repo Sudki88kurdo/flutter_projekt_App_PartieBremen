@@ -861,8 +861,10 @@ class PoiView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: TextButton.icon(
-                              onPressed: () async =>
-                                  context.read<PoiViewCubit>().createPetition(),
+                              onPressed: () async {
+                                context.read<PoiViewCubit>().createPetition();
+                                Navigator.of(bc).pop();
+                              },
                               icon:
                                   const Icon(Icons.check, color: Colors.white),
                               label: const Text(

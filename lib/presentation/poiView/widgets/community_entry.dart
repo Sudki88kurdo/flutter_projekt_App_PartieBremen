@@ -85,7 +85,7 @@ class PetitionEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
                 height: 8,
               ),
               Text(
-                "${text?.substring(0, min(text!.length, 150))}${150 < text!.length ? "..." : ""}",
+                "${petitionResponse?.description!}",
                 style: Theme.of(context)
                     .textTheme
                     .bodyLarge
@@ -142,25 +142,18 @@ class PetitionEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
                           Icons.edit,
                           color: Colors.white70,
                         ),
-                        onPressed: () => blocBuilderContext
-                            .read<PoiViewCubit>()
-                            .createSignature(
-                              petitionId: petitionResponse!.id!,
-                              userId: blocBuilderContext
-                                  .read<AppCubit>()
-                                  .state!
-                                  .user!
-                                  .id!,
-                            )
-                            .then((value) {
-                          if (value) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'Petition wurde Erfolgreich unterschrieben!')),
-                            );
-                          }
-                        }),
+                        onPressed: () {
+                          blocBuilderContext
+                              .read<PoiViewCubit>()
+                              .createSignature(
+                                petitionId: petitionResponse!.id!,
+                                userId: blocBuilderContext
+                                    .read<AppCubit>()
+                                    .state!
+                                    .user!
+                                    .id!,
+                              );
+                        },
                       ),
                     ),
                   ),

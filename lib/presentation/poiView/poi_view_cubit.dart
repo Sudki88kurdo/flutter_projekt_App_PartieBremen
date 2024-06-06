@@ -247,6 +247,9 @@ class PoiViewCubit extends Cubit<PoiViewState> {
       success: (value) {
         emit(
           state.copyWith(
+            newPetitionDescription: '',
+            newPetitionTitle: '',
+            newPetitionGoal: 0,
             commentStatus: const ScreenStatus.success(),
           ),
         );

@@ -1,0 +1,270 @@
+[33mcommit 6803c013b9979458b68bffe1048d49272a0a445c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnour[m[33m, [m[1;31morigin/nour[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Merge: 263def7 bdb27a1
+Author: sudki <edooo132@gmail.com>
+Date:   Fri May 31 10:17:14 2024 +0200
+
+    Merge remote-tracking branch 'origin/nour' into nour
+    
+    # Conflicts:
+    #       lib/presentation/home-screen/home_screen.dart
+    #       lib/presentation/login-page/login_page.dart
+    #       lib/presentation/poiView/poi_view.dart
+    #       lib/presentation/poiView/poi_view_cubit.dart
+    #       lib/presentation/poiView/poi_view_provider.dart
+    #       lib/presentation/poiView/poi_view_state.freezed.dart
+    #       lib/presentation/profile/prfileNav/profile-page/profile_page.dart
+
+[33mcommit 263def7df1e8398177db0da0fec519da23ab292b[m
+Merge: 05341fa 99c2d02
+Author: sudki <edooo132@gmail.com>
+Date:   Thu May 30 21:49:12 2024 +0200
+
+    Merge branch 'main' into sudki
+
+[33mcommit 99c2d023a68dd06bb0acd6259e3a12cda286b09a[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Thu May 30 18:48:57 2024 +0200
+
+    fix some bugs, add surveylist and cleanup
+
+[33mcommit bdb27a1024defef2a78ee9678adef012421e3d9a[m
+Author: nouralhamwi <nourhamwii@gmail.com>
+Date:   Tue May 28 21:58:16 2024 +0200
+
+    antworten und abschicken moeglich
+
+[33mcommit efcc9f842fe47777cf807fcc184b66ea8b44e29f[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Tue May 28 21:48:32 2024 +0200
+
+    change voting logic and design of poiview
+
+[33mcommit 05341fabb14884ac88388cf2807ca8da47f620f5[m
+Author: sudki <edooo132@gmail.com>
+Date:   Mon May 27 22:00:31 2024 +0200
+
+    ,,,
+
+[33mcommit 2ed89cf9bb418ac8d383ddf52fe0c550325d756a[m
+Author: sudki <edooo132@gmail.com>
+Date:   Mon May 27 21:58:32 2024 +0200
+
+    ,,,
+
+[33mcommit 0f718a17b3e3d739316daf0ba4af189b78897bf2[m
+Author: sudki <edooo132@gmail.com>
+Date:   Mon May 27 21:26:54 2024 +0200
+
+    Update gelöst
+    myPOIs List fast fertig
+    showDiajog für Funktionen hinzufügt
+    Design(Farben, Style) geändert für User Manegement
+
+[33mcommit dc7be8c339366b85d7180765a38582d3898f7c18[m
+Author: sudki <edooo132@gmail.com>
+Date:   Mon May 27 21:26:33 2024 +0200
+
+    Update gelöst
+    myPOIs List fast fertig
+    showDiajog für Funktionen hinzufügt
+    Design(Farben, Style) geändert für User Manegement
+
+[33mcommit e6775fd949745ff12e4b15b7f79238c959e74848[m
+Author: nouralhamwi <nourhamwii@gmail.com>
+Date:   Sun May 26 19:55:53 2024 +0200
+
+    statische fragen und design hinzugefuegt
+
+[33mcommit fd257e4b58fddfae13dbb25b400692371a28ce7b[m
+Author: nouralhamwi <nourhamwii@gmail.com>
+Date:   Sun May 26 17:09:28 2024 +0200
+
+    design fuer umfragen
+
+[33mcommit b90a076d614eb3006c220d94f113609f2ae1f56e[m
+Author: nour <nourhamwii28@gmail.com>
+Date:   Sun May 26 14:24:12 2024 +0200
+
+    umfragen angefangen
+
+[33mcommit 5b91f53af76489b8df360a567a549f95286b2ad3[m
+Author: nour <nourhamwii28@gmail.com>
+Date:   Sun May 26 12:48:24 2024 +0200
+
+    umfragen angefangen
+
+[33mcommit a1b2590ddffeec894352a0af1ea2f3d802675c8e[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Fri May 24 18:53:18 2024 +0200
+
+    fix overflow
+
+[33mcommit 96b3c528dab74d5b07ef75339f4b50881da70137[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Fri May 24 18:42:42 2024 +0200
+
+    change PoiView to look better
+
+[33mcommit d2988013135b34d077d05f3b87e931245f786980[m[33m ([m[1;31morigin/stani[m[33m)[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Thu May 23 21:47:34 2024 +0200
+
+    fix comment function
+
+[33mcommit f6c06282fba4c9a64172cde543c958bc176e98ac[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Mon May 20 17:07:50 2024 +0200
+
+    add Comment funktion and Scrollable Commentlist with redirect to User
+
+[33mcommit dc1735ff3e9ffc5cb125bc84e838fe2b265ed5ef[m
+Author: sudki <edooo132@gmail.com>
+Date:   Fri May 17 11:16:21 2024 +0200
+
+    ...
+
+[33mcommit b85e0ae329f069d0d20064867c9ab27584684e4b[m
+Author: Maxim <m.kirsch@28apps.de>
+Date:   Fri May 17 10:58:00 2024 +0200
+
+    merge sudki into main
+
+[33mcommit 115ce37c5f40530d40a857d1a893183e847b37e2[m
+Author: Maxim <m.kirsch@28apps.de>
+Date:   Fri May 17 10:53:56 2024 +0200
+
+    merge main into sudki
+
+[33mcommit 02603ae132bcee0c77c51adf19102315ccdb7eb0[m
+Merge: 3b28f07 13ca8d0
+Author: Maxim <m.kirsch@28apps.de>
+Date:   Fri May 17 10:35:44 2024 +0200
+
+    Merge branch 'main' into Sudki96
+    
+    # Conflicts:
+    #       lib/api/clients/user_client.dart
+    #       lib/api/repositories/user_repository.dart
+    #       lib/common/rounded_bottomNavigationBar.dart
+    #       lib/presentation/app/app_view_provider.dart
+    #       lib/presentation/login-page/login_page.dart
+    #       lib/presentation/login-page/login_page_cubit.dart
+    #       lib/presentation/register-page/register_page.dart
+    #       lib/presentation/viewHome-page/HomeScreen.dart
+    #       lib/router.dart
+
+[33mcommit 13ca8d0807503b0e3cb63463d54f56ba01f75d48[m
+Author: Maxim <m.kirsch@28apps.de>
+Date:   Fri May 17 10:18:49 2024 +0200
+
+    merge nour into main
+
+[33mcommit 4fa33ab52cb9e2de0665b3f9143bf916ff821c16[m
+Merge: 2ecea4b 44f8ce1
+Author: Maxim <m.kirsch@28apps.de>
+Date:   Fri May 17 10:14:03 2024 +0200
+
+    Merge branch 'nour'
+    
+    # Conflicts:
+    #       lib/main.dart
+    #       lib/presentation/home-screen/home_screen.dart
+    #       lib/router.dart
+
+[33mcommit 44f8ce1db0e3da5926ed66034a754603f6aa5e98[m
+Author: nour <nourhamwii28@gmail.com>
+Date:   Fri May 17 00:12:54 2024 +0200
+
+    autocomplete street suggestions
+
+[33mcommit 2ecea4b4acea54e92cc06f6495307160fe69c483[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Wed May 15 20:10:15 2024 +0200
+
+    add Comments, votings and start implementing Poi-detailview
+
+[33mcommit b58f34c2d3941bf4cb4ff9586d81e5d8aa5b8a44[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Wed May 15 20:09:41 2024 +0200
+
+    add Comments, votings and start implementing Poi-detailview
+
+[33mcommit 5eebd9e4c30c83ef3472f915abf07b51c076e4bc[m
+Author: MaximKirsch <Maximkirsch2003@hotmail.com>
+Date:   Wed May 15 17:28:50 2024 +0200
+
+    change poi latitude and longitude to double
+
+[33mcommit 3b28f07ea064247dc633592d79800993eff1fff0[m
+Author: sudki <edooo132@gmail.com>
+Date:   Wed May 15 14:25:19 2024 +0200
+
+    Profil change (Datum geht nicht)
+    logout mit showLogoutDialog
+    Account delete mit showDeleteAccountDialog
+
+[33mcommit e66e3bf2aa6278733e5536e307b237056ff70e25[m
+Author: sudki <edooo132@gmail.com>
+Date:   Tue May 14 20:27:24 2024 +0200
+
+    Profil change (Datum geht nicht)
+    logout
+    Account delete
+
+[33mcommit 3611f84708e0c14333df2bd2cfee30d9604327cd[m
+Author: sudki <edooo132@gmail.com>
+Date:   Tue May 14 20:27:12 2024 +0200
+
+    Profil change (Datum geht nicht)
+    logout
+    Account delete
+
+[33mcommit d3018fb69c2020e7252e17713bdbcb59d7015a9e[m
+Author: nour <nourhamwii28@gmail.com>
+Date:   Mon May 13 08:18:52 2024 +0200
+
+    suchfunktion angefangen
+
+[33mcommit 8967f018a1aef99ebed68daf84be09f7a3c06eb8[m
+Author: nour <nourhamwii28@gmail.com>
+Date:   Fri May 10 23:45:49 2024 +0200
+
+    openplz klassen
+
+[33mcommit 01a2b143f8ceeaf17ffd1a94cfb305aacdf515e6[m
+Author: Maxim <m.kirsch@28apps.de>
+Date:   Fri May 10 12:08:06 2024 +0200
+
+    merge maxim into main
+
+[33mcommit d7c6b6e4aeee6e46163ec9ad76f60bfe5b5aaa99[m
+Author: Maxim <m.kirsch@28apps.de>
+Date:   Fri May 10 10:54:05 2024 +0200
+
+    merge nour into main
+
+[33mcommit 8fe3492fe5b1f3c3a2d334a2b13e6a9432c18bef[m
+Author: nourh <nourhamwii28@gmail.com>
+Date:   Thu May 9 22:36:01 2024 +0200
+
+    .
+
+[33mcommit 1f4fd596e6353cd983faf95819427e7bd1606311[m
+Author: nourh <nourhamwii28@gmail.com>
+Date:   Thu May 9 21:43:51 2024 +0200
+
+    .
+
+[33mcommit eeeecd6d5e40979f129d25c69793c05b2ad68e6f[m
+Author: sudki <edooo132@gmail.com>
+Date:   Fri Apr 26 12:14:50 2024 +0100
+
+    struktur
+
+[33mcommit 070c10e15e3454d6dd9568a7301fbcabc64d5586[m
+Author: sudki <edooo132@gmail.com>
+Date:   Fri Apr 26 12:08:15 2024 +0100
+
+    nachriccht test entfernen
+
+[33mcommit 99e83a3e2de329cf9896f23093f99955c9

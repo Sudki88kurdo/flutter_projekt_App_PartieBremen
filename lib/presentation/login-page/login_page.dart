@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/login-page/login_page_cubit.dart';
 import 'package:flutter_app/presentation/login-page/login_page_state.dart';
+import 'package:flutter_app/presentation/profile/prfileNav/myComments-list/myComments_list.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/myPoi-list/myPoi_list.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page.dart';
 import 'package:flutter_app/presentation/start-page/start_page_provider.dart';
@@ -23,6 +24,7 @@ class LoginPage extends StatelessWidget {
   ProfileEditPage pe = ProfileEditPage();
   ProfilePage profilePage = ProfilePage();
   MyPoiListPage myPois = MyPoiListPage();
+  MyCommentsListPage myComments = MyCommentsListPage();
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +131,8 @@ class LoginPage extends StatelessWidget {
       pe.setUser(user);
       profilePage.setUser(user);
       myPois.setUser(user);
+      myComments.setUser(user);
+
       loginContext.pushNamed(HomeScreen.routeName);
     } else {
       ScaffoldMessenger.of(loginContext).showSnackBar(

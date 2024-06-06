@@ -27,5 +27,6 @@ abstract class PoiClient {
   Future<HttpResponse<Poi>> findOne({@Path("poiId") required String poiId});
 
   @GET("/poi/user/{userId}")
-  Future<HttpResponse<List<Poi>>>  findUserPOIs({@Path("userId") required String userId});
+  Future<HttpResponse<List<Poi>>>  findUserPOIs({@Path("userId") required String userId
+  });
   }

@@ -4,14 +4,10 @@ import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../appStyle.dart';
-import '../../../../appStyle.dart';
-import '../../../../appStyle.dart';
-import '../../../../appStyle.dart';
-import '../../../../appStyle.dart';
-import '../../../../appStyle.dart';
 import '../../../../common/rounded_bottomNavigationBar.dart';
 import '../../../../entities/user.dart';
 import '../../../login-page/login_page_provider.dart';
+import '../myComments-list/myComments_list.dart';
 import '../profileEdit-page/ProfileEdit_page.dart';
 import '../myPoi-list/myPoi_list.dart';
 
@@ -84,6 +80,19 @@ class ProfilePage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => MyPoiListPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildCard(
+                    context: context,
+                    icon: Icons.share_location_outlined,
+                    title: 'My comments',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyCommentsListPage(),
                         ),
                       );
                     },

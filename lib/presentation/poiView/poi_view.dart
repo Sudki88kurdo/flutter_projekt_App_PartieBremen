@@ -402,7 +402,7 @@ class _Comments extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const _List(),
+              const _List(), //Poll() um die Umfrage anzuzeigen
               SizedBox(
                 height: 100,
               ),

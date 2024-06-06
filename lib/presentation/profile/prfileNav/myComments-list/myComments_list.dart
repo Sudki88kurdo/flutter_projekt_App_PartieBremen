@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/presentation/profile/prfileNav/myPoi-list/myPoi_list_cubit.dart';
-import 'package:flutter_app/presentation/profile/prfileNav/myPoi-list/myPoi_list_state.dart';
+import 'package:flutter_app/api/repositories/comment_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_app/api/repositories/poi_repository.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../../../appStyle.dart';
 import '../../../../entities/user.dart';
-import '../../../poiView/poi_view_provider.dart';
+import 'myComments_list_cubit.dart';
+import 'myComments_list_state.dart';
 
-class MyPoiListPage extends StatelessWidget {
-  const MyPoiListPage({super.key});
+
+class MyCommentsListPage extends StatelessWidget {
+  const MyCommentsListPage({super.key});
   static User? user;
   //final BuildContext mapcontext;
 
@@ -23,11 +21,11 @@ class MyPoiListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MyPoiListCubit(context.read<PoiRepository>())
-        ..findUserPOIs(userId: '${user?.id}'),
+      create: (context) => MyCommentsListCubit(context.read<CommentRepository>())
+        ..findUserComments(userId: '${user?.id}'),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('My POIs',
+          title: Text('My all comments',
             style: AppStyles.appBarTitleStyle,
           ),
           backgroundColor: AppStyles.buttonColor,
@@ -38,15 +36,15 @@ class MyPoiListPage extends StatelessWidget {
           ),
           iconTheme: IconThemeData(color: Colors.white),
         ),
-        body: BlocBuilder<MyPoiListCubit, MyPoiListState>(
+        body: BlocBuilder<MyCommentsListCubit, MyCommentsListState>(
           builder: (context, state) {
-            if (state.status == MyPoiListStatus.loading) {
+            if (state.status == MyCommentsListStatus.loading) {
               return Center(child: CircularProgressIndicator());
-            } else if (state.status == MyPoiListStatus.failure) {
+            } else if (state.status == MyCommentsListStatus.failure) {
               return Center(child: Text('Error: ${state.errorMessage}'));
-            } else if (state.status == MyPoiListStatus.success) {
+            } else if (state.status == MyCommentsListStatus.success) {
               return ListView.builder(
-                itemCount: state.pois.length,
+                itemCount: state.comments.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -58,20 +56,22 @@ class MyPoiListPage extends StatelessWidget {
                       child: ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         title: Text(
-                          state.pois[index].titel ?? 'No Title',
+                          state.comments[index].actualcomment ?? 'No comment',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          state.pois[index].description ?? 'No Description',
+                          //todo ............................
+
+                          state.comments[index].commenter?.surname ?? 'No Description',
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
                         onTap: () {
-                          context.pushNamed(
-                            PoiViewProvider.routeName,
-                            pathParameters: {'poiId': state.pois[index].id ?? ''},
-                          );
-                          //print('Clicked POI: ${state.pois[index].id}');
+                         // context.pushNamed(
+                          //  PoiViewProvider.routeName,
+                            //pathParameters: {'poiId': state.pois[index].id ?? ''},
+                        //  );
+                          print('Clicked comment: ${state.comments[index].toJson()}');
                         },
                       ),
                     ),

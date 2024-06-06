@@ -13,6 +13,9 @@ class CommentRepository extends BaseRepository<CommentClient> {
       {required String poiId}) async {
     return execute(() => client.findAllFromPoI(poiId: poiId));
   }
+  Future<ApiResult<List<CommentsResponse>>> findUserComments({required String userId}) async {
+    return execute(() => client.findUserComments(userId: userId));
+  }
 
   Future<ApiResult<CommentsResponse>> writeComment(
       {required String actualComment,

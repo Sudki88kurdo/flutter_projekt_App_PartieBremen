@@ -19,4 +19,9 @@ abstract class CommentClient {
   @GET("/comment/{poiId}/fromPoI")
   Future<HttpResponse<List<CommentsResponse>>> findAllFromPoI(
       {@Path("poiId") required String poiId});
+
+  @GET("/comment/user/{userId}")
+  Future<HttpResponse<List<CommentsResponse>>> findUserComments({
+    @Path("userId") required String userId,
+  });
 }

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../appStyle.dart';
+import '../presentation/home-screen/home_screen.dart';
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int initialIndex;
@@ -69,6 +70,14 @@ class BottomNavigationBarWidget extends StatelessWidget {
       context.pushNamed(
         ProfilePageProvider.routeName,
       );
+    }
+    if (index == 0) {
+      await context
+          .read<HomePageCubit>()
+          .loadPointsOfInterest()
+          .then((value) => context.goNamed(
+                HomeScreen.routeName,
+              ));
     }
     /*
     if (index == 1) {
@@ -236,8 +245,8 @@ class BottomNavigationBarWidget extends StatelessWidget {
             );
           });
     }
-     */
 
+     */
     return null;
   }
 }

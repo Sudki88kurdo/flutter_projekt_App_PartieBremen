@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/repositories/openplz_repository.dart';
+import 'package:flutter_app/api/repositories/petition_repository.dart';
 import 'package:flutter_app/api/repositories/poi_repository.dart';
+import 'package:flutter_app/api/repositories/signature_repository.dart';
 import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/presentation/app/app_view_provider.dart';
@@ -48,9 +50,10 @@ void main() async {
           RepositoryProvider.value(value: CommentRepository(baseUrl, dio)),
           RepositoryProvider.value(value: VotingRepository(baseUrl, dio)),
           RepositoryProvider.value(value: SurveyRepository(baseUrl, dio)),
+          RepositoryProvider.value(value: PetitionRepository(baseUrl, dio)),
+          RepositoryProvider.value(value: SignatureRepository(baseUrl, dio)),
           RepositoryProvider.value(
               value: OpenplzRepository(openPlzBaseUrl, dio)),
-
         ],
         child: const AppViewProvider(),
       )));

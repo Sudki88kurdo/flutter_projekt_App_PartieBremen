@@ -1,7 +1,7 @@
 import 'package:flutter_app/entities/street.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import '../../entities/poi.dart';
-import '../../entities/user.dart';
 
 part 'home_screen_state.freezed.dart';
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'survey_client.dart';
+part of 'petition_client.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'survey_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _SurveyClient implements SurveyClient {
-  _SurveyClient(
+class _PetitionClient implements PetitionClient {
+  _PetitionClient(
     this._dio, {
     this.baseUrl,
   });
@@ -19,11 +19,11 @@ class _SurveyClient implements SurveyClient {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<SurveyResponse>> create({
+  Future<HttpResponse<PetitionResponse>> createPetition({
     required String titel,
-    required String beschreibung,
-    required String expiresAt,
-    required String userId,
+    required String description,
+    required String expireAt,
+    required int goal,
     required String poiId,
   }) async {
     final _extra = <String, dynamic>{};
@@ -31,20 +31,20 @@ class _SurveyClient implements SurveyClient {
     final _headers = <String, dynamic>{};
     final _data = {
       'titel': titel,
-      'beschreibung': beschreibung,
-      'expiresAt': expiresAt,
-      'userId': userId,
+      'description': description,
+      'expireAt': expireAt,
+      'goal': goal,
       'poiId': poiId,
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<SurveyResponse>>(Options(
+        _setStreamType<HttpResponse<PetitionResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/survey',
+              '/petition',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -53,57 +53,27 @@ class _SurveyClient implements SurveyClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = SurveyResponse.fromJson(_result.data!);
+    final value = PetitionResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<List<SurveyResponse>>> getAllSurveys() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<SurveyResponse>>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/survey',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => SurveyResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<List<SurveyResponse>>> findAllToPoiId(
+  Future<HttpResponse<List<PetitionResponse>>> getAllPetitions(
       {required String poiId}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<SurveyResponse>>>(Options(
+        _setStreamType<HttpResponse<List<PetitionResponse>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/survey/poi/${poiId}',
+              '/petition/poi/${poiId}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -113,28 +83,28 @@ class _SurveyClient implements SurveyClient {
               baseUrl,
             ))));
     var value = _result.data!
-        .map((dynamic i) => SurveyResponse.fromJson(i as Map<String, dynamic>))
+        .map(
+            (dynamic i) => PetitionResponse.fromJson(i as Map<String, dynamic>))
         .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<SurveyResponse>> findOne(
-      {required String surveyId}) async {
+  Future<HttpResponse<PetitionResponse>> findOne({required String id}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<SurveyResponse>>(Options(
+        _setStreamType<HttpResponse<PetitionResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/survey/${surveyId}',
+              '/petition/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -143,50 +113,7 @@ class _SurveyClient implements SurveyClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = SurveyResponse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<List<SurveyResponse>>> updateSurvey({
-    required String surveyId,
-    required String titel,
-    required String beschreibung,
-    required String expiresAt,
-    required String userId,
-    required String poiId,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = {
-      'titel': titel,
-      'beschreibung': beschreibung,
-      'expiresAt': expiresAt,
-      'userId': userId,
-      'poiId': poiId,
-    };
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<HttpResponse<List<SurveyResponse>>>(Options(
-      method: 'PUT',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/survey/${surveyId}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var value = _result.data!
-        .map((dynamic i) => SurveyResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = PetitionResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

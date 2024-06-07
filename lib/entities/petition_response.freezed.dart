@@ -28,6 +28,7 @@ mixin _$PetitionResponse {
   DateTime? get expireAt => throw _privateConstructorUsedError;
   int? get goal => throw _privateConstructorUsedError;
   String? get poiId => throw _privateConstructorUsedError;
+  List<Signature>? get signatures => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,7 +50,8 @@ abstract class $PetitionResponseCopyWith<$Res> {
       String? description,
       DateTime? expireAt,
       int? goal,
-      String? poiId});
+      String? poiId,
+      List<Signature>? signatures});
 }
 
 /// @nodoc
@@ -73,6 +75,7 @@ class _$PetitionResponseCopyWithImpl<$Res, $Val extends PetitionResponse>
     Object? expireAt = freezed,
     Object? goal = freezed,
     Object? poiId = freezed,
+    Object? signatures = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -107,6 +110,10 @@ class _$PetitionResponseCopyWithImpl<$Res, $Val extends PetitionResponse>
           ? _value.poiId
           : poiId // ignore: cast_nullable_to_non_nullable
               as String?,
+      signatures: freezed == signatures
+          ? _value.signatures
+          : signatures // ignore: cast_nullable_to_non_nullable
+              as List<Signature>?,
     ) as $Val);
   }
 }
@@ -127,7 +134,8 @@ abstract class _$$PetitionResponseImplCopyWith<$Res>
       String? description,
       DateTime? expireAt,
       int? goal,
-      String? poiId});
+      String? poiId,
+      List<Signature>? signatures});
 }
 
 /// @nodoc
@@ -149,6 +157,7 @@ class __$$PetitionResponseImplCopyWithImpl<$Res>
     Object? expireAt = freezed,
     Object? goal = freezed,
     Object? poiId = freezed,
+    Object? signatures = freezed,
   }) {
     return _then(_$PetitionResponseImpl(
       id: freezed == id
@@ -183,6 +192,10 @@ class __$$PetitionResponseImplCopyWithImpl<$Res>
           ? _value.poiId
           : poiId // ignore: cast_nullable_to_non_nullable
               as String?,
+      signatures: freezed == signatures
+          ? _value._signatures
+          : signatures // ignore: cast_nullable_to_non_nullable
+              as List<Signature>?,
     ));
   }
 }
@@ -198,7 +211,9 @@ class _$PetitionResponseImpl implements _PetitionResponse {
       this.description,
       this.expireAt,
       this.goal,
-      this.poiId});
+      this.poiId,
+      final List<Signature>? signatures})
+      : _signatures = signatures;
 
   factory _$PetitionResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$PetitionResponseImplFromJson(json);
@@ -219,10 +234,19 @@ class _$PetitionResponseImpl implements _PetitionResponse {
   final int? goal;
   @override
   final String? poiId;
+  final List<Signature>? _signatures;
+  @override
+  List<Signature>? get signatures {
+    final value = _signatures;
+    if (value == null) return null;
+    if (_signatures is EqualUnmodifiableListView) return _signatures;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'PetitionResponse(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, titel: $titel, description: $description, expireAt: $expireAt, goal: $goal, poiId: $poiId)';
+    return 'PetitionResponse(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, titel: $titel, description: $description, expireAt: $expireAt, goal: $goal, poiId: $poiId, signatures: $signatures)';
   }
 
   @override
@@ -241,13 +265,24 @@ class _$PetitionResponseImpl implements _PetitionResponse {
             (identical(other.expireAt, expireAt) ||
                 other.expireAt == expireAt) &&
             (identical(other.goal, goal) || other.goal == goal) &&
-            (identical(other.poiId, poiId) || other.poiId == poiId));
+            (identical(other.poiId, poiId) || other.poiId == poiId) &&
+            const DeepCollectionEquality()
+                .equals(other._signatures, _signatures));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt, titel,
-      description, expireAt, goal, poiId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updatedAt,
+      titel,
+      description,
+      expireAt,
+      goal,
+      poiId,
+      const DeepCollectionEquality().hash(_signatures));
 
   @JsonKey(ignore: true)
   @override
@@ -273,7 +308,8 @@ abstract class _PetitionResponse implements PetitionResponse {
       final String? description,
       final DateTime? expireAt,
       final int? goal,
-      final String? poiId}) = _$PetitionResponseImpl;
+      final String? poiId,
+      final List<Signature>? signatures}) = _$PetitionResponseImpl;
 
   factory _PetitionResponse.fromJson(Map<String, dynamic> json) =
       _$PetitionResponseImpl.fromJson;
@@ -294,6 +330,8 @@ abstract class _PetitionResponse implements PetitionResponse {
   int? get goal;
   @override
   String? get poiId;
+  @override
+  List<Signature>? get signatures;
   @override
   @JsonKey(ignore: true)
   _$$PetitionResponseImplCopyWith<_$PetitionResponseImpl> get copyWith =>

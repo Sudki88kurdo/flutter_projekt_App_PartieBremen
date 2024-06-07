@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/entities/poi.dart';
+import 'package:flutter_app/presentation/app/app_cubit.dart';
+import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
 import 'package:flutter_app/presentation/poiView/widgets/touchable_opacity.dart';
 import 'package:flutter_app/presentation/poiView/widgets/user_avatar.dart';
@@ -11,6 +14,170 @@ import 'package:go_router/go_router.dart';
 
 import '../../../entities/user.dart';
 import '../../../theme/colors.dart';
+
+class PetitionEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
+  final Poi? poi;
+
+  final PetitionResponse? petitionResponse;
+
+  /// User to display
+  final User? user;
+
+  /// Callback when the entry is tapped
+  final VoidCallback? onTap;
+
+  final DateTime? createdAt;
+
+  final String? text;
+
+  final String? description;
+
+  final BuildContext blocBuilderContext;
+
+  /// Constructor
+  const PetitionEntry(
+      {super.key,
+      this.user,
+      this.onTap,
+      this.createdAt,
+      this.poi,
+      this.text,
+      this.description,
+      this.petitionResponse,
+      required this.blocBuilderContext});
+
+  void _defaultTapBehavior(BuildContext context) => context.pushNamed(
+        PoiViewProvider.routeName,
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return TouchableOpacity(
+      onTap: onTap != null
+          ? () => onTap?.call()
+          : () => _defaultTapBehavior(context),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xff24262c),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 20.0,
+            top: 15,
+            right: 10.0,
+            bottom: 15,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Padding
+              if (user == null) const SizedBox(height: 4),
+
+              Text(
+                "${text?.substring(0, min(text!.length, 150))}${150 < text!.length ? "..." : ""}",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Colors.white70, fontSize: 24),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                "${petitionResponse?.description!}",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Colors.white70, fontSize: 16),
+              ),
+              // Padding
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: Column(
+                      children: [
+                        LinearProgressIndicator(
+                          //TODO Put progress value into here
+                          value: (petitionResponse?.signatures!.length! ?? 1) /
+                              (petitionResponse?.goal! == null ||
+                                      petitionResponse?.goal! == 0
+                                  ? 1
+                                  : petitionResponse!.goal!),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              petitionResponse?.signatures!.length!
+                                      .toString() ??
+                                  '0',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                      color: Colors.white70, fontSize: 16),
+                            ),
+                            Text(
+                              petitionResponse!.goal!.toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                      color: Colors.white70, fontSize: 16),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, bottom: 30),
+                    child: SizedBox(
+                      child: IconButton(
+                        iconSize: 20,
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.white70,
+                        ),
+                        onPressed: () {
+                          blocBuilderContext
+                              .read<PoiViewCubit>()
+                              .createSignature(
+                                petitionId: petitionResponse!.id!,
+                                userId: blocBuilderContext
+                                    .read<AppCubit>()
+                                    .state!
+                                    .user!
+                                    .id!,
+                              );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Divider
+              Divider(color: Colors.white.withOpacity(0.03), height: 1),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget makeDismissible(
+          {required Widget child, required BuildContext context}) =>
+      GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Navigator.of(context).pop(),
+          child: GestureDetector(
+            onTap: () {},
+            child: child,
+          ));
+}
 
 class CommunityEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
   final Poi? poi;

@@ -17,12 +17,17 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
     return execute(() => client.getAllSurveys());
   }
 
+  Future<ApiResult<List<SurveyResponse>>> getAllToPoiId(
+      {required String poiId}) async {
+    return execute(() => client.findAllToPoiId(poiId: poiId));
+  }
+
   Future<ApiResult<SurveyResponse>> create({
     required String titel,
     required String beschreibung,
     required String expiresAt,
     required String creatorId,
-    required double poiId,
+    required String poiId,
   }) async =>
       execute(
         () => client.create(
@@ -30,6 +35,24 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
             beschreibung: beschreibung,
             expiresAt: DateTime.now().add(const Duration(days: 90)).toString(),
             userId: creatorId,
+            poiId: poiId),
+      );
+
+  Future<ApiResult<List<SurveyResponse>>> updateSurvey({
+    required String surveyId,
+    required String title,
+    required String description,
+    required String expiresAt,
+    required String userId,
+    required String poiId,
+  }) async =>
+      execute(
+        () => client.updateSurvey(
+            surveyId: surveyId,
+            titel: title,
+            beschreibung: description,
+            expiresAt: expiresAt,
+            userId: userId,
             poiId: poiId),
       );
 }

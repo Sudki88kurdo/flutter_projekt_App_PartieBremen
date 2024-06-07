@@ -14,6 +14,9 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../appStyle.dart';
+import '../app/app_cubit.dart';
+
 class CustomIconWidget extends StatelessWidget {
   const CustomIconWidget(
       {super.key,
@@ -56,7 +59,7 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(
             title: Text('PartiBremen Home'),
             centerTitle: true,
-            backgroundColor: Colors.green,
+            backgroundColor: AppStyles.buttonColor,
             titleTextStyle: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -78,9 +81,189 @@ class HomeScreen extends StatelessWidget {
                           height: MediaQuery.of(buildContext).size.height * 1,
                           child: FlutterMap(
                             mapController: mapController,
-                            options: const MapOptions(
+                            options: MapOptions(
                               initialCenter: LatLng(53.0793, 8.8017),
                               initialZoom: 12,
+                              onTap: (_, pos) => showModalBottomSheet(
+                                  enableDrag: true,
+                                  showDragHandle: true,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  context: mapcontext,
+                                  builder: (BuildContext bc) {
+                                    return BlocBuilder<HomePageCubit,
+                                        HomePageState>(
+                                      builder: (context, state) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom),
+                                          child: makeDismissible(
+                                            context: context,
+                                            child: DraggableScrollableSheet(
+                                              initialChildSize: 0.65,
+                                              maxChildSize: 0.65,
+                                              builder:
+                                                  (context, scrollController) =>
+                                                      Container(
+                                                height: 500,
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    20))),
+                                                child: ListView(
+                                                  controller: scrollController,
+                                                  children: [
+                                                    const Flex(
+                                                      direction: Axis.vertical,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(height: 50),
+                                                        Text(
+                                                          "Neuen Interessenpunkt erstellen",
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 100.0,
+                                                              right: 100,
+                                                              top: 20,
+                                                              bottom: 40),
+                                                      child: Flex(
+                                                        direction:
+                                                            Axis.vertical,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          TextFormField(
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                hintText:
+                                                                    "Titel",
+                                                                filled: false,
+                                                              ),
+                                                              onChanged: (title) => context
+                                                                  .read<
+                                                                      HomePageCubit>()
+                                                                  .updateNewPoiTitle(
+                                                                      title)),
+                                                          TextFormField(
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                hintText:
+                                                                    "Beschreibung",
+                                                                filled: false,
+                                                              ),
+                                                              onChanged: (description) => context
+                                                                  .read<
+                                                                      HomePageCubit>()
+                                                                  .updateNewPoiDescription(
+                                                                      description)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Flex(
+                                                      direction: Axis.vertical,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 220,
+                                                          height: 60,
+                                                          child: FilledButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                if (state.newPoiTitle ==
+                                                                        null ||
+                                                                    state.newPoiDescription ==
+                                                                        null) {
+                                                                  ScaffoldMessenger
+                                                                          .of(
+                                                                              bc)
+                                                                      .showSnackBar(const SnackBar(
+                                                                          content:
+                                                                              Text('Fehler beim Erstellen des Interessenpunktes')));
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                } else {
+                                                                  await context
+                                                                      .read<
+                                                                          HomePageCubit>()
+                                                                      .create(
+                                                                          title: state
+                                                                              .newPoiTitle!,
+                                                                          description: state
+                                                                              .newPoiDescription!,
+                                                                          active:
+                                                                              true,
+                                                                          creatorId: context
+                                                                              .read<
+                                                                                  AppCubit>()
+                                                                              .state
+                                                                              .user!
+                                                                              .id!,
+                                                                          latitude: pos
+                                                                              .latitude!,
+                                                                          longitude: pos
+                                                                              .longitude!)
+                                                                      .then((value) => context
+                                                                          .read<
+                                                                              HomePageCubit>()
+                                                                          .loadPointsOfInterest())
+                                                                      .then(
+                                                                          (value) {
+                                                                    ScaffoldMessenger
+                                                                            .of(
+                                                                                bc)
+                                                                        .showSnackBar(const SnackBar(
+                                                                            content:
+                                                                                Text('Interessenpunkt erfolgreich erstellt')));
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  });
+                                                                }
+                                                              },
+                                                              child: const Text(
+                                                                "Erstellen",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                              )),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }),
                               interactionOptions: InteractionOptions(
                                 flags: InteractiveFlag.drag |
                                     InteractiveFlag.flingAnimation |
@@ -137,9 +320,8 @@ class HomeScreen extends StatelessWidget {
                           direction: Axis.vertical,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              width: 350,
-                              height: 65.0,
+                            Container(
+                              alignment: Alignment.center,
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: SearchAnchor(
@@ -164,9 +346,8 @@ class HomeScreen extends StatelessWidget {
                                               EdgeInsets>(
                                           EdgeInsets.symmetric(
                                               horizontal: 16.0)),
-                                      hintText: 'Ort suchen',
+                                      hintText: 'Straßenname eingeben...',
                                       onTap: () {
-                                        logger.i("On Tap");
                                         controller.openView();
                                       },
                                       leading: const Icon(Icons.search,
@@ -205,6 +386,8 @@ class HomeScreen extends StatelessWidget {
                                                                 "");
                                                     controller.closeView(
                                                         controller.text);
+                                                    controller.text =
+                                                        data[index].name ?? "";
                                                   },
                                                 );
                                               },
@@ -255,4 +438,14 @@ class HomeScreen extends StatelessWidget {
       String search, BuildContext context) async {
     return await context.read<HomePageCubit>().getStreets(search);
   }
+
+  Widget makeDismissible(
+          {required Widget child, required BuildContext context}) =>
+      GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Navigator.of(context).pop(),
+          child: GestureDetector(
+            onTap: () {},
+            child: child,
+          ));
 }

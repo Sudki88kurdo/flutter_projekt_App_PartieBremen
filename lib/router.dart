@@ -3,6 +3,7 @@ import 'package:flutter_app/presentation/error/error_page.dart';
 import 'package:flutter_app/presentation/home-screen/home_screen.dart';
 import 'package:flutter_app/presentation/login-page/login_page_provider.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
+import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_provider.dart';
 import 'package:flutter_app/presentation/register-page/register_page.dart';

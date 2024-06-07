@@ -122,11 +122,14 @@ class PetitionList<C extends StateStreamable<S>, S> extends StatelessWidget {
     return PagedSliverList.separated(
       builderDelegate: PagedChildBuilderDelegate<PetitionResponse>(
         itemBuilder: (context, item, index) {
-          return CommunityEntry(
+          return PetitionEntry(
             user: context.read<AppCubit>().state.user!,
             poi: context.read<PoiViewCubit>().state.poi,
             createdAt: item.createdAt,
-            text: item.titel ?? '\n\n${item.description!}' ?? '',
+            text: item.titel ?? '',
+            description: item.description! ?? '',
+            petitionResponse: item,
+            blocBuilderContext: context,
           );
         },
         noItemsFoundIndicatorBuilder: (context) =>
@@ -150,8 +153,8 @@ class _CommentCount extends StatelessWidget {
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.comment,
-          title: "Kommentare",
-          value: "${state.comments.length}",
+          title: 'Kommentare',
+          value: '${state.comments.length}',
           index: 0,
         );
       },
@@ -170,8 +173,8 @@ class _Surveys extends StatelessWidget {
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.question_answer,
-          title: "Umfragen",
-          value: "${state.surveys.length}",
+          title: 'Umfragen',
+          value: '${state.surveys.length}',
           index: 1,
         );
       },
@@ -186,12 +189,13 @@ class _Petitions extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PoiViewCubit, PoiViewState>(
       buildWhen: (previous, current) =>
-          previous.votings.length != current.votings.length,
+          previous.petitions.length != current.petitions.length ||
+          previous.postSignatureStatus != current.postSignatureStatus,
       builder: (context, state) {
         return _StatisticsItem(
           icon: Icons.local_post_office,
           title: "Petitionen",
-          value: "${state.votings.length}",
+          value: "${state.petitions.length}",
           index: 2,
         );
       },
@@ -223,7 +227,7 @@ class _AccountCreationValue extends StatelessWidget {
             const SizedBox(height: 5),
 
             Text(
-              "$value",
+              '$value',
               style: Theme.of(context)
                   .textTheme
                   .labelLarge
@@ -259,10 +263,11 @@ class _StatisticsItem extends StatelessWidget {
           onTap: () => context.read<PoiViewCubit>().updateIndex(index),
           child: Container(
             decoration: BoxDecoration(
-                color: state.listIndex == index
-                    ? Color(0xff24262c)
-                    : Color(0xff1c1e24),
-                borderRadius: BorderRadius.circular(32)),
+              color: state.listIndex == index
+                  ? Color(0xff24262c)
+                  : Color(0xff1c1e24),
+              borderRadius: BorderRadius.circular(32),
+            ),
             width: MediaQuery.of(context).size.width / 4.22,
             child: Column(
               children: [
@@ -275,7 +280,7 @@ class _StatisticsItem extends StatelessWidget {
                 // Value and Title
                 title != null
                     ? Text(
-                        title ?? "Konnte nicht geladen werden",
+                        title ?? 'Konnte nicht geladen werden',
                         style: Theme.of(context)
                             .textTheme
                             .bodySmall
@@ -283,7 +288,7 @@ class _StatisticsItem extends StatelessWidget {
                       )
                     : Container(),
                 Text(
-                  value ?? "0",
+                  value ?? '0',
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge
@@ -322,7 +327,9 @@ class _Comments extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Color(0xff1c1e24),
         borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
       ),
       child: CustomScrollView(
         shrinkWrap: false,
@@ -354,11 +361,13 @@ class _Comments extends StatelessWidget {
                                       .textTheme
                                       .bodyLarge
                                       ?.copyWith(
-                                          color: Colors.white70, fontSize: 20),
+                                        color: Colors.white70,
+                                        fontSize: 20,
+                                      ),
                                 ),
                               ),
                             )
-                          : const Text("");
+                          : const Text('');
                     },
                   ),
                   const Padding(
@@ -383,7 +392,7 @@ class _Comments extends StatelessWidget {
                                 ?.copyWith(color: Colors.white70),
                           ),
                         )
-                      : const Text("");
+                      : const Text('');
                 },
               ),
               const SizedBox(
@@ -402,7 +411,7 @@ class _Comments extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              const _List(), //Poll() um die Umfrage anzuzeigen
+              _List(),
               SizedBox(
                 height: 100,
               ),
@@ -472,7 +481,8 @@ class _List extends StatelessWidget {
             buildWhen: (prev, current) =>
                 prev.petitions.isEmpty ||
                 prev.petitions.length != current.petitions.length ||
-                prev.petitions.isEmpty && current.petitions.isNotEmpty,
+                prev.petitions.isEmpty && current.petitions.isNotEmpty ||
+                prev.postSignatureStatus != current.postSignatureStatus,
             builder: (context, state) {
               return PetitionList<PoiViewCubit, PoiViewState>(
                 // TODO: Somehow the default Loading Indicator with Shimmers is bugged
@@ -533,7 +543,9 @@ class PoiView extends StatelessWidget {
                             mapController: _mapController,
                             options: MapOptions(
                               initialCenter: LatLng(
-                                  state.poi!.latitude!, state.poi!.longitude!),
+                                state.poi!.latitude!,
+                                state.poi!.longitude!,
+                              ),
                               initialZoom: 17,
                               interactionOptions: const InteractionOptions(
                                 flags: InteractiveFlag.drag |
@@ -565,15 +577,18 @@ class PoiView extends StatelessWidget {
                                       color: Colors.red,
                                       size: 50.0,
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                               RichAttributionWidget(
                                 attributions: [
                                   TextSourceAttribution(
                                     'OpenStreetMap contributors',
-                                    onTap: () => launchUrl(Uri.parse(
-                                        'https://openstreetmap.org/copyright')),
+                                    onTap: () => launchUrl(
+                                      Uri.parse(
+                                        'https://openstreetmap.org/copyright',
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -646,8 +661,9 @@ class PoiView extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width - 50,
-                              top: 150),
+                            left: MediaQuery.of(context).size.width - 50,
+                            top: 150,
+                          ),
                           child: Column(
                             children: [
                               CircleAvatar(
@@ -660,13 +676,14 @@ class PoiView extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     context.read<PoiViewCubit>().createVote(
-                                        VoteType.DOWN,
-                                        context
-                                            .read<AppCubit>()
-                                            .state
-                                            .user!
-                                            .id!,
-                                        poiId: state.poi!.id!);
+                                          VoteType.DOWN,
+                                          context
+                                              .read<AppCubit>()
+                                              .state
+                                              .user!
+                                              .id!,
+                                          poiId: state.poi!.id!,
+                                        );
                                   },
                                 ),
                               ),
@@ -677,7 +694,7 @@ class PoiView extends StatelessWidget {
                                     prev.votings != curr.votings,
                                 builder: (context, state) {
                                   return Text(
-                                    "${state.votings.where((element) => element.voteType!.name == VoteType.DOWN.name).toList().length}",
+                                    '${state.votings.where((element) => element.voteType!.name == VoteType.DOWN.name).toList().length}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge
@@ -698,20 +715,54 @@ class PoiView extends StatelessWidget {
                             child: _PoIData(),
                           ),
                         ),
-                        Positioned(
-                          bottom: 0,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              bottom: MediaQuery.viewInsetsOf(context).bottom,
-                            ),
-                            child: ChatContainer(
-                              value: 1,
-                              onSendMessagePressed: (msg) => context
-                                  .read<PoiViewCubit>()
-                                  .writeComment(msg,
-                                      context.read<AppCubit>().state.user!),
-                            ),
-                          ),
+                        BlocBuilder<PoiViewCubit, PoiViewState>(
+                          builder: (context, state) {
+                            return Positioned(
+                              bottom: 0,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.viewInsetsOf(context).bottom,
+                                ),
+                                child: state.listIndex == 0
+                                    ? ChatContainer(
+                                        value: 1,
+                                        onSendMessagePressed: (msg) => context
+                                            .read<PoiViewCubit>()
+                                            .writeComment(
+                                                msg,
+                                                context
+                                                    .read<AppCubit>()
+                                                    .state
+                                                    .user!),
+                                      )
+                                    : state.listIndex == 1
+                                        ? Container()
+                                        : Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: 20,
+                                              left: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.82,
+                                            ),
+                                            child: CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor: Colors.white70,
+                                              child: IconButton(
+                                                color: Colors.deepPurple,
+                                                onPressed: () =>
+                                                    createPressed(context),
+                                                icon: Icon(
+                                                  size: 35,
+                                                  Icons.add,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -719,6 +770,121 @@ class PoiView extends StatelessWidget {
                 ),
               )
             : CircularProgressIndicator();
+      },
+    );
+  }
+
+  createPressed(BuildContext context) {
+    return showModalBottomSheet(
+      enableDrag: true,
+      showDragHandle: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext bc) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.60,
+            maxChildSize: 1,
+            snap: true,
+            expand: false,
+            builder: (contexte, scrollController) => Container(
+              height: 800,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  const Flex(
+                    direction: Axis.vertical,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 50),
+                      Text(
+                        "Neue Petition erstellen",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Arial',
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 100.0,
+                      right: 100,
+                      top: 20,
+                      bottom: 40,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          onChanged: (value) => context
+                              .read<PoiViewCubit>()
+                              .updateNewPetitionTitle(value),
+                          decoration: const InputDecoration(
+                            hintText: "Titel",
+                            filled: false,
+                          ),
+                        ),
+                        TextFormField(
+                          onChanged: (value) => context
+                              .read<PoiViewCubit>()
+                              .updateNewPetitionDescription(value),
+                          decoration: const InputDecoration(
+                            hintText: "Beschreibung",
+                            filled: false,
+                          ),
+                        ),
+                        TextFormField(
+                          onChanged: (value) => context
+                              .read<PoiViewCubit>()
+                              .updateNewPetitionGoal(value),
+                          decoration: const InputDecoration(
+                            hintText: "Ziel",
+                            filled: false,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(25.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: TextButton.icon(
+                              onPressed: () async {
+                                context.read<PoiViewCubit>().createPetition();
+                                Navigator.of(bc).pop();
+                              },
+                              icon:
+                                  const Icon(Icons.check, color: Colors.white),
+                              label: const Text(
+                                'Erstellen',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }

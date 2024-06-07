@@ -18,13 +18,27 @@ abstract class SurveyClient {
     @Field("beschreibung") required String beschreibung,
     @Field("expiresAt") required String expiresAt,
     @Field("userId") required String userId,
-    @Field("poiId") required double poiId,
+    @Field("poiId") required String poiId,
   });
 
   @GET("/survey")
   Future<HttpResponse<List<SurveyResponse>>> getAllSurveys();
 
+  @GET("/survey/poi/{poiId}")
+  Future<HttpResponse<List<SurveyResponse>>> findAllToPoiId(
+      {@Path("poiId") required String poiId});
+
   @GET("/survey/{surveyId}")
   Future<HttpResponse<SurveyResponse>> findOne(
       {@Path("surveyId") required String surveyId});
+
+  @PUT("/survey/{surveyId}")
+  Future<HttpResponse<List<SurveyResponse>>> updateSurvey({
+    @Path("surveyId") required String surveyId,
+    @Field("titel") required String titel,
+    @Field("beschreibung") required String beschreibung,
+    @Field("expiresAt") required String expiresAt,
+    @Field("userId") required String userId,
+    @Field("poiId") required String poiId,
+  });
 }

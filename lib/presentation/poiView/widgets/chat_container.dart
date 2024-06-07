@@ -110,7 +110,6 @@ class _ChatTextField extends StatelessWidget {
 
         return Row(
           children: [
-            // Message TextField
             Expanded(
               child: TextField(
                 style: TextStyle(color: Colors.white70),
@@ -127,7 +126,7 @@ class _ChatTextField extends StatelessWidget {
 
             // Send Button
             SizedBox(
-              width: 48,
+              width: 69,
               height: 48,
               child: TextButton(
                 onPressed: () =>

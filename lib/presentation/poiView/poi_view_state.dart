@@ -14,12 +14,17 @@ part 'poi_view_state.freezed.dart';
 class PoiViewState with _$PoiViewState {
   const factory PoiViewState({
     @Default(ScreenStatus.pure()) ScreenStatus status,
+    @Default(ScreenStatus.pure()) ScreenStatus postSignatureStatus,
     @Default(null) Poi? poi,
+    @Default(null) String? newPetitionTitle,
+    @Default(null) String? newPetitionDescription,
+    @Default(null) int? newPetitionGoal,
     @Default([]) List<CommentsResponse> comments,
     @Default([]) List<SurveyResponse> surveys,
     @Default([]) List<PetitionResponse> petitions,
     @Default([]) List<VotingsResponse> votings,
     @Default(ScreenStatus.loading()) ScreenStatus commentStatus,
+    @Default(ScreenStatus.loading()) ScreenStatus surveyStatus,
     @Default(0) int listIndex,
     required PagingController<int, CommentsResponse> commentsPagingController,
     required PagingController<int, SurveyResponse> surveyPagingController,

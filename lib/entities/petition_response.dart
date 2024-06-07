@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter_app/entities/signature.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'petition_response.freezed.dart';
@@ -27,6 +28,7 @@ class PetitionResponse with _$PetitionResponse {
     DateTime? expireAt,
     int? goal,
     String? poiId,
+    List<Signature>? signatures,
   }) = _PetitionResponse;
 
   factory PetitionResponse.fromJson(Map<String, dynamic> json) =>

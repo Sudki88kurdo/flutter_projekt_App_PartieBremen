@@ -10,8 +10,6 @@ import 'myComments_list_state.dart';
 class MyCommentsListPage extends StatelessWidget {
   const MyCommentsListPage({super.key});
   static User? user;
-  //final BuildContext mapcontext;
-
 
   setUser(User loginUser) {
     user = loginUser;
@@ -67,10 +65,6 @@ class MyCommentsListPage extends StatelessWidget {
                         ),
                         trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
                         onTap: () {
-                         // context.pushNamed(
-                          //  PoiViewProvider.routeName,
-                            //pathParameters: {'poiId': state.pois[index].id ?? ''},
-                        //  );
                           print('Clicked comment: ${state.comments[index].toJson()}');
                         },
                       ),

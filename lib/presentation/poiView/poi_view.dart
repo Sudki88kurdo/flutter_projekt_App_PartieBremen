@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/entities/survey_response.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/app/app_state.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
+import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
 import 'package:flutter_app/presentation/poiView/widgets/chat_container.dart';
 import 'package:flutter_app/presentation/poiView/widgets/community_entry.dart';
 import 'package:flutter_app/presentation/poiView/widgets/poll.dart';
@@ -43,23 +43,23 @@ class CommentsList<C extends StateStreamable<S>, S> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        return PagedSliverList.separated(
-          builderDelegate: PagedChildBuilderDelegate<CommentsResponse>(
-            itemBuilder: (context, item, index) {
-              return CommunityEntry(
-                user: item.commenter,
-                poi: context.read<PoiViewCubit>().state.poi,
-                createdAt: item.createdAt,
-                text: item.actualcomment ?? '',
-              );
-            },
-            noItemsFoundIndicatorBuilder: (context) =>
-                noItems ?? const NoItemsFoundError(),
-          ),
-          separatorBuilder: (context, index) => const SizedBox(height: 8),
-          shrinkWrapFirstPageIndicators: false,
-          pagingController: pagingController,
-        );
+    return PagedSliverList.separated(
+      builderDelegate: PagedChildBuilderDelegate<CommentsResponse>(
+        itemBuilder: (context, item, index) {
+          return CommunityEntry(
+            user: item.commenter,
+            poi: context.read<PoiViewCubit>().state.poi,
+            createdAt: item.createdAt,
+            text: item.actualcomment ?? '',
+          );
+        },
+        noItemsFoundIndicatorBuilder: (context) =>
+            noItems ?? const NoItemsFoundError(),
+      ),
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      shrinkWrapFirstPageIndicators: false,
+      pagingController: pagingController,
+    );
   }
 }
 
@@ -408,13 +408,17 @@ class _Comments extends StatelessWidget {
                   _Petitions(),
                 ],
               ),
-
               const SizedBox(
                 height: 30,
               ),
-              _List(),
-              SizedBox(
-                height: 100,
+              BlocBuilder<PoiViewCubit, PoiViewState>(
+                builder: (context, state) {
+                  return state.listIndex == 0
+                      ? _List()
+                      : state.listIndex == 1
+                          ? Poll()
+                          : Container();
+                },
               ),
             ],
           ),
@@ -595,19 +599,21 @@ class PoiView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(17.0),
-                          child: CircleAvatar(
-                            backgroundColor: const Color(0xff1c1e24),
-                            child: IconButton(
-                              iconSize: 20,
-                              icon: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.white70,
+                        SafeArea(
+                          child: Padding(
+                            padding: const EdgeInsets.all(17.0),
+                            child: CircleAvatar(
+                              backgroundColor: const Color(0xff1c1e24),
+                              child: IconButton(
+                                iconSize: 20,
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white70,
+                                ),
+                                onPressed: () {
+                                  context.pushNamed(HomeScreen.routeName);
+                                },
                               ),
-                              onPressed: () {
-                                context.pushNamed(HomeScreen.routeName);
-                              },
                             ),
                           ),
                         ),
@@ -717,22 +723,30 @@ class PoiView extends StatelessWidget {
                         ),
                         BlocBuilder<PoiViewCubit, PoiViewState>(
                           builder: (context, state) {
-                            return state.listIndex == 0 ?
-                            Positioned(
-                            bottom: 0,
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: MediaQuery.viewInsetsOf(context).bottom,
-                              ),
-                              child: ChatContainer(
-                                value: 1,
-                                onSendMessagePressed: (msg) => context
-                                    .read<PoiViewCubit>()
-                                    .writeComment(msg,
-                                    context.read<AppCubit>().state.user!),
-                              ),
-                            ),
-                          ) : Container();
+                            return state.listIndex == 0
+                                ? Positioned(
+                                    bottom: 0,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: MediaQuery.viewInsetsOf(context)
+                                            .bottom,
+                                      ),
+                                      child: ChatContainer(
+                                        value: 1,
+                                        onSendMessagePressed: (msg) => context
+                                            .read<PoiViewCubit>()
+                                            .writeComment(
+                                                msg,
+                                                context
+                                                    .read<AppCubit>()
+                                                    .state
+                                                    .user!),
+                                      ),
+                                    ),
+                                  )
+                                : state.listIndex == 1
+                                    ? buildSurvey(context)
+                                    : Container();
                           },
                         ),
                       ],
@@ -742,6 +756,32 @@ class PoiView extends StatelessWidget {
               )
             : CircularProgressIndicator();
       },
+    );
+  }
+
+  Widget buildSurvey(context) {
+    return Positioned(
+      bottom: 30,
+      right: 30,
+      child: Container(
+        width: 60,
+        height: 60,
+        child: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: () {
+            showBottomSheet(
+              context: context,
+              builder: (context) => AddSurvey(),
+              showDragHandle: true,
+            );
+          },
+          child: Icon(
+            Icons.add,
+            size: 30,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }

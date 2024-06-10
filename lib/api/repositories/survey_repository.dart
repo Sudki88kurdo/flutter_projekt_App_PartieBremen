@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_app/api/common/api_result.dart';
 import 'package:flutter_app/api/repositories/base_repository.dart';
+import 'package:flutter_app/main.dart';
 
 import '../../entities/survey_response.dart';
 import '../clients/survey_client.dart';
@@ -20,19 +22,23 @@ class SurveyRepository extends BaseRepository<SurveyClient> {
   Future<ApiResult<SurveyResponse>> create({
     required String titel,
     required String beschreibung,
-    required String expiresAt,
+    required int expiresAt,
     required String creatorId,
     required String poiId,
-  }) async =>
-      execute(
+  }) async {
+    var date = DateTime.now().add(Duration(days: expiresAt));
+    var dateFormatted = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(date);
+
+    return execute(
         () => client.create(
             titel: titel,
             beschreibung: beschreibung,
-            expiresAt: DateTime.now().add(const Duration(days: 90)).toString(),
+            expiresAt: dateFormatted,
             userId: creatorId,
             poiId: poiId
         ),
       );
+  }
 
   Future<ApiResult<List<SurveyResponse>>> updateSurvey({
     required String surveyId,

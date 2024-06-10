@@ -19,6 +19,7 @@ class LoginPage extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
 
   LoginPage({super.key});
+
   late User user;
   ProfileEditPage pe = ProfileEditPage();
   ProfilePage profilePage = ProfilePage();
@@ -27,105 +28,120 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginPageCubit, LoginPageState>(
-        builder: (loginPageContext, loginPageState) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'Login',
-                style: AppStyles.appBarTitleStyle,
-              ),
-              backgroundColor: AppStyles.buttonColor,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  loginPageContext.pushNamed(StartPageProvider.routeName);
-                },
-              ),
-              iconTheme: const IconThemeData(color: Colors.white),
+      builder: (loginPageContext, loginPageState) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Login',
+              style: AppStyles.appBarTitleStyle,
             ),
-            body: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/hintergrundBremen2.jpg'),
-                  fit: BoxFit.cover,
-                ),
+            backgroundColor: AppStyles.buttonColor,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                loginPageContext.pushNamed(StartPageProvider.routeName);
+              },
+            ),
+            iconTheme: const IconThemeData(color: Colors.white),
+          ),
+          body: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/hintergrundBremen2.jpg'),
+                fit: BoxFit.cover,
               ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          'Willkommen zurück!',
-                          style: AppStyles.commonTextStyle,
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        'Willkommen zurück!',
+                        style: AppStyles.commonTextStyle,
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _usernameController,
+                        style: TextStyle(color: Colors.green),
+                        decoration: AppStyles.textFieldDecoration(
+                          'Benutzername',
+                          Icons.person,
                         ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _usernameController,
-                          style: TextStyle(color: Colors.green),
-                          decoration: AppStyles.textFieldDecoration('Benutzername', Icons.person),
-                        ),
-                        const SizedBox(height: 20),
-                        BlocBuilder<LoginPageCubit, LoginPageState>(
-                            builder: (loginPageContext, loginPageState) {
-                              return TextField(
-                                controller: _passwordController,
-                                obscureText: !loginPageState.passwordVisible,
-                                style: TextStyle(color: Colors.green),
-                                decoration: AppStyles.textFieldDecoration('Passwort', Icons.lock).copyWith(
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      loginPageState.passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                      color: Colors.green,
-                                    ),
-                                    onPressed: () {
-                                      loginPageContext.read<LoginPageCubit>().updatePasswordVisible();
-                                    },
-                                  ),
+                      ),
+                      const SizedBox(height: 20),
+                      BlocBuilder<LoginPageCubit, LoginPageState>(
+                        builder: (loginPageContext, loginPageState) {
+                          return TextField(
+                            controller: _passwordController,
+                            obscureText: !loginPageState.passwordVisible,
+                            style: TextStyle(color: Colors.green),
+                            decoration: AppStyles.textFieldDecoration(
+                              'Passwort',
+                              Icons.lock,
+                            ).copyWith(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  loginPageState.passwordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.green,
                                 ),
-                              );
-                            }),
-                        const SizedBox(height: 20),
-                        BlocBuilder<LoginPageCubit, LoginPageState>(
-                          builder: (loginContext, loginState) {
-                            return loginState.status != const ScreenStatus.pure()
-                                ? const CircularProgressIndicator()
-                                : SizedBox(
-                              width: AppStyles.buttonWidth, // Use the fixed width from AppStyles
-                              child: ElevatedButton(
-                                onPressed: () => _login(loginContext, loginPageState),
-                                style: AppStyles.buttonStyle(),
-                                child: const Text(
-                                  'Einloggen',
-                                  style: AppStyles.commonTextStyle,
-                                ),
-
+                                onPressed: () {
+                                  loginPageContext
+                                      .read<LoginPageCubit>()
+                                      .updatePasswordVisible();
+                                },
                               ),
-
-                            );
-
-                          },
-                        ),
-                        const SizedBox(height: 80),
-                      ],
-                    ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      BlocBuilder<LoginPageCubit, LoginPageState>(
+                        builder: (loginContext, loginState) {
+                          return loginState.status != const ScreenStatus.pure()
+                              ? const CircularProgressIndicator()
+                              : SizedBox(
+                                  width: AppStyles.buttonWidth,
+                                  // Use the fixed width from AppStyles
+                                  child: ElevatedButton(
+                                    onPressed: () async => await _login(
+                                      loginContext,
+                                      loginPageState,
+                                    ),
+                                    style: AppStyles.buttonStyle(),
+                                    child: const Text(
+                                      'Einloggen',
+                                      style: AppStyles.commonTextStyle,
+                                    ),
+                                  ),
+                                );
+                        },
+                      ),
+                      const SizedBox(height: 80),
+                    ],
                   ),
                 ),
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
-  void _login(BuildContext loginContext, LoginPageState loginPageState) async {
+  Future<void> _login(
+    BuildContext loginContext,
+    LoginPageState loginPageState,
+  ) async {
     final success = await loginContext.read<LoginPageCubit>().login(
-      email: _usernameController.text,
-      password: _passwordController.text,
-      context: loginContext,
-    );
-
+          email: _usernameController.text,
+          password: _passwordController.text,
+          context: loginContext,
+        );
     if (success) {
       user = loginPageState.user!;
       pe.setUser(user);

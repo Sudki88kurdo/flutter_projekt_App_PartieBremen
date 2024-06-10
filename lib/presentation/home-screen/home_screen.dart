@@ -17,6 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../app/app_cubit.dart';
 
 class CustomIconWidget extends StatelessWidget {
+  static const String routeName = 'home_screen';
   const CustomIconWidget(
       {super.key,
       required this.poiId,

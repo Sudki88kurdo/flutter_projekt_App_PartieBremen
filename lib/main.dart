@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
 import 'api/repositories/comment_repository.dart';
+import 'api/repositories/question_repository.dart';
 import 'api/repositories/user_repository.dart';
 import 'presentation/start-page/start_page.dart';
 
@@ -52,6 +53,7 @@ void main() async {
           RepositoryProvider.value(value: SurveyRepository(baseUrl, dio)),
           RepositoryProvider.value(value: PetitionRepository(baseUrl, dio)),
           RepositoryProvider.value(value: SignatureRepository(baseUrl, dio)),
+          RepositoryProvider.value(value: QuestionRepository(baseUrl, dio)),
           RepositoryProvider.value(
               value: OpenplzRepository(openPlzBaseUrl, dio)),
         ],

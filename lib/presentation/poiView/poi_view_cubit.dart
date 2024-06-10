@@ -1,16 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/api/repositories/comment_repository.dart';
 import 'package:flutter_app/api/repositories/petition_repository.dart';
+import 'package:flutter_app/api/repositories/question_repository.dart';
 import 'package:flutter_app/api/repositories/signature_repository.dart';
 import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/common/screen_status.dart';
 import 'package:flutter_app/entities/survey_response.dart';
-import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../api/repositories/poi_repository.dart';
+import '../../entities/question.dart';
 import '../../entities/user.dart';
 
 enum VoteType { UP, DOWN }
@@ -22,6 +24,8 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final SurveyRepository _surveyRepository;
   final PetitionRepository _petitionRepository;
   final SignatureRepository _signatureRepository;
+
+  final QuestionRepository _questionRepository;
   final String _poiId;
 
   PoiViewCubit(
@@ -31,6 +35,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     this._surveyRepository,
     this._petitionRepository,
     this._signatureRepository,
+    this._questionRepository,
     this._poiId,
   ) : super(PoiViewState.initial()) {
     init(poiId: _poiId);
@@ -44,16 +49,15 @@ class PoiViewCubit extends Cubit<PoiViewState> {
         .addPageRequestListener((pageKey) => findAllPetitionsFromPoI());
   }
 
-  Future<void> getAllPois()
-    async {
-      try {
-        var res = await _poIRepository.getPois();
-        print(res);
-        print('++++++++++++++++++++++++++');
-        emit(state.copyWith());
-      } catch (error) {
-        print('Error in Cubit while getAllPOIs: $error');
-      }
+  Future<void> getAllPois() async {
+    try {
+      var res = await _poIRepository.getPois();
+      print(res);
+      print('++++++++++++++++++++++++++');
+      emit(state.copyWith());
+    } catch (error) {
+      print('Error in Cubit while getAllPOIs: $error');
+    }
   }
 
   Future<bool> init({required String poiId}) async {
@@ -146,8 +150,10 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   Future<void> createSurvey({
     required String title,
     required String description,
-    required int expiresAt,
+    required DateTime expiresAt,
     required String creatorId,
+    required List<TextEditingController> questions,
+    required List<QuestionType> questionTypes,
   }) async {
     emit(state.copyWith(
       surveyStatus: const ScreenStatus.loading(),
@@ -171,6 +177,13 @@ class PoiViewCubit extends Cubit<PoiViewState> {
             surveyStatus: const ScreenStatus.success(),
           ));
           state.surveyPagingController.appendLastPage([newSurvey]);
+          questions.asMap().forEach((index, item) {
+            this._questionRepository.createQuestion(
+                  surveyId: newSurvey.id!,
+                  fragestellung: item.text,
+                  type: questionTypes[index],
+                );
+          });
         },
         failure: (error) {
           logger.e('Error in Cubit while createSurvey: $error');

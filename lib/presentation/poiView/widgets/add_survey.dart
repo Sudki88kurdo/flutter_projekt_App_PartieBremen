@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_app/entities/question.dart';
 import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddSurvey extends StatefulWidget {
@@ -16,13 +14,14 @@ class AddSurvey extends StatefulWidget {
 
 class _AddSurveyState extends State<AddSurvey> {
   final List<Map<String, dynamic>> stepsData = List.generate(
-      6,
-      (index) => {
-            'title': TextEditingController(),
-            'description': TextEditingController(),
-            'expiresAt': TextEditingController(),
-            'answers': <TextEditingController>[TextEditingController()],
-          });
+    1,
+    (index) => {
+      'title': TextEditingController(),
+      'description': TextEditingController(),
+      'answers': <TextEditingController>[],
+      'questionTypes': <QuestionType>[],
+    },
+  );
   final int maxAnswers = 5;
   int currentStep = 1;
 
@@ -31,10 +30,59 @@ class _AddSurveyState extends State<AddSurvey> {
     super.initState();
   }
 
-  void _addAnswerField() {
+  Widget _QuestionTypeButton(
+      String text, IconData icon, QuestionType questionType) {
+    return Container(
+      width: 200,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16), color: Colors.deepPurple),
+      child: TextButton.icon(
+        onPressed: () {
+          _addAnswerField(questionType);
+          Navigator.pop(context);
+        },
+        icon: Icon(icon, color: Colors.white),
+        label: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openPickTypeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Wähle einen Fragentypen",
+          textAlign: TextAlign.center,
+        ),
+        content: SizedBox(
+          height: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _QuestionTypeButton("Skala", Icons.bar_chart, QuestionType.SKALA),
+              _QuestionTypeButton(
+                  "Ja/Nein", Icons.multiple_stop, QuestionType.M_CHOICE),
+              _QuestionTypeButton(
+                  "Antwortsatz", Icons.textsms_outlined, QuestionType.SATZ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _addAnswerField(QuestionType questionType) {
     if (stepsData[currentStep - 1]['answers'].length < maxAnswers) {
       setState(() {
         stepsData[currentStep - 1]['answers'].add(TextEditingController());
+        stepsData[currentStep - 1]['questionTypes'].add(questionType);
       });
     } else {
       showMessage('Maximale Anzahl an Antworten erreicht', color: Colors.red);
@@ -44,6 +92,7 @@ class _AddSurveyState extends State<AddSurvey> {
   void _removeAnswerField(int index) {
     setState(() {
       stepsData[currentStep - 1]['answers'].removeAt(index);
+      stepsData[currentStep - 1]['questionTypes'].removeAt(index);
     });
   }
 
@@ -56,7 +105,7 @@ class _AddSurveyState extends State<AddSurvey> {
             child: TextFormField(
               controller: controller,
               decoration: InputDecoration(
-                hintText: 'Antwort ${index + 1}',
+                hintText: 'Frage ${index + 1}',
                 filled: false,
               ),
             ),
@@ -93,6 +142,7 @@ class _AddSurveyState extends State<AddSurvey> {
           children: [
             buildCurrentQuestionHeader(currentStep),
             createQuestion(),
+            /*
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
@@ -121,7 +171,6 @@ class _AddSurveyState extends State<AddSurvey> {
                               });
                             }
                           },
-                          iconAlignment: IconAlignment.end,
                           child: Text(
                             'Frage hinzufügen',
                             style: TextStyle(
@@ -134,6 +183,7 @@ class _AddSurveyState extends State<AddSurvey> {
                 ],
               ),
             ),
+            */
           ],
         );
       }),
@@ -145,18 +195,18 @@ class _AddSurveyState extends State<AddSurvey> {
     for (final step in stepsData) {
       if (step['title'].text.isEmpty ||
           step['description'].text.isEmpty ||
-          step['expiresAt'].text.isEmpty ||
-          step['answers'].any((controller) => controller.text.isEmpty)) {
+          step['answers'].any(
+              (TextEditingController controller) => controller.text.isEmpty)) {
         allFieldsFilled = false;
         break;
       }
     }
-
+    print(allFieldsFilled);
     if (allFieldsFilled) {
       try {
         await createSurvey();
         showMessage('Umfrage erfolgreich erstellt!');
-        context.pop();
+        Navigator.pop(context);
       } catch (e) {
         showMessage('Fehler beim Erstellen der Umfrage', color: Colors.red);
       }
@@ -169,14 +219,18 @@ class _AddSurveyState extends State<AddSurvey> {
 
   Future<void> createSurvey() async {
     final userId = context.read<AppCubit>().state.user!.id!;
-    for (final step in stepsData) {
+    stepsData.forEach((step) async {
+      print("here");
+      print(step['title']);
       await context.read<PoiViewCubit>().createSurvey(
             title: step['title'].text,
             description: step['description'].text,
-            expiresAt: int.tryParse(step['expiresAt'].text) ?? 90,
+            expiresAt: DateTime.now().add(Duration(days: 30)),
             creatorId: userId,
+            questions: step['answers'],
+            questionTypes: step['questionTypes'],
           );
-    }
+    });
   }
 
   Widget createQuestion() {
@@ -206,20 +260,14 @@ class _AddSurveyState extends State<AddSurvey> {
               hintText: "Beschreibung",
             ),
           ),
-          TextFormField(
-            controller: stepData['expiresAt'],
-            decoration: const InputDecoration(
-              hintText: "Gültigkeit der Umfrage",
-            ),
-          ),
           ...stepData['answers'].asMap().entries.map((entry) {
             final index = entry.key;
-            final controller = entry.value;
+            final controller = entry?.value;
             return _buildAnswerField(index, controller);
           }).toList(),
           Center(
             child: IconButton(
-              onPressed: _addAnswerField,
+              onPressed: () => _openPickTypeDialog(context),
               icon: const Icon(Icons.add, color: Colors.green),
             ),
           ),
@@ -260,7 +308,7 @@ class _AddSurveyState extends State<AddSurvey> {
         padding: const EdgeInsets.all(20.0),
         child: Text(
           stepsData[currentStep - 1]['title'].text.isEmpty
-              ? 'Frage ${currentStep}'
+              ? 'Umfrage'
               : stepsData[currentStep - 1]['title'].text,
           style: TextStyle(
             color: Colors.green,

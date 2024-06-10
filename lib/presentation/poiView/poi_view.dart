@@ -10,6 +10,7 @@ import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
 import 'package:flutter_app/presentation/poiView/widgets/chat_container.dart';
 import 'package:flutter_app/presentation/poiView/widgets/community_entry.dart';
+import 'package:flutter_app/presentation/poiView/widgets/survey_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
@@ -84,11 +85,12 @@ class SurveyList<C extends StateStreamable<S>, S> extends StatelessWidget {
     return PagedSliverList.separated(
       builderDelegate: PagedChildBuilderDelegate<SurveyResponse>(
         itemBuilder: (context, item, index) {
-          return CommunityEntry(
+          return SurveyEntry(
             user: item.creator,
             poi: context.read<PoiViewCubit>().state.poi,
             createdAt: item.createdAt,
             text: (item.titel ?? '') + ('\n\n${item.beschreibung!}' ?? ''),
+            onTap: () => context.pushNamed(SurveyPage.routeName),
           );
         },
         noItemsFoundIndicatorBuilder: (context) =>
@@ -414,11 +416,7 @@ class _Comments extends StatelessWidget {
               ),
               BlocBuilder<PoiViewCubit, PoiViewState>(
                 builder: (context, state) {
-                  return state.listIndex == 0
-                      ? _List()
-                      : state.listIndex == 1
-                          ? Poll()
-                          : Container();
+                  return _List();
                 },
               ),
             ],
@@ -745,9 +743,16 @@ class PoiView extends StatelessWidget {
                                                     .user!),
                                       )
                                     : state.listIndex == 1
-                                        ? state.listIndex == 1
-                                    ? buildSurvey(context)
-                                    : Container()
+                                        ? Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: 20,
+                                              left: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.82,
+                                            ),
+                                            child: buildSurvey(context),
+                                          )
                                         : Padding(
                                             padding: EdgeInsets.only(
                                               bottom: 20,
@@ -911,8 +916,8 @@ class PoiView extends StatelessWidget {
           onPressed: () {
             showBottomSheet(
               context: context,
+              enableDrag: true,
               builder: (context) => AddSurvey(),
-              showDragHandle: true,
             );
           },
           child: Icon(

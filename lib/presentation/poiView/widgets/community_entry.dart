@@ -7,6 +7,7 @@ import 'package:flutter_app/entities/poi.dart';
 import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
+import 'package:flutter_app/presentation/poiView/widgets/survey_page.dart';
 import 'package:flutter_app/presentation/poiView/widgets/touchable_opacity.dart';
 import 'package:flutter_app/presentation/poiView/widgets/user_avatar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -241,6 +242,95 @@ class CommunityEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
             const SizedBox(height: 8),
 
             // Divider
+            Divider(color: Colors.white.withOpacity(0.03), height: 1),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SurveyEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
+  final Poi? poi;
+
+  /// User to display
+  final User? user;
+
+  /// Callback when the entry is tapped
+  final VoidCallback? onTap;
+
+  final DateTime? createdAt;
+
+  final String? text;
+
+  /// Constructor
+  const SurveyEntry(
+      {super.key, this.user, this.onTap, this.createdAt, this.poi, this.text});
+
+  void _defaultTapBehavior(BuildContext context) => context.pushNamed(
+        PoiViewProvider.routeName,
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return TouchableOpacity(
+      onTap: onTap != null
+          ? () => onTap?.call()
+          : () => _defaultTapBehavior(context),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xff24262c),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Padding
+            if (user == null) const SizedBox(height: 4),
+
+            // Header with User Avatar
+            _Header(
+              user: user,
+              createdAt: createdAt,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "${text?.substring(0, min(text!.length, 150))}${150 < text!.length ? "..." : ""}" ??
+                    "GENERAL.UNKNOWN".tr(),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Colors.white70),
+              ),
+            ),
+
+            // Thumbnail & Title & Description
+
+            // Padding
+            const SizedBox(height: 8),
+
+            Center(
+              child: SizedBox(
+                width: 200,
+                child: FloatingActionButton(
+                  backgroundColor: Colors.green,
+                  onPressed: () => context.pushNamed(SurveyPage.routeName),
+                  child: Text(
+                    "Mitmachen!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Divider
+            const SizedBox(height: 16),
             Divider(color: Colors.white.withOpacity(0.03), height: 1),
           ],
         ),

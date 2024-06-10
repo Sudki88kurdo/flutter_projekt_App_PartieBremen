@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/repositories/comment_repository.dart';
 import 'package:flutter_app/api/repositories/petition_repository.dart';
+import 'package:flutter_app/api/repositories/question_repository.dart';
 import 'package:flutter_app/api/repositories/signature_repository.dart';
 import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
@@ -27,6 +28,7 @@ class PoiViewProvider extends StatelessWidget {
           context.read<SurveyRepository>(),
           context.read<PetitionRepository>(),
           context.read<SignatureRepository>(),
+          context.read<QuestionRepository>(),
           poiId),
       child: const PoiView(),
     );

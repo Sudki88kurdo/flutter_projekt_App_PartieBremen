@@ -7,6 +7,7 @@ import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/app/app_state.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
+import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
 import 'package:flutter_app/presentation/poiView/widgets/chat_container.dart';
 import 'package:flutter_app/presentation/poiView/widgets/community_entry.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -411,9 +412,14 @@ class _Comments extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              _List(),
-              SizedBox(
-                height: 100,
+              BlocBuilder<PoiViewCubit, PoiViewState>(
+                builder: (context, state) {
+                  return state.listIndex == 0
+                      ? _List()
+                      : state.listIndex == 1
+                          ? Poll()
+                          : Container();
+                },
               ),
             ],
           ),
@@ -595,19 +601,21 @@ class PoiView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(17.0),
-                          child: CircleAvatar(
-                            backgroundColor: const Color(0xff1c1e24),
-                            child: IconButton(
-                              iconSize: 20,
-                              icon: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.white70,
+                        SafeArea(
+                          child: Padding(
+                            padding: const EdgeInsets.all(17.0),
+                            child: CircleAvatar(
+                              backgroundColor: const Color(0xff1c1e24),
+                              child: IconButton(
+                                iconSize: 20,
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white70,
+                                ),
+                                onPressed: () {
+                                  context.pushNamed(HomeScreen.routeName);
+                                },
                               ),
-                              onPressed: () {
-                                context.pushNamed(HomeScreen.routeName);
-                              },
                             ),
                           ),
                         ),
@@ -737,7 +745,9 @@ class PoiView extends StatelessWidget {
                                                     .user!),
                                       )
                                     : state.listIndex == 1
-                                        ? Container()
+                                        ? state.listIndex == 1
+                                    ? buildSurvey(context)
+                                    : Container()
                                         : Padding(
                                             padding: EdgeInsets.only(
                                               bottom: 20,
@@ -886,6 +896,32 @@ class PoiView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget buildSurvey(context) {
+    return Positioned(
+      bottom: 30,
+      right: 30,
+      child: Container(
+        width: 60,
+        height: 60,
+        child: FloatingActionButton(
+          backgroundColor: Colors.green,
+          onPressed: () {
+            showBottomSheet(
+              context: context,
+              builder: (context) => AddSurvey(),
+              showDragHandle: true,
+            );
+          },
+          child: Icon(
+            Icons.add,
+            size: 30,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }

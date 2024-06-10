@@ -20,6 +20,7 @@ class LoginPage extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
 
   LoginPage({super.key});
+
   late User user;
   ProfileEditPage pe = ProfileEditPage();
   ProfilePage profilePage = ProfilePage();
@@ -119,13 +120,15 @@ class LoginPage extends StatelessWidget {
         });
   }
 
-  void _login(BuildContext loginContext, LoginPageState loginPageState) async {
+  Future<void> _login(
+    BuildContext loginContext,
+    LoginPageState loginPageState,
+  ) async {
     final success = await loginContext.read<LoginPageCubit>().login(
-      email: _usernameController.text,
-      password: _passwordController.text,
-      context: loginContext,
-    );
-
+          email: _usernameController.text,
+          password: _passwordController.text,
+          context: loginContext,
+        );
     if (success) {
       user = loginPageState.user!;
       pe.setUser(user);

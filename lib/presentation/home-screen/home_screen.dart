@@ -18,6 +18,7 @@ import '../../appStyle.dart';
 import '../app/app_cubit.dart';
 
 class CustomIconWidget extends StatelessWidget {
+  static const String routeName = 'home_screen';
   const CustomIconWidget(
       {super.key,
       required this.poiId,

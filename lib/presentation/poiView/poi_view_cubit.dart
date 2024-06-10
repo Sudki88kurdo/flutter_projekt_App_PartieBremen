@@ -5,6 +5,8 @@ import 'package:flutter_app/api/repositories/survey_repository.dart';
 import 'package:flutter_app/api/repositories/voting_repository.dart';
 import 'package:flutter_app/common/screen_status.dart';
 import 'package:flutter_app/entities/survey_response.dart';
+import 'package:flutter_app/entities/petition_response.dart';
+import 'package:flutter_app/main.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,15 +44,16 @@ class PoiViewCubit extends Cubit<PoiViewState> {
         .addPageRequestListener((pageKey) => findAllPetitionsFromPoI());
   }
 
-  Future<void> getAllPois() async {
-    try {
-      var res = await _poIRepository.getPois();
-      print(res);
-      print("++++++++++++++++++++++++++");
-      emit(state.copyWith());
-    } catch (error) {
-      print("Error in Cubit while getAllPOIs: $error");
-    }
+  Future<void> getAllPois()
+    async {
+      try {
+        var res = await _poIRepository.getPois();
+        print(res);
+        print('++++++++++++++++++++++++++');
+        emit(state.copyWith());
+      } catch (error) {
+        print('Error in Cubit while getAllPOIs: $error');
+      }
   }
 
   Future<bool> init({required String poiId}) async {
@@ -143,7 +146,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   Future<void> createSurvey({
     required String title,
     required String description,
-    required String expiresAt,
+    required int expiresAt,
     required String creatorId,
   }) async {
     emit(state.copyWith(
@@ -160,6 +163,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
 
       resSurvey.whenOrNull(
         success: (newSurvey) {
+          logger.i('Survey created: $newSurvey');
           final updatedSurveys = List<SurveyResponse>.from(state.surveys)
             ..add(newSurvey);
           emit(state.copyWith(
@@ -169,12 +173,14 @@ class PoiViewCubit extends Cubit<PoiViewState> {
           state.surveyPagingController.appendLastPage([newSurvey]);
         },
         failure: (error) {
+          logger.e('Error in Cubit while createSurvey: $error');
           emit(state.copyWith(
             surveyStatus: ScreenStatus.error(msg: error.toString()),
           ));
         },
       );
     } catch (error) {
+      logger.e('Error in Cubit while createSurvey: $error');
       emit(state.copyWith(
         surveyStatus: ScreenStatus.error(msg: error.toString()),
       ));

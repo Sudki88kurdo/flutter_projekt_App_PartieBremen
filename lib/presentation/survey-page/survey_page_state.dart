@@ -12,6 +12,6 @@ class SurveyPageState with _$SurveyPageState {
     @Default(ScreenStatus.pure()) ScreenStatus status,
     @Default(null) SurveyResponse? survey,
     @Default([]) List<Question> questions,
-    @Default([]) List<double> answers,
+    @Default([]) List<String?> answers,
   }) = _SurveyPageState;
 }

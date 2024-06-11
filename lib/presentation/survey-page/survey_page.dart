@@ -18,6 +18,17 @@ class SurveyPage extends StatefulWidget {
 
 class _SurveyState extends State<SurveyPage> {
   int currentStep = 0;
+  List<double> sliderStepper = [1, 1, 1, 1, 1];
+
+  List<int> buttonStates = [0, 0, 0, 0, 0];
+
+  List<TextEditingController?> textEditingControllers = [
+    null,
+    null,
+    null,
+    null,
+    null
+  ];
   bool isSent = false;
 
   @override
@@ -84,7 +95,7 @@ class _SurveyState extends State<SurveyPage> {
                                 blocContext: blocContext,
                               ),
                             ),
-                            currentStep < state.questions.length
+                            currentStep + 1 < state.questions.length
                                 ? IconButton(
                                     onPressed: () {
                                       if (currentStep <
@@ -159,21 +170,21 @@ class _SurveyState extends State<SurveyPage> {
         Padding(padding: EdgeInsets.all(20)),
         _QuestionAnswers(question, questionNumber, blocContext, state),
         Padding(padding: EdgeInsets.all(20)),
-        Container(
-          alignment: Alignment.bottomRight,
-          child: TextButton(
-            onPressed: () {
-              if (!isSent) {
-                setState(() {
-                  isSent = true;
-                });
-                sendAnswers();
-              } else {
-                _showErrorMessage();
-              }
-            },
-            child: currentStep + 1 == state.questions.length
-                ? Padding(
+        currentStep + 1 == state.questions.length
+            ? Container(
+                alignment: Alignment.bottomRight,
+                child: TextButton(
+                  onPressed: () {
+                    if (!isSent) {
+                      setState(() {
+                        isSent = true;
+                      });
+                      sendAnswers();
+                    } else {
+                      _showErrorMessage();
+                    }
+                  },
+                  child: Padding(
                     padding: const EdgeInsets.only(top: 10, left: 10),
                     child: Text(
                       'Abschicken',
@@ -183,32 +194,122 @@ class _SurveyState extends State<SurveyPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )
-                : Container(),
+                  ),
+                ),
+              )
+            : Container(),
+      ],
+    );
+  }
+
+  Widget _MultipleChoiceButton(
+    BuildContext blocContext,
+    int stateIndex,
+    String text,
+    int index,
+  ) {
+    return SizedBox(
+      width: 200,
+      child: FloatingActionButton(
+        backgroundColor: buttonStates[index] == stateIndex
+            ? Colors.white70
+            : Colors.deepPurple,
+        onPressed: () {
+          setState(() {
+            buttonStates[index] = stateIndex;
+          });
+          blocContext.read<SurveyPageCubit>().updateList(
+                index,
+                text,
+              );
+        },
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Arial',
+            fontSize: 16,
           ),
         ),
-      ],
+      ),
     );
   }
 
   Widget _QuestionAnswers(Question question, int index,
       BuildContext blocContext, SurveyPageState state) {
-    var sliderStep = state.answers[index];
     switch (question.type!) {
       case QuestionType.SKALA:
         return Slider(
-          onChanged: (change) =>
-              blocContext.read<SurveyPageCubit>().updateList(index, change),
-          value: sliderStep,
-          min: 0,
+          onChanged: (change) {
+            setState(() {
+              sliderStepper[index] = change;
+            });
+            blocContext.read<SurveyPageCubit>().updateList(
+                  index,
+                  change.toString(),
+                );
+          },
+          value: sliderStepper[index],
+          min: 1,
           max: 5,
           divisions: 4,
-          label: sliderStep.toString(),
+          label: sliderStepper[index].toString(),
         );
       case QuestionType.M_CHOICE:
-      // TODO: Handle this case.
+        return Column(
+          children: [
+            _MultipleChoiceButton(
+              blocContext,
+              1,
+              'Ja!',
+              index,
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            _MultipleChoiceButton(
+              blocContext,
+              2,
+              'Nein!',
+              index,
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            _MultipleChoiceButton(
+              blocContext,
+              3,
+              'Vielleicht!',
+              index,
+            )
+          ],
+        );
       case QuestionType.SATZ:
-      // TODO: Handle this case.
+        textEditingControllers[index] = textEditingControllers[index] != null
+            ? textEditingControllers[index]
+            : TextEditingController();
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white70,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: textEditingControllers[index],
+              keyboardType: TextInputType.multiline,
+              maxLines: 7,
+              decoration: InputDecoration(hintText: "Antwort mit Text.."),
+              onChanged: (value) {
+                blocContext.read<SurveyPageCubit>().updateList(
+                      index,
+                      value,
+                    );
+              },
+            ),
+          ),
+        );
     }
     return Container();
   }

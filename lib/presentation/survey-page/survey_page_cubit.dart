@@ -42,9 +42,16 @@ class SurveyPageCubit extends Cubit<SurveyPageState> {
         );
     questionRes.whenOrNull(
       success: (questions) {
+        List<String?> doubleArray = [];
+        questions.asMap().forEach(
+          (key, value) {
+            doubleArray.add(null);
+          },
+        );
         emit(
           state.copyWith(
             questions: questions,
+            answers: doubleArray,
             status: ScreenStatus.success(),
           ),
         );
@@ -53,11 +60,20 @@ class SurveyPageCubit extends Cubit<SurveyPageState> {
         successful = false;
       },
     );
+
     return successful;
   }
 
-  void updateList(int index, double answer) {
-    var list = state.answers;
+  void updateList(int index, String answer) {
+    List<String?> list = [];
+    state.answers.asMap().forEach((key, value) {
+      list.add(null);
+      if (index == key) {
+        list[index] = answer;
+      } else {
+        list[key] = state.answers[index];
+      }
+    });
     list[index] = answer;
     emit(
       state.copyWith(answers: list),

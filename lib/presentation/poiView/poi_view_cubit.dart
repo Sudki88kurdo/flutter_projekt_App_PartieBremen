@@ -24,7 +24,6 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final SurveyRepository _surveyRepository;
   final PetitionRepository _petitionRepository;
   final SignatureRepository _signatureRepository;
-
   final QuestionRepository _questionRepository;
   final String _poiId;
 

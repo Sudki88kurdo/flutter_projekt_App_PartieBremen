@@ -7,9 +7,9 @@ import 'package:flutter_app/entities/poi.dart';
 import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_provider.dart';
-import 'package:flutter_app/presentation/poiView/widgets/survey_page.dart';
 import 'package:flutter_app/presentation/poiView/widgets/touchable_opacity.dart';
 import 'package:flutter_app/presentation/poiView/widgets/user_avatar.dart';
+import 'package:flutter_app/presentation/survey-page/survey_view_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -263,9 +263,17 @@ class SurveyEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
 
   final String? text;
 
+  final String? surveyId;
+
   /// Constructor
   const SurveyEntry(
-      {super.key, this.user, this.onTap, this.createdAt, this.poi, this.text});
+      {super.key,
+      this.user,
+      this.onTap,
+      this.createdAt,
+      this.poi,
+      this.text,
+      this.surveyId});
 
   void _defaultTapBehavior(BuildContext context) => context.pushNamed(
         PoiViewProvider.routeName,
@@ -316,7 +324,10 @@ class SurveyEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
                 width: 200,
                 child: FloatingActionButton(
                   backgroundColor: Colors.green,
-                  onPressed: () => context.pushNamed(SurveyPage.routeName),
+                  onPressed: () => context.pushNamed(
+                    SurveyPagePageProvider.routeName,
+                    pathParameters: {'surveyId': surveyId ?? ''},
+                  ),
                   child: Text(
                     "Mitmachen!",
                     style: TextStyle(

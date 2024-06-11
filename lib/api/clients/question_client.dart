@@ -15,7 +15,8 @@ abstract class QuestionClient {
     @Field("surveyId") String? surveyId,
   });
 
-  @GET("/question/surveyId/{id}")
-  Future<HttpResponse<List<Question>>> findAllFromSurvey(
-      {@Path("id") required String id});
+  @GET("/question/surveyid/{id}")
+  Future<HttpResponse<List<Question>>> findAllFromSurvey({
+    @Path('id') required String id,
+  });
 }

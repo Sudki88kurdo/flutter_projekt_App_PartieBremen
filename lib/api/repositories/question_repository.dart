@@ -8,8 +8,9 @@ class QuestionRepository extends BaseRepository<QuestionClient> {
   QuestionRepository(String baseUrl, Dio dio)
       : super(client: QuestionClient(dio, baseUrl: baseUrl), dio: dio);
 
-  Future<ApiResult<List<Question>>> findQuestionsToSurvey(
-      {required String surveyId}) async {
+  Future<ApiResult<List<Question>>> findQuestionsToSurvey({
+    required String surveyId,
+  }) async {
     return execute(() => client.findAllFromSurvey(id: surveyId));
   }
 

@@ -10,7 +10,7 @@ import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
 import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
 import 'package:flutter_app/presentation/poiView/widgets/chat_container.dart';
 import 'package:flutter_app/presentation/poiView/widgets/community_entry.dart';
-import 'package:flutter_app/presentation/poiView/widgets/survey_page.dart';
+import 'package:flutter_app/presentation/survey-page/survey_view_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocode/geocode.dart';
@@ -87,10 +87,14 @@ class SurveyList<C extends StateStreamable<S>, S> extends StatelessWidget {
         itemBuilder: (context, item, index) {
           return SurveyEntry(
             user: item.creator,
+            surveyId: item.id,
             poi: context.read<PoiViewCubit>().state.poi,
             createdAt: item.createdAt,
             text: (item.titel ?? '') + ('\n\n${item.beschreibung!}' ?? ''),
-            onTap: () => context.pushNamed(SurveyPage.routeName),
+            onTap: () => context.pushNamed(
+              SurveyPagePageProvider.routeName,
+              pathParameters: {'surveyId': item.id ?? ''},
+            ),
           );
         },
         noItemsFoundIndicatorBuilder: (context) =>

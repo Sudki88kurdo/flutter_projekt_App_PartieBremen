@@ -1,17 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_state.dart';
-import 'package:flutter_app/presentation/poiView/widgets/survey_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'add_survey.dart';
-import 'package:flutter_app/entities/survey_response.dart';
-import 'package:flutter_app/presentation/poiView/questions.dart';
-import 'package:flutter_app/presentation/poiView/widgets/add_survey.dart';
-import 'package:flutter_app/presentation/poiView/widgets/poll_answer.dart';
-import 'package:infinite_scroll_pagination/src/widgets/layouts/paged_sliver_list.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
+
+import '../../survey-page/survey_view_provider.dart';
 
 class Poll extends StatefulWidget {
   static const String routeName = 'poll';
@@ -42,7 +35,10 @@ class _PollState extends State<Poll> {
               return ListTile(
                 title: Text(survey.titel ?? ''),
                 subtitle: Text(survey.beschreibung ?? ''),
-                onTap: () => context.pushNamed(SurveyPage.routeName),
+                onTap: () => context.pushNamed(
+                  SurveyPagePageProvider.routeName,
+                  pathParameters: {'surveyId': ''},
+                ),
               );
             },
           ),

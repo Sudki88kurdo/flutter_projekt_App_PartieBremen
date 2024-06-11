@@ -71,7 +71,7 @@ class _QuestionClient implements QuestionClient {
     )
             .compose(
               _dio.options,
-              '/question/surveyId/${id}',
+              '/question/surveyid/${id}',
               queryParameters: queryParameters,
               data: _data,
             )

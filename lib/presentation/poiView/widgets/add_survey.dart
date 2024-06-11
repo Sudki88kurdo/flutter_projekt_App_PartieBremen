@@ -106,6 +106,7 @@ class _AddSurveyState extends State<AddSurvey> {
               controller: controller,
               decoration: InputDecoration(
                 hintText: 'Frage ${index + 1}',
+                border: OutlineInputBorder(),
                 filled: false,
               ),
             ),
@@ -124,11 +125,11 @@ class _AddSurveyState extends State<AddSurvey> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Neue Umfrage erstellen',
+          'Umfrage erstellen',
           style: TextStyle(
             color: Colors.green,
-            fontWeight: FontWeight.bold,
             fontFamily: 'Arial',
+            fontSize: 26,
           ),
         ),
         centerTitle: true,
@@ -142,48 +143,6 @@ class _AddSurveyState extends State<AddSurvey> {
           children: [
             buildCurrentQuestionHeader(currentStep),
             createQuestion(),
-            /*
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  currentStep > 1
-                      ? IconButton(
-                          onPressed: () {
-                            if (currentStep != 1) {
-                              setState(() {
-                                currentStep--;
-                              });
-                            }
-                          },
-                          icon:
-                              Icon(Icons.arrow_back_ios_new_outlined, size: 30),
-                          color: Colors.green,
-                        )
-                      : SizedBox(width: 40),
-                  currentStep < stepsData.length
-                      ? TextButton(
-                          onPressed: () {
-                            if (currentStep < stepsData.length) {
-                              setState(() {
-                                currentStep++;
-                              });
-                            }
-                          },
-                          child: Text(
-                            'Frage hinzufügen',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 20,
-                            ),
-                          ),
-                        )
-                      : SizedBox(width: 40),
-                ],
-              ),
-            ),
-            */
           ],
         );
       }),
@@ -202,6 +161,7 @@ class _AddSurveyState extends State<AddSurvey> {
       }
     }
     print(allFieldsFilled);
+    ;
     if (allFieldsFilled) {
       try {
         await createSurvey();
@@ -237,8 +197,8 @@ class _AddSurveyState extends State<AddSurvey> {
     final stepData = stepsData[currentStep - 1];
     return Padding(
       padding: const EdgeInsets.only(
-        left: 100.0,
-        right: 100,
+        left: 40.0,
+        right: 40,
         top: 20,
         bottom: 40,
       ),
@@ -248,16 +208,22 @@ class _AddSurveyState extends State<AddSurvey> {
           TextFormField(
             controller: stepData['title'],
             decoration: const InputDecoration(
-              hintText: "Titel",
+              hintText: 'Titel',
+              border: OutlineInputBorder(),
             ),
             onChanged: (value) {
               setState(() {});
             },
           ),
+          SizedBox(height: 16),
           TextFormField(
             controller: stepData['description'],
+            keyboardType: TextInputType.multiline,
+            minLines: 1,
+            maxLines: 6,
             decoration: const InputDecoration(
-              hintText: "Beschreibung",
+              hintText: 'Beschreibung',
+              border: OutlineInputBorder(),
             ),
           ),
           ...stepData['answers'].asMap().entries.map((entry) {
@@ -271,27 +237,13 @@ class _AddSurveyState extends State<AddSurvey> {
               icon: const Icon(Icons.add, color: Colors.green),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.7,
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextButton.icon(
-                onPressed: () async {
-                  await _postSurvey();
-                },
-                icon: const Icon(Icons.check, color: Colors.white),
-                label: const Text(
-                  'Erstellen',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
+          Center(
+            child: TextButton.icon(
+              onPressed: () async {
+                await _postSurvey();
+              },
+              label: Text('Umfrage erstellen'),
+              icon: Icon(Icons.pending_actions),
             ),
           ),
         ],

@@ -1,7 +1,10 @@
 import 'package:flutter_app/common/screen_status.dart';
+import 'package:flutter_app/entities/question.dart';
+import 'package:flutter_app/presentation/survey-page/common/answerBody.dart';
 import 'package:flutter_app/presentation/survey-page/survey_page_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../api/repositories/answer_repository.dart';
 import '../../api/repositories/question_repository.dart';
 import '../../api/repositories/survey_repository.dart';
 
@@ -9,11 +12,13 @@ class SurveyPageCubit extends Cubit<SurveyPageState> {
   final String _survedId;
   final QuestionRepository _questionRepository;
   final SurveyRepository _surveyRepository;
+  final AnswerRepository _answerRepository;
 
   SurveyPageCubit(
     this._survedId,
     this._questionRepository,
     this._surveyRepository,
+    this._answerRepository,
   ) : super(const SurveyPageState()) {
     init(surveyId: _survedId);
   }
@@ -42,16 +47,16 @@ class SurveyPageCubit extends Cubit<SurveyPageState> {
         );
     questionRes.whenOrNull(
       success: (questions) {
-        List<String?> doubleArray = [];
+        List<AnswerBody?> answerArray = [];
         questions.asMap().forEach(
           (key, value) {
-            doubleArray.add(null);
+            answerArray.add(null);
           },
         );
         emit(
           state.copyWith(
             questions: questions,
-            answers: doubleArray,
+            answers: answerArray,
             status: ScreenStatus.success(),
           ),
         );
@@ -64,8 +69,8 @@ class SurveyPageCubit extends Cubit<SurveyPageState> {
     return successful;
   }
 
-  void updateList(int index, String answer) {
-    List<String?> list = [];
+  void updateList(int index, AnswerBody answer) {
+    List<AnswerBody?> list = [];
     state.answers.asMap().forEach((key, value) {
       list.add(null);
       if (index == key) {
@@ -78,5 +83,37 @@ class SurveyPageCubit extends Cubit<SurveyPageState> {
     emit(
       state.copyWith(answers: list),
     );
+  }
+
+  Future<bool> createAnswers(String userId) async {
+    state.answers.asMap().forEach((key, element) async {
+      switch (element?.questionType!) {
+        case null:
+          break;
+        case QuestionType.SKALA:
+          await this._answerRepository.create(
+                titel: 'idk',
+                questionId: state.questions[key].id!,
+                answererId: userId,
+                skalarAnswer: element?.skalarAnswer!,
+              );
+        case QuestionType.M_CHOICE:
+          await this._answerRepository.create(
+                titel: 'idk',
+                questionId: state.questions[key].id!,
+                answererId: userId,
+                multipleChoiceAnswer: element?.multipleChoiceAnswer!,
+              );
+        case QuestionType.SATZ:
+          await this._answerRepository.create(
+                titel: 'idk',
+                questionId: state.questions[key].id!,
+                answererId: userId,
+                textAnswer: element?.textAnswer!,
+              );
+      }
+    });
+
+    return true;
   }
 }

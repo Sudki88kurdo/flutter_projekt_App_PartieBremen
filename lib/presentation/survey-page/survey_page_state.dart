@@ -1,5 +1,6 @@
 import 'package:flutter_app/entities/question.dart';
 import 'package:flutter_app/entities/survey_response.dart';
+import 'package:flutter_app/presentation/survey-page/common/answerBody.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../common/screen_status.dart';
@@ -12,6 +13,6 @@ class SurveyPageState with _$SurveyPageState {
     @Default(ScreenStatus.pure()) ScreenStatus status,
     @Default(null) SurveyResponse? survey,
     @Default([]) List<Question> questions,
-    @Default([]) List<String?> answers,
+    @Default([]) List<AnswerBody?> answers,
   }) = _SurveyPageState;
 }

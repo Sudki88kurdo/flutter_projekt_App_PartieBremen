@@ -19,7 +19,7 @@ mixin _$SurveyPageState {
   ScreenStatus get status => throw _privateConstructorUsedError;
   SurveyResponse? get survey => throw _privateConstructorUsedError;
   List<Question> get questions => throw _privateConstructorUsedError;
-  List<String?> get answers => throw _privateConstructorUsedError;
+  List<AnswerBody?> get answers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SurveyPageStateCopyWith<SurveyPageState> get copyWith =>
@@ -36,7 +36,7 @@ abstract class $SurveyPageStateCopyWith<$Res> {
       {ScreenStatus status,
       SurveyResponse? survey,
       List<Question> questions,
-      List<String?> answers});
+      List<AnswerBody?> answers});
 
   $ScreenStatusCopyWith<$Res> get status;
   $SurveyResponseCopyWith<$Res>? get survey;
@@ -76,7 +76,7 @@ class _$SurveyPageStateCopyWithImpl<$Res, $Val extends SurveyPageState>
       answers: null == answers
           ? _value.answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<String?>,
+              as List<AnswerBody?>,
     ) as $Val);
   }
 
@@ -113,7 +113,7 @@ abstract class _$$SurveyPageStateImplCopyWith<$Res>
       {ScreenStatus status,
       SurveyResponse? survey,
       List<Question> questions,
-      List<String?> answers});
+      List<AnswerBody?> answers});
 
   @override
   $ScreenStatusCopyWith<$Res> get status;
@@ -153,7 +153,7 @@ class __$$SurveyPageStateImplCopyWithImpl<$Res>
       answers: null == answers
           ? _value._answers
           : answers // ignore: cast_nullable_to_non_nullable
-              as List<String?>,
+              as List<AnswerBody?>,
     ));
   }
 }
@@ -165,7 +165,7 @@ class _$SurveyPageStateImpl implements _SurveyPageState {
       {this.status = const ScreenStatus.pure(),
       this.survey = null,
       final List<Question> questions = const [],
-      final List<String?> answers = const []})
+      final List<AnswerBody?> answers = const []})
       : _questions = questions,
         _answers = answers;
 
@@ -184,10 +184,10 @@ class _$SurveyPageStateImpl implements _SurveyPageState {
     return EqualUnmodifiableListView(_questions);
   }
 
-  final List<String?> _answers;
+  final List<AnswerBody?> _answers;
   @override
   @JsonKey()
-  List<String?> get answers {
+  List<AnswerBody?> get answers {
     if (_answers is EqualUnmodifiableListView) return _answers;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_answers);
@@ -231,7 +231,7 @@ abstract class _SurveyPageState implements SurveyPageState {
       {final ScreenStatus status,
       final SurveyResponse? survey,
       final List<Question> questions,
-      final List<String?> answers}) = _$SurveyPageStateImpl;
+      final List<AnswerBody?> answers}) = _$SurveyPageStateImpl;
 
   @override
   ScreenStatus get status;
@@ -240,7 +240,7 @@ abstract class _SurveyPageState implements SurveyPageState {
   @override
   List<Question> get questions;
   @override
-  List<String?> get answers;
+  List<AnswerBody?> get answers;
   @override
   @JsonKey(ignore: true)
   _$$SurveyPageStateImplCopyWith<_$SurveyPageStateImpl> get copyWith =>

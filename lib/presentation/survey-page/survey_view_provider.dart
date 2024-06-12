@@ -5,6 +5,8 @@ import 'package:flutter_app/presentation/survey-page/survey_page.dart';
 import 'package:flutter_app/presentation/survey-page/survey_page_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../api/repositories/answer_repository.dart';
+
 /// Main entry point of the application if the user is authenticated.
 class SurveyPagePageProvider extends StatelessWidget {
   static const String routeName = 'survey-page';
@@ -20,6 +22,7 @@ class SurveyPagePageProvider extends StatelessWidget {
         surveyId,
         context.read<QuestionRepository>(),
         context.read<SurveyRepository>(),
+        context.read<AnswerRepository>(),
       ),
       child: const SurveyPage(),
     );

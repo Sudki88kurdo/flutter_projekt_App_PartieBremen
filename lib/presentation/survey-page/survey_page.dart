@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/common/screen_status.dart';
+import 'package:flutter_app/presentation/survey-page/common/answerBody.dart';
 import 'package:flutter_app/presentation/survey-page/survey_page_cubit.dart';
 import 'package:flutter_app/presentation/survey-page/survey_page_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../entities/question.dart';
+import '../app/app_cubit.dart';
 
 class SurveyPage extends StatefulWidget {
   static const String routeName = 'survey_page';
@@ -93,6 +95,7 @@ class _SurveyState extends State<SurveyPage> {
                                 questionNumber: currentStep,
                                 state: state,
                                 blocContext: blocContext,
+                                mainContext: context,
                               ),
                             ),
                             currentStep + 1 < state.questions.length
@@ -127,10 +130,12 @@ class _SurveyState extends State<SurveyPage> {
     );
   }
 
-  Widget _buildAnswers(
-      {required int questionNumber,
-      required SurveyPageState state,
-      required BuildContext blocContext}) {
+  Widget _buildAnswers({
+    required int questionNumber,
+    required SurveyPageState state,
+    required BuildContext blocContext,
+    required BuildContext mainContext,
+  }) {
     var question = state.questions.elementAt(questionNumber);
     return Column(
       children: [
@@ -175,11 +180,17 @@ class _SurveyState extends State<SurveyPage> {
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   onPressed: () {
-                    if (!isSent) {
+                    if (!isSent &&
+                        state.answers
+                            .where((element) => element == null)
+                            .isEmpty) {
                       setState(() {
                         isSent = true;
                       });
-                      sendAnswers();
+                      sendAnswers(blocContext);
+                      showMessage('Umfrage erfolgreich beantwortet!',
+                          color: Colors.green);
+                      Navigator.pop(mainContext);
                     } else {
                       _showErrorMessage();
                     }
@@ -206,6 +217,7 @@ class _SurveyState extends State<SurveyPage> {
     BuildContext blocContext,
     int stateIndex,
     String text,
+    MultipleChoice multipleChoice,
     int index,
   ) {
     return SizedBox(
@@ -220,7 +232,10 @@ class _SurveyState extends State<SurveyPage> {
           });
           blocContext.read<SurveyPageCubit>().updateList(
                 index,
-                text,
+                AnswerBody(
+                  multipleChoiceAnswer: multipleChoice,
+                  questionType: QuestionType.M_CHOICE,
+                ),
               );
         },
         child: Text(
@@ -247,7 +262,10 @@ class _SurveyState extends State<SurveyPage> {
             });
             blocContext.read<SurveyPageCubit>().updateList(
                   index,
-                  change.toString(),
+                  AnswerBody(
+                    skalarAnswer: change.round(),
+                    questionType: QuestionType.SKALA,
+                  ),
                 );
           },
           value: sliderStepper[index],
@@ -263,6 +281,7 @@ class _SurveyState extends State<SurveyPage> {
               blocContext,
               1,
               'Ja!',
+              MultipleChoice.Ja,
               index,
             ),
             SizedBox(
@@ -272,6 +291,7 @@ class _SurveyState extends State<SurveyPage> {
               blocContext,
               2,
               'Nein!',
+              MultipleChoice.Nein,
               index,
             ),
             SizedBox(
@@ -281,6 +301,7 @@ class _SurveyState extends State<SurveyPage> {
               blocContext,
               3,
               'Vielleicht!',
+              MultipleChoice.Vielleicht,
               index,
             )
           ],
@@ -304,7 +325,10 @@ class _SurveyState extends State<SurveyPage> {
               onChanged: (value) {
                 blocContext.read<SurveyPageCubit>().updateList(
                       index,
-                      value,
+                      AnswerBody(
+                        textAnswer: value,
+                        questionType: QuestionType.SATZ,
+                      ),
                     );
               },
             ),
@@ -324,5 +348,19 @@ class _SurveyState extends State<SurveyPage> {
     );
   }
 
-  void sendAnswers() {}
+  void sendAnswers(BuildContext blocContext) {
+    blocContext.read<SurveyPageCubit>().createAnswers(
+          blocContext.read<AppCubit>().state.user!.id!,
+        );
+  }
+
+  void showMessage(String message, {Color color = Colors.green}) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+      ),
+    );
+  }
 }

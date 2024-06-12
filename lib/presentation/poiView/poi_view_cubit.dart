@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_app/api/repositories/answer_repository.dart';
 import 'package:flutter_app/api/repositories/comment_repository.dart';
 import 'package:flutter_app/api/repositories/petition_repository.dart';
 import 'package:flutter_app/api/repositories/question_repository.dart';
@@ -25,6 +26,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
   final PetitionRepository _petitionRepository;
   final SignatureRepository _signatureRepository;
   final QuestionRepository _questionRepository;
+  final AnswerRepository _answerRepository;
   final String _poiId;
 
   PoiViewCubit(
@@ -35,6 +37,7 @@ class PoiViewCubit extends Cubit<PoiViewState> {
     this._petitionRepository,
     this._signatureRepository,
     this._questionRepository,
+    this._answerRepository,
     this._poiId,
   ) : super(PoiViewState.initial()) {
     init(poiId: _poiId);

@@ -9,6 +9,7 @@ import 'package:flutter_app/presentation/poiView/poi_view.dart';
 import 'package:flutter_app/presentation/poiView/poi_view_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../api/repositories/answer_repository.dart';
 import '../../api/repositories/poi_repository.dart';
 
 /// Main entry point of the application if the user is authenticated.
@@ -29,6 +30,7 @@ class PoiViewProvider extends StatelessWidget {
           context.read<PetitionRepository>(),
           context.read<SignatureRepository>(),
           context.read<QuestionRepository>(),
+          context.read<AnswerRepository>(),
           poiId),
       child: const PoiView(),
     );

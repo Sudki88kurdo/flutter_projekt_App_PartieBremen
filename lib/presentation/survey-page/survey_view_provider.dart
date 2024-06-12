@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/repositories/question_repository.dart';
 import 'package:flutter_app/api/repositories/survey_repository.dart';
+import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/survey-page/survey_page.dart';
 import 'package:flutter_app/presentation/survey-page/survey_page_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class SurveyPagePageProvider extends StatelessWidget {
     return BlocProvider(
       create: (context) => SurveyPageCubit(
         surveyId,
+        context.read<AppCubit>().state.user!.id!,
         context.read<QuestionRepository>(),
         context.read<SurveyRepository>(),
         context.read<AnswerRepository>(),

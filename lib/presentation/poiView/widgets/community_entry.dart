@@ -329,7 +329,7 @@ class SurveyEntry<C extends StateStreamable<S>, S> extends StatelessWidget {
                     pathParameters: {'surveyId': surveyId ?? ''},
                   ),
                   child: Text(
-                    "Mitmachen!",
+                    "Anschauen!",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

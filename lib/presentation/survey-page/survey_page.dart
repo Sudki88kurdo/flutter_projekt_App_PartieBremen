@@ -6,6 +6,7 @@ import 'package:flutter_app/presentation/survey-page/survey_page_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../entities/answer.dart';
 import '../../entities/question.dart';
 import '../app/app_cubit.dart';
 
@@ -44,89 +45,443 @@ class _SurveyState extends State<SurveyPage> {
             Navigator.pop(context);
             break;
           case ScreenStatusSuccess():
-            return Scaffold(
-              backgroundColor: Colors.black,
-              appBar: AppBar(
-                  backgroundColor: Colors.black,
-                  title: Text(
-                    state.survey?.titel! ?? 'Titel',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  centerTitle: true,
-                  iconTheme: IconThemeData(
-                    color: Colors.white,
-                  )),
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(30.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: EdgeInsets.only(bottom: 32),
-                        child: Row(
-                          children: [
-                            currentStep > 0
-                                ? IconButton(
-                                    onPressed: () {
-                                      if (currentStep != 0) {
-                                        setState(() {
-                                          currentStep--;
-                                        });
-                                      }
-                                    },
-                                    icon:
-                                        Icon(Icons.arrow_back_ios_new_outlined),
-                                    color: Colors.white,
-                                  )
-                                : SizedBox(
-                                    width: 40,
-                                  ),
-                            Expanded(
-                              child: _buildAnswers(
-                                questionNumber: currentStep,
-                                state: state,
-                                blocContext: blocContext,
-                                mainContext: context,
-                              ),
-                            ),
-                            currentStep + 1 < state.questions.length
-                                ? IconButton(
-                                    onPressed: () {
-                                      if (currentStep <
-                                          state.questions.length) {
-                                        setState(() {
-                                          currentStep++;
-                                        });
-                                      }
-                                    },
-                                    icon:
-                                        Icon(Icons.arrow_forward_ios_outlined),
-                                    color: Colors.white,
-                                  )
-                                : SizedBox(
-                                    width: 40,
-                                  ),
-                          ],
-                        ),
-                      ),
-                      // _buildSurvey(),
-                    ],
-                  ),
-                ),
-              ),
-            );
+            return state.answersFromUser.isNotEmpty
+                ? _statisticSheet(context, blocContext, state)
+                : _answerSheet(context, blocContext, state);
         }
         return Container();
       },
+    );
+  }
+
+  Widget _statisticSheet(
+      BuildContext context, BuildContext blocContext, SurveyPageState state) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          state.survey?.titel! ?? 'Titel',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+      ),
+      body: SingleChildScrollView(
+        controller: ScrollController(),
+        child: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.only(bottom: 32),
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Text(
+                    'Auswertung',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Column(
+                  children: _QuestionStatistics(context, blocContext, state),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _QuestionStatistics(
+    BuildContext context,
+    BuildContext blocContext,
+    SurveyPageState state,
+  ) {
+    return state.answersFromSurvey.entries.map((entry) {
+      return Column(
+        children: [
+          Divider(),
+          SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                entry.key.fragestellung ?? 'Frage',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          switch (entry.key.type!) {
+            QuestionType.SKALA => _skalaStatistics(
+                context,
+                blocContext,
+                state,
+                entry.value,
+              ),
+            QuestionType.M_CHOICE => _multipleChoiceStatistics(
+                context,
+                blocContext,
+                state,
+                entry.value,
+              ),
+            QuestionType.SATZ => _textAnswerStatistic(
+                context,
+                blocContext,
+                state,
+                entry.value,
+              ),
+          },
+          SizedBox(
+            height: 20,
+          ),
+        ],
+      );
+    }).toList();
+  }
+
+  Widget _textAnswerStatistic(
+    BuildContext context,
+    BuildContext blocContext,
+    SurveyPageState state,
+    List<Answer> answers,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.transparent, borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+            ),
+            Center(
+              child: SizedBox(
+                width: 200,
+                child: FloatingActionButton(
+                  backgroundColor: Colors.deepPurple,
+                  onPressed: () {},
+                  child: Text(
+                    "Antworten anschauen!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Arial',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15, top: 18),
+              child: Text(
+                "Insgesamt geantwortet haben " + answers.length.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _multipleChoiceStatistics(
+    BuildContext context,
+    BuildContext blocContext,
+    SurveyPageState state,
+    List<Answer> answers,
+  ) {
+    Map<String, int> yesAmount = {'Ja': 0};
+    Map<String, int> noAmount = {'Nein': 0};
+    Map<String, int> maybeAmount = {'Vielleicht': 0};
+    answers.forEach(
+      (element) {
+        switch (element.multipleChoiceAnswer) {
+          case 'Ja':
+            yesAmount['Ja'] = (yesAmount['Ja'] as int) + 1;
+          case 'Nein':
+            noAmount['Nein'] = (noAmount['Nein'] as int) + 1;
+          case 'Vielleicht':
+            maybeAmount['Vielleicht'] = (maybeAmount['Vielleicht'] as int) + 1;
+        }
+      },
+    );
+    var max = yesAmount;
+    [yesAmount, noAmount, maybeAmount].forEach((element) {
+      if ((element[element.keys.first] as int) > (max[max.keys.first] as int)) {
+        max = element;
+      }
+    });
+    var yesPercent = (yesAmount['Ja'] as int) / answers.length;
+    var noPercent = (noAmount['Nein'] as int) / answers.length;
+    var maybePercent = (maybeAmount['Vielleicht'] as int) / answers.length;
+    var width = MediaQuery.of(context).size.width * 0.6;
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.transparent, borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Die Durchschnittliche Antwort liegt bei " + max.keys.first,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Container(
+              width: width,
+              height: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Row(
+                  children: [
+                    Container(
+                      width: width * yesPercent,
+                      height: 50,
+                      decoration: BoxDecoration(color: Colors.deepPurple),
+                      child: Center(
+                        child: Text(
+                          'Ja!',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: width * noPercent,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Nein!',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: width * maybePercent,
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Vielleicht!',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15, top: 10),
+              child: Text(
+                "Insgesamt geantwortet haben " + answers.length.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _skalaStatistics(
+    BuildContext context,
+    BuildContext blocContext,
+    SurveyPageState state,
+    List<Answer> answers,
+  ) {
+    double tempValue = 0;
+    answers.forEach((element) {
+      print(element);
+      tempValue = element.skalarAnswer! + tempValue;
+    });
+    double value = tempValue / answers.length;
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.transparent, borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Die Durchschnittliche Antwort liegt bei " + value.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Slider(
+              onChanged: (value) => print(''),
+              value: value,
+              min: 1,
+              max: 5,
+              label: value.toString(),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15, top: 10),
+              child: Text(
+                "Insgesamt geantwortet haben " + answers.length.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _answerSheet(
+      BuildContext context, BuildContext blocContext, SurveyPageState state) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text(
+            state.survey?.titel! ?? 'Titel',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          )),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(30.0),
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: EdgeInsets.only(bottom: 32),
+                child: Row(
+                  children: [
+                    currentStep > 0
+                        ? IconButton(
+                            onPressed: () {
+                              if (currentStep != 0) {
+                                setState(() {
+                                  currentStep--;
+                                });
+                              }
+                            },
+                            icon: Icon(Icons.arrow_back_ios_new_outlined),
+                            color: Colors.white,
+                          )
+                        : SizedBox(
+                            width: 40,
+                          ),
+                    Expanded(
+                      child: _buildAnswers(
+                        questionNumber: currentStep,
+                        state: state,
+                        blocContext: blocContext,
+                        mainContext: context,
+                      ),
+                    ),
+                    currentStep + 1 < state.questions.length
+                        ? IconButton(
+                            onPressed: () {
+                              if (currentStep < state.questions.length) {
+                                setState(() {
+                                  currentStep++;
+                                });
+                              }
+                            },
+                            icon: Icon(Icons.arrow_forward_ios_outlined),
+                            color: Colors.white,
+                          )
+                        : SizedBox(
+                            width: 40,
+                          ),
+                  ],
+                ),
+              ),
+              // _buildSurvey(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -219,6 +574,7 @@ class _SurveyState extends State<SurveyPage> {
     String text,
     MultipleChoice multipleChoice,
     int index,
+    String questionId,
   ) {
     return SizedBox(
       width: 200,
@@ -235,6 +591,7 @@ class _SurveyState extends State<SurveyPage> {
                 AnswerBody(
                   multipleChoiceAnswer: multipleChoice,
                   questionType: QuestionType.M_CHOICE,
+                  questionId: questionId,
                 ),
               );
         },
@@ -265,6 +622,7 @@ class _SurveyState extends State<SurveyPage> {
                   AnswerBody(
                     skalarAnswer: change.round(),
                     questionType: QuestionType.SKALA,
+                    questionId: question.id!,
                   ),
                 );
           },
@@ -283,6 +641,7 @@ class _SurveyState extends State<SurveyPage> {
               'Ja!',
               MultipleChoice.Ja,
               index,
+              question.id!,
             ),
             SizedBox(
               height: 25,
@@ -293,6 +652,7 @@ class _SurveyState extends State<SurveyPage> {
               'Nein!',
               MultipleChoice.Nein,
               index,
+              question.id!,
             ),
             SizedBox(
               height: 25,
@@ -303,6 +663,7 @@ class _SurveyState extends State<SurveyPage> {
               'Vielleicht!',
               MultipleChoice.Vielleicht,
               index,
+              question.id!,
             )
           ],
         );
@@ -328,6 +689,7 @@ class _SurveyState extends State<SurveyPage> {
                       AnswerBody(
                         textAnswer: value,
                         questionType: QuestionType.SATZ,
+                        questionId: question.id!,
                       ),
                     );
               },

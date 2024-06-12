@@ -20,6 +20,9 @@ mixin _$SurveyPageState {
   SurveyResponse? get survey => throw _privateConstructorUsedError;
   List<Question> get questions => throw _privateConstructorUsedError;
   List<AnswerBody?> get answers => throw _privateConstructorUsedError;
+  List<Answer> get answersFromUser => throw _privateConstructorUsedError;
+  Map<Question, List<Answer>> get answersFromSurvey =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SurveyPageStateCopyWith<SurveyPageState> get copyWith =>
@@ -36,7 +39,9 @@ abstract class $SurveyPageStateCopyWith<$Res> {
       {ScreenStatus status,
       SurveyResponse? survey,
       List<Question> questions,
-      List<AnswerBody?> answers});
+      List<AnswerBody?> answers,
+      List<Answer> answersFromUser,
+      Map<Question, List<Answer>> answersFromSurvey});
 
   $ScreenStatusCopyWith<$Res> get status;
   $SurveyResponseCopyWith<$Res>? get survey;
@@ -59,6 +64,8 @@ class _$SurveyPageStateCopyWithImpl<$Res, $Val extends SurveyPageState>
     Object? survey = freezed,
     Object? questions = null,
     Object? answers = null,
+    Object? answersFromUser = null,
+    Object? answersFromSurvey = null,
   }) {
     return _then(_value.copyWith(
       status: null == status
@@ -77,6 +84,14 @@ class _$SurveyPageStateCopyWithImpl<$Res, $Val extends SurveyPageState>
           ? _value.answers
           : answers // ignore: cast_nullable_to_non_nullable
               as List<AnswerBody?>,
+      answersFromUser: null == answersFromUser
+          ? _value.answersFromUser
+          : answersFromUser // ignore: cast_nullable_to_non_nullable
+              as List<Answer>,
+      answersFromSurvey: null == answersFromSurvey
+          ? _value.answersFromSurvey
+          : answersFromSurvey // ignore: cast_nullable_to_non_nullable
+              as Map<Question, List<Answer>>,
     ) as $Val);
   }
 
@@ -113,7 +128,9 @@ abstract class _$$SurveyPageStateImplCopyWith<$Res>
       {ScreenStatus status,
       SurveyResponse? survey,
       List<Question> questions,
-      List<AnswerBody?> answers});
+      List<AnswerBody?> answers,
+      List<Answer> answersFromUser,
+      Map<Question, List<Answer>> answersFromSurvey});
 
   @override
   $ScreenStatusCopyWith<$Res> get status;
@@ -136,6 +153,8 @@ class __$$SurveyPageStateImplCopyWithImpl<$Res>
     Object? survey = freezed,
     Object? questions = null,
     Object? answers = null,
+    Object? answersFromUser = null,
+    Object? answersFromSurvey = null,
   }) {
     return _then(_$SurveyPageStateImpl(
       status: null == status
@@ -154,6 +173,14 @@ class __$$SurveyPageStateImplCopyWithImpl<$Res>
           ? _value._answers
           : answers // ignore: cast_nullable_to_non_nullable
               as List<AnswerBody?>,
+      answersFromUser: null == answersFromUser
+          ? _value._answersFromUser
+          : answersFromUser // ignore: cast_nullable_to_non_nullable
+              as List<Answer>,
+      answersFromSurvey: null == answersFromSurvey
+          ? _value._answersFromSurvey
+          : answersFromSurvey // ignore: cast_nullable_to_non_nullable
+              as Map<Question, List<Answer>>,
     ));
   }
 }
@@ -165,9 +192,14 @@ class _$SurveyPageStateImpl implements _SurveyPageState {
       {this.status = const ScreenStatus.pure(),
       this.survey = null,
       final List<Question> questions = const [],
-      final List<AnswerBody?> answers = const []})
+      final List<AnswerBody?> answers = const [],
+      final List<Answer> answersFromUser = const [],
+      final Map<Question, List<Answer>> answersFromSurvey =
+          const <Question, List<Answer>>{}})
       : _questions = questions,
-        _answers = answers;
+        _answers = answers,
+        _answersFromUser = answersFromUser,
+        _answersFromSurvey = answersFromSurvey;
 
   @override
   @JsonKey()
@@ -193,9 +225,28 @@ class _$SurveyPageStateImpl implements _SurveyPageState {
     return EqualUnmodifiableListView(_answers);
   }
 
+  final List<Answer> _answersFromUser;
+  @override
+  @JsonKey()
+  List<Answer> get answersFromUser {
+    if (_answersFromUser is EqualUnmodifiableListView) return _answersFromUser;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_answersFromUser);
+  }
+
+  final Map<Question, List<Answer>> _answersFromSurvey;
+  @override
+  @JsonKey()
+  Map<Question, List<Answer>> get answersFromSurvey {
+    if (_answersFromSurvey is EqualUnmodifiableMapView)
+      return _answersFromSurvey;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_answersFromSurvey);
+  }
+
   @override
   String toString() {
-    return 'SurveyPageState(status: $status, survey: $survey, questions: $questions, answers: $answers)';
+    return 'SurveyPageState(status: $status, survey: $survey, questions: $questions, answers: $answers, answersFromUser: $answersFromUser, answersFromSurvey: $answersFromSurvey)';
   }
 
   @override
@@ -207,7 +258,11 @@ class _$SurveyPageStateImpl implements _SurveyPageState {
             (identical(other.survey, survey) || other.survey == survey) &&
             const DeepCollectionEquality()
                 .equals(other._questions, _questions) &&
-            const DeepCollectionEquality().equals(other._answers, _answers));
+            const DeepCollectionEquality().equals(other._answers, _answers) &&
+            const DeepCollectionEquality()
+                .equals(other._answersFromUser, _answersFromUser) &&
+            const DeepCollectionEquality()
+                .equals(other._answersFromSurvey, _answersFromSurvey));
   }
 
   @override
@@ -216,7 +271,9 @@ class _$SurveyPageStateImpl implements _SurveyPageState {
       status,
       survey,
       const DeepCollectionEquality().hash(_questions),
-      const DeepCollectionEquality().hash(_answers));
+      const DeepCollectionEquality().hash(_answers),
+      const DeepCollectionEquality().hash(_answersFromUser),
+      const DeepCollectionEquality().hash(_answersFromSurvey));
 
   @JsonKey(ignore: true)
   @override
@@ -228,10 +285,13 @@ class _$SurveyPageStateImpl implements _SurveyPageState {
 
 abstract class _SurveyPageState implements SurveyPageState {
   const factory _SurveyPageState(
-      {final ScreenStatus status,
-      final SurveyResponse? survey,
-      final List<Question> questions,
-      final List<AnswerBody?> answers}) = _$SurveyPageStateImpl;
+          {final ScreenStatus status,
+          final SurveyResponse? survey,
+          final List<Question> questions,
+          final List<AnswerBody?> answers,
+          final List<Answer> answersFromUser,
+          final Map<Question, List<Answer>> answersFromSurvey}) =
+      _$SurveyPageStateImpl;
 
   @override
   ScreenStatus get status;
@@ -241,6 +301,10 @@ abstract class _SurveyPageState implements SurveyPageState {
   List<Question> get questions;
   @override
   List<AnswerBody?> get answers;
+  @override
+  List<Answer> get answersFromUser;
+  @override
+  Map<Question, List<Answer>> get answersFromSurvey;
   @override
   @JsonKey(ignore: true)
   _$$SurveyPageStateImplCopyWith<_$SurveyPageStateImpl> get copyWith =>

@@ -191,7 +191,73 @@ class _SurveyState extends State<SurveyPage> {
                 width: 200,
                 child: FloatingActionButton(
                   backgroundColor: Colors.deepPurple,
-                  onPressed: () {},
+                  onPressed: () => showModalBottomSheet(
+                    enableDrag: true,
+                    showDragHandle: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (BuildContext bc) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: DraggableScrollableSheet(
+                          initialChildSize: 0.60,
+                          maxChildSize: 1,
+                          snap: true,
+                          expand: false,
+                          builder: (contexte, scrollController) => Container(
+                              height: 800,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black87,
+                                ),
+                                child: SingleChildScrollView(
+                                  controller: ScrollController(),
+                                  child: Column(
+                                    children: answers.map((value) {
+                                      return Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.9,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                color: Colors.black54),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Text(
+                                                value.textAnswer!,
+                                                style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      );
+                    },
+                  ),
                   child: Text(
                     "Antworten anschauen!",
                     style: TextStyle(

@@ -19,6 +19,7 @@ import '../app/app_cubit.dart';
 
 class CustomIconWidget extends StatelessWidget {
   static const String routeName = 'home_screen';
+
   const CustomIconWidget(
       {super.key,
       required this.poiId,
@@ -157,6 +158,10 @@ class HomeScreen extends StatelessWidget {
                                                           TextFormField(
                                                               decoration:
                                                                   const InputDecoration(
+                                                                border: const OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(16))),
                                                                 hintText:
                                                                     "Titel",
                                                                 filled: false,
@@ -166,12 +171,20 @@ class HomeScreen extends StatelessWidget {
                                                                       HomePageCubit>()
                                                                   .updateNewPoiTitle(
                                                                       title)),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
                                                           TextFormField(
+                                                              maxLines: 5,
                                                               decoration:
                                                                   const InputDecoration(
                                                                 hintText:
                                                                     "Beschreibung",
                                                                 filled: false,
+                                                                border: const OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(16))),
                                                               ),
                                                               onChanged: (description) => context
                                                                   .read<

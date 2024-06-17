@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app/entities/comments_response.dart';
 import 'package:flutter_app/entities/petition_response.dart';
 import 'package:flutter_app/entities/survey_response.dart';
@@ -423,6 +424,9 @@ class _Comments extends StatelessWidget {
                   return _List();
                 },
               ),
+              SizedBox(
+                height: 100,
+              ),
             ],
           ),
         ],
@@ -755,7 +759,11 @@ class PoiView extends StatelessWidget {
                                                       .width *
                                                   0.82,
                                             ),
-                                            child: buildSurvey(context),
+                                            child: CircleAvatar(
+                                              radius: 30,
+                                              backgroundColor: Colors.white70,
+                                              child: buildSurvey(context),
+                                            ),
                                           )
                                         : Padding(
                                             padding: EdgeInsets.only(
@@ -804,7 +812,7 @@ class PoiView extends StatelessWidget {
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: DraggableScrollableSheet(
-            initialChildSize: 0.60,
+            initialChildSize: 0.70,
             maxChildSize: 1,
             snap: true,
             expand: false,
@@ -822,7 +830,7 @@ class PoiView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 50),
+                      SizedBox(height: 30),
                       Text(
                         "Neue Petition erstellen",
                         style: TextStyle(
@@ -851,22 +859,42 @@ class PoiView extends StatelessWidget {
                           decoration: const InputDecoration(
                             hintText: "Titel",
                             filled: false,
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16))),
                           ),
+                        ),
+                        SizedBox(
+                          height: 10,
                         ),
                         TextFormField(
                           onChanged: (value) => context
                               .read<PoiViewCubit>()
                               .updateNewPetitionDescription(value),
+                          maxLines: 4,
                           decoration: const InputDecoration(
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16))),
                             hintText: "Beschreibung",
                             filled: false,
                           ),
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         TextFormField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
                           onChanged: (value) => context
                               .read<PoiViewCubit>()
                               .updateNewPetitionGoal(value),
                           decoration: const InputDecoration(
+                            border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16))),
                             hintText: "Ziel",
                             filled: false,
                           ),
@@ -909,27 +937,18 @@ class PoiView extends StatelessWidget {
   }
 
   Widget buildSurvey(context) {
-    return Positioned(
-      bottom: 30,
-      right: 30,
-      child: Container(
-        width: 60,
-        height: 60,
-        child: FloatingActionButton(
-          backgroundColor: Colors.green,
-          onPressed: () {
-            showBottomSheet(
-              context: context,
-              enableDrag: true,
-              builder: (context) => AddSurvey(),
-            );
-          },
-          child: Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.white,
-          ),
-        ),
+    return IconButton(
+      color: Colors.deepPurple,
+      onPressed: () {
+        showBottomSheet(
+          context: context,
+          enableDrag: true,
+          builder: (context) => AddSurvey(),
+        );
+      },
+      icon: Icon(
+        size: 35,
+        Icons.add,
       ),
     );
   }

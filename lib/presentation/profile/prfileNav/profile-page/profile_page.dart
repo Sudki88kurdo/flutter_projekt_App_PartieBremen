@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/presentation/app/app_cubit.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_cubit.dart';
 import 'package:flutter_app/presentation/profile/prfileNav/profile-page/profile_page_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../appStyle.dart';
 import '../../../../common/rounded_bottomNavigationBar.dart';
 import '../../../../entities/user.dart';
 import '../../../login-page/login_page_provider.dart';
 import '../myComments-list/myComments_list.dart';
-import '../profileEdit-page/ProfileEdit_page.dart';
 import '../myPoi-list/myPoi_list.dart';
-
+import '../profileEdit-page/ProfileEdit_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
+
   static User? user;
 
   setUser(User loginUser) {
@@ -26,7 +28,8 @@ class ProfilePage extends StatelessWidget {
       builder: (profilePageContext, profilePageState) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Profil',
+            title: Text(
+              'Profil',
               style: AppStyles.appBarTitleStyle,
             ),
             backgroundColor: AppStyles.buttonColor,
@@ -44,18 +47,24 @@ class ProfilePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const SizedBox(height: 25.0),
-                  Row(
-                    children: [
-                      Icon(Icons.person_rounded, size: 32.0),
-                      SizedBox(width: 8.0),
-                      Text(
-                        'Profile ${user?.name} ${user?.surname}',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Row(
+                      children: [
+                        Icon(Icons.person_rounded, size: 32.0),
+                        SizedBox(width: 8.0),
+                        Expanded(
+                          child: Text(
+                            'Profile ${user?.name} ${user?.surname}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10.0),
                   _buildCard(
@@ -97,13 +106,12 @@ class ProfilePage extends StatelessWidget {
                       );
                     },
                   ),
-
                   _buildCard(
                     context: context,
                     icon: Icons.logout,
                     title: 'Logout',
-                    onTap: () => _showLogoutDialog(
-                        profilePageContext, profilePageState),
+                    onTap: () =>
+                        _showLogoutDialog(profilePageContext, profilePageState),
                   ),
                   _buildCard(
                     context: context,
@@ -112,7 +120,6 @@ class ProfilePage extends StatelessWidget {
                     onTap: () => _showDeleteAccountDialog(
                         profilePageContext, profilePageState),
                   ),
-
                 ],
               ),
             ),
@@ -161,7 +168,7 @@ class ProfilePage extends StatelessWidget {
             TextButton(
               child: Text('Abbrechen', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
-                backgroundColor:  AppStyles.buttonColor,
+                backgroundColor: AppStyles.buttonColor,
               ),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
@@ -170,7 +177,7 @@ class ProfilePage extends StatelessWidget {
             TextButton(
               child: Text('Bestätigen', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
-                backgroundColor:  AppStyles.buttonColor,
+                backgroundColor: AppStyles.buttonColor,
               ),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
@@ -195,7 +202,7 @@ class ProfilePage extends StatelessWidget {
             TextButton(
               child: Text('Abbrechen', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
-                backgroundColor:  AppStyles.buttonColor,
+                backgroundColor: AppStyles.buttonColor,
               ),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
@@ -204,7 +211,8 @@ class ProfilePage extends StatelessWidget {
             TextButton(
               child: Text('Bestätigen', style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppStyles.buttonColor,),
+                backgroundColor: AppStyles.buttonColor,
+              ),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 _DeleteAccount(profileContext, profilePageState);
@@ -217,8 +225,11 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _Logout(
-      BuildContext profileContext, ProfilePageState profilePageState) async {
+    BuildContext profileContext,
+    ProfilePageState profilePageState,
+  ) async {
     await profileContext.read<ProfilePageCubit>().logoutUser().then((value) {
+      profileContext.read<AppCubit>().updateUser(null);
       profileContext.pushNamed(LoginPageProvider.routeName);
     }).catchError((error) {
       print("Error during account logout: $error");

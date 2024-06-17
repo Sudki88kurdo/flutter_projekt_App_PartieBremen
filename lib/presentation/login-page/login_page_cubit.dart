@@ -16,11 +16,13 @@ class LoginPageCubit extends Cubit<LoginPageState> {
       required BuildContext context}) async {
     var res = await _userRepository.loginUser(email: email, password: password);
     bool successful = false;
-    res.whenOrNull(success: (value) {
-      emit(state.copyWith(user: value));
-      successful = true;
-      context.read<AppCubit>().updateUser(value);
-    });
+    await res.whenOrNull(
+      success: (value) async {
+        emit(state.copyWith(user: value));
+        successful = true;
+        await context.read<AppCubit>().updateUser(value);
+      },
+    );
     return successful;
   }
 

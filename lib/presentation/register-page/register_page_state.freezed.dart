@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$RegisterPageState {
   ScreenStatus get status => throw _privateConstructorUsedError;
+  User? get user => throw _privateConstructorUsedError;
   bool get registerSuccessful => throw _privateConstructorUsedError;
   DateTime? get pickedDate => throw _privateConstructorUsedError;
 
@@ -32,9 +33,13 @@ abstract class $RegisterPageStateCopyWith<$Res> {
       _$RegisterPageStateCopyWithImpl<$Res, RegisterPageState>;
   @useResult
   $Res call(
-      {ScreenStatus status, bool registerSuccessful, DateTime? pickedDate});
+      {ScreenStatus status,
+      User? user,
+      bool registerSuccessful,
+      DateTime? pickedDate});
 
   $ScreenStatusCopyWith<$Res> get status;
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -51,6 +56,7 @@ class _$RegisterPageStateCopyWithImpl<$Res, $Val extends RegisterPageState>
   @override
   $Res call({
     Object? status = null,
+    Object? user = freezed,
     Object? registerSuccessful = null,
     Object? pickedDate = freezed,
   }) {
@@ -59,6 +65,10 @@ class _$RegisterPageStateCopyWithImpl<$Res, $Val extends RegisterPageState>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
       registerSuccessful: null == registerSuccessful
           ? _value.registerSuccessful
           : registerSuccessful // ignore: cast_nullable_to_non_nullable
@@ -77,6 +87,18 @@ class _$RegisterPageStateCopyWithImpl<$Res, $Val extends RegisterPageState>
       return _then(_value.copyWith(status: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $UserCopyWith<$Res>(_value.user!, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -88,10 +110,15 @@ abstract class _$$RegisterPageStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {ScreenStatus status, bool registerSuccessful, DateTime? pickedDate});
+      {ScreenStatus status,
+      User? user,
+      bool registerSuccessful,
+      DateTime? pickedDate});
 
   @override
   $ScreenStatusCopyWith<$Res> get status;
+  @override
+  $UserCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -106,6 +133,7 @@ class __$$RegisterPageStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = null,
+    Object? user = freezed,
     Object? registerSuccessful = null,
     Object? pickedDate = freezed,
   }) {
@@ -114,6 +142,10 @@ class __$$RegisterPageStateImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ScreenStatus,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
       registerSuccessful: null == registerSuccessful
           ? _value.registerSuccessful
           : registerSuccessful // ignore: cast_nullable_to_non_nullable
@@ -131,12 +163,16 @@ class __$$RegisterPageStateImplCopyWithImpl<$Res>
 class _$RegisterPageStateImpl implements _RegisterPageState {
   const _$RegisterPageStateImpl(
       {this.status = const ScreenStatus.pure(),
+      this.user = null,
       this.registerSuccessful = false,
       this.pickedDate = null});
 
   @override
   @JsonKey()
   final ScreenStatus status;
+  @override
+  @JsonKey()
+  final User? user;
   @override
   @JsonKey()
   final bool registerSuccessful;
@@ -146,7 +182,7 @@ class _$RegisterPageStateImpl implements _RegisterPageState {
 
   @override
   String toString() {
-    return 'RegisterPageState(status: $status, registerSuccessful: $registerSuccessful, pickedDate: $pickedDate)';
+    return 'RegisterPageState(status: $status, user: $user, registerSuccessful: $registerSuccessful, pickedDate: $pickedDate)';
   }
 
   @override
@@ -155,6 +191,7 @@ class _$RegisterPageStateImpl implements _RegisterPageState {
         (other.runtimeType == runtimeType &&
             other is _$RegisterPageStateImpl &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.user, user) || other.user == user) &&
             (identical(other.registerSuccessful, registerSuccessful) ||
                 other.registerSuccessful == registerSuccessful) &&
             (identical(other.pickedDate, pickedDate) ||
@@ -163,7 +200,7 @@ class _$RegisterPageStateImpl implements _RegisterPageState {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, status, registerSuccessful, pickedDate);
+      Object.hash(runtimeType, status, user, registerSuccessful, pickedDate);
 
   @JsonKey(ignore: true)
   @override
@@ -176,11 +213,14 @@ class _$RegisterPageStateImpl implements _RegisterPageState {
 abstract class _RegisterPageState implements RegisterPageState {
   const factory _RegisterPageState(
       {final ScreenStatus status,
+      final User? user,
       final bool registerSuccessful,
       final DateTime? pickedDate}) = _$RegisterPageStateImpl;
 
   @override
   ScreenStatus get status;
+  @override
+  User? get user;
   @override
   bool get registerSuccessful;
   @override

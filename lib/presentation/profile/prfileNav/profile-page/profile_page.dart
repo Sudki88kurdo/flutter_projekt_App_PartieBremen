@@ -11,7 +11,6 @@ import '../myComments-list/myComments_list.dart';
 import '../profileEdit-page/ProfileEdit_page.dart';
 import '../myPoi-list/myPoi_list.dart';
 
-
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
   static User? user;
@@ -73,31 +72,17 @@ class ProfilePage extends StatelessWidget {
                   ),
                   _buildCard(
                     context: context,
-                    icon: Icons.share_location_outlined,
-                    title: 'View POIs',
+                    icon: Icons.local_activity,
+                    title: 'My activities',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MyPoiListPage(),
+                          builder: (context) => CombinedPage(),
                         ),
                       );
                     },
                   ),
-                  _buildCard(
-                    context: context,
-                    icon: Icons.share_location_outlined,
-                    title: 'My comments',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyCommentsListPage(),
-                        ),
-                      );
-                    },
-                  ),
-
                   _buildCard(
                     context: context,
                     icon: Icons.logout,
@@ -112,7 +97,6 @@ class ProfilePage extends StatelessWidget {
                     onTap: () => _showDeleteAccountDialog(
                         profilePageContext, profilePageState),
                   ),
-
                 ],
               ),
             ),
@@ -232,5 +216,98 @@ class ProfilePage extends StatelessWidget {
     }).catchError((error) {
       print("Error during account deletion: $error");
     });
+  }
+}
+
+class CombinedPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Combined Page',
+          style: AppStyles.appBarTitleStyle,
+        ),
+        backgroundColor: AppStyles.buttonColor,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 25.0),
+              _buildCard(
+                context: context,
+                icon: Icons.share_location_outlined,
+                title: 'View POIs',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyPoiListPage(),
+                    ),
+                  );
+                },
+              ),
+              _buildCard(
+                context: context,
+                icon: Icons.comment,
+                title: 'My comments',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyCommentsListPage(),
+                    ),
+                  );
+                },
+              ),
+              _buildCard(
+                context: context,
+                icon: Icons.thumb_up,
+                title: 'My likes',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      //todo
+                      builder: (context) => MyCommentsListPage(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard({
+    required BuildContext context,
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 5,
+        child: ListTile(
+          leading: Icon(icon, color: Colors.green),
+          title: Text(
+            title,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+          onTap: onTap,
+        ),
+      ),
+    );
   }
 }
